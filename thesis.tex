@@ -1,0 +1,90 @@
+% *********************************************************************
+% Main file
+% *********************************************************************
+\RequirePackage{silence} % :-\
+    \WarningFilter{scrreprt}{Usage of package `titlesec'}
+    %\WarningFilter{scrreprt}{Activating an ugly workaround}
+    \WarningFilter{titlesec}{Non standard sectioning command detected}
+\documentclass[ twoside,openright,titlepage,numbers=noenddot,%1headlines,
+                headinclude,footinclude,cleardoublepage=empty,abstract=on,
+                %BCOR=5mm,
+                paper=b5,fontsize=10pt
+                ]{scrreprt}
+
+%********************************************************************
+% Note: Make all your adjustments in here
+%*******************************************************
+\input{classicthesis-config}
+
+%********************************************************************
+% Bibliographies
+%*******************************************************
+\addbibresource{bibliography.bib}
+
+%********************************************************************
+% Hyphenation
+%*******************************************************
+%\hyphenation{put special hyphenation here}
+
+% ********************************************************************
+% GO!GO!GO! MOVE IT!
+%*******************************************************
+\begin{document}
+%\frenchspacing
+\raggedbottom
+\selectlanguage{american}
+%\renewcommand*{\bibname}{new name}
+%\setbibpreamble{}
+\pagenumbering{roman}
+\pagestyle{plain}
+
+%********************************************************************
+% Frontmatter
+%*******************************************************
+\include{front_back_matter/cover}
+\include{front_back_matter/titlepage}
+%\include{front_back_matter/titleback}
+%\cleardoublepage\include{front_back_matter/dedication}
+%\cleardoublepage\include{front_back_matter/foreword}
+\cleardoublepage\include{front_back_matter/abstract}
+%\cleardoublepage\include{front_back_matter/publications}
+\cleardoublepage\include{front_back_matter/acknowledgments}
+\cleardoublepage\include{front_back_matter/contents}
+\cleardoublepage\include{front_back_matter/preface}
+
+%********************************************************************
+% Mainmatter
+%*******************************************************
+\cleardoublepage
+\pagestyle{scrheadings}
+\pagenumbering{arabic}
+%\setcounter{page}{90}
+% use \cleardoublepage here to avoid problems with pdfbookmark
+\cleardoublepage\include{chapters/chapter1}
+\cleardoublepage\include{chapters/chapter2}
+\cleardoublepage\include{chapters/chapter3}
+\cleardoublepage\include{chapters/chapter4}
+\cleardoublepage\include{chapters/chapter5}
+\cleardoublepage\include{chapters/conclusion}
+
+% ********************************************************************
+% Backmatter
+%*******************************************************
+\appendix
+%\renewcommand{\thechapter}{\alph{chapter}}
+\cleardoublepage
+\part*{Appendix}
+\include{chapters/chapterA}
+\cleardoublepage\include{chapters/chapterB}
+
+%********************************************************************
+% Other Stuff in the Back
+%*******************************************************
+\cleardoublepage\include{front_back_matter/bibliography}
+%\cleardoublepage\include{front_back_matter/declaration}
+\cleardoublepage\include{front_back_matter/colophon}
+% ********************************************************************
+% Game Over: Restore, Restart, or Quit?
+%*******************************************************
+\end{document}
+% ********************************************************************
