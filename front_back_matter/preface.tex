@@ -10,7 +10,27 @@
 
 \chapter*{Preface}
 
-Preface
+\section*{The renascence of statistical sampling}
+Nicholas Metropolis defined in this way \cite{metropolis:1987} the period that began in 1945, after the building of ENIAC, the first general purpose electronic computer.
+Its first usage was in relation to the problem of the nuclear chain reaction.
+The success obtained brought a renascence of a mathematical technique known as statistical sampling, and its usage spread with a new name: the Monte Carlo method.
+This name was used in scientific literature for the first time in 1949 by Metropolis and Ulam \cite{metropolis-ulam:1949}.
+
+The main idea of the Monte Carlo method is based on pseudorandom numbers, which are sequences of integer numbers whose properties approximate the properties of random numbers sequences.
+From pseudorandom numbers, it is possible to sample sequences of real numbers that are distributed according to a given probability density function.
+The applications of this principle are very broad: from numerical approximations of integrals and differential equations, to simulation of events that have a probabilistic nature.
+
+The impact on Physics was enormous. Theoretical physicists not only have a powerful method to compute the predictions of a theory, but is also possible to choose, from a wide-ranging class of theories, the one that is most compatible with experiments.
+The Monte Carlo method is also an essential tool for experimental physicists, who can simulate an experimental setup in order to estimate the performance of the setup, or to compare the results with the actual experimental results to find if there are problems with the apparatus, or maybe, to discover weakness in our physics theories and start working to expand them.
+
+\section*{From local algorithms to cluster algorithms}
+A class of problems in which the Monte Carlo method shines is the integral in a very high number of dimensions.
+Other methods, like the quadrature rules, suffer the so called \emph{curse of dimensionality}: the error of the approximation in terms of the number of function evaluations scales exponentially with the number of dimensions.
+For Monte Carlo, on the other hand, the scaling is independent from the number of dimensions.
+
+A branch of Physics in which such integrals are very frequent is Statistical Mechanics.
+In order to compute mean values of observables at thermodynamic equilibrium,
+it is necessary to integrate the observable in all configuration in the phase space, weighted in accordance with the Boltzmann distribution.
 
 \endgroup
 
