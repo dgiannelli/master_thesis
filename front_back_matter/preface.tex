@@ -1,6 +1,8 @@
 %*******************************************************
 % Preface
 %*******************************************************
+\phantomsection
+\markboth{\spacedlowsmallcaps{Preface}}{\spacedlowsmallcaps{Preface}}
 \pdfbookmark[1]{Preface}{Preface}
 \addcontentsline{toc}{chapter}{\tocEntry{Preface}}
 \begingroup
@@ -21,7 +23,7 @@ From pseudorandom numbers, it is possible to sample sequences of real numbers th
 The applications of this principle are very broad: from numerical approximations of integrals and differential equations, to simulation of events that have a probabilistic nature.
 
 The impact on Physics was enormous. Theoretical physicists not only have a powerful method to compute the predictions of a theory, but is also possible to choose, from a wide-ranging class of theories, the one that is most compatible with experiments.
-The Monte Carlo method is also an essential tool for experimental physicists, who can simulate an experimental setup in order to estimate the performance of the setup, or to compare the results with the actual experimental results to find if there are problems with the apparatus, or maybe, to discover weakness in our physics theories and start working to expand them.
+The Monte Carlo method is also an essential tool for experimental physicists, who can simulate an experimental setup in order to estimate the performance of the setup, or to compare the results with the actual experimental results to find if there are problems with the apparatus, or maybe, to discover weakness in physics theories and start working to expand them.
 
 \section*{From local algorithms to cluster algorithms}
 A class of problems in which the Monte Carlo method shines is the integral in a very high number of dimensions.
@@ -31,6 +33,45 @@ For Monte Carlo, on the other hand, the scaling is independent from the number o
 A branch of Physics in which such integrals are very frequent is Statistical Mechanics.
 In order to compute mean values of observables at thermodynamic equilibrium,
 it is necessary to integrate the observable in all configuration in the phase space, weighted in accordance with the Boltzmann distribution.
+If it is possible to sample the configurations from the Boltzmann distribution,
+the arithmetic mean of the observable evaluated in all theese configurations will converge to the correct result of the integral.
+
+A very important step forward in this topic was achieved when Metropolis et al. introduced in 1953 \cite{metropolis:1953} the Metropolis algorithm,
+which was further generalized by Hastings in 1970 \cite{hastings:1970} and it is usually referred as Metropolis-Hastings algorithm.
+It allows to generate Markov chains of configurations in the phase space that follow a given probability density function.
+Its generality and simplicity potentially allow to compute almost any integral that appears in Statistical Mechanics with an improved convergence rate.
+
+An important challenge in Markov chain sampling is achieving ergodicity,
+\ie the property according to which the sequence will eventually reach every point in the phase space in a finite number of steps.
+Without ergodicity, the Markov chain is actually sampling only a subset of the domain, thus, the integral result will probably be incorrect.
+Even if the algorithm is ergodic, if the number of steps needed to reach all relevant sectors of the phase space is too high
+with respect to the number of iterations the computer can perform in the available amount of time, the algorithm will effectively behave as it is not ergodic.
+
+An example of this problem is the two dimensional Ising model near the critical temperature.
+This system comprises a lattice of spins which can be oriented in two directions.
+Each pair of adjacent spins gives a contribute to the total energy: if they are aligned, the contribute is negative, otherwise it is positive.
+At thermodynamic equilibrium, if the temperature is above the critical temperature and in absence of external magnetic fields, the mean magnetization of the system is zero.
+Below the critical temperature, most of the spins are aligned in the same direction, producing a non-zero mean magnetization.
+Varying the temperature in a range of values that are still greater than the critical temperature, but very close to it,
+it is possible to observe a critical behaviour: distinct cluster of spins aligned internally all together start arising.
+The size of theese clusters keeps increasing as the temperature approaches the critical value.
+
+In terms of a Monte Carlo simulation, this cluster structure has important implications.
+The energy of the system has a local nature,
+\ie it is expressed in terms of the single spins, and, modifying the value of a spin,
+the variation of the total energy is only due to the local energy variation.
+Because of this fact, the most straightforward way to sample all the configurations is to update all the spins one by one,
+changing only one spin at each iteration of the program. This is what is called a local Monte Carlo.
+However, when the system is divided into clusters, local algorithms show their weakness.
+Updating the spins one per time makes very unlikely that a whole cluster can be reversed,
+and this problem gets worse when the cluster size increases.
+This is the \emph{critical slowing down}: the correlation length between the configurations increases exponentialy approaching the critical temperature.
+
+A solution to the slowing down for the Ising model \footnote{It applies also to the more general Potts model} was found by Swendsen and Wang in 1987 \cite{swendsen-wang:1987}.
+
+
+
+
 
 \endgroup
 
