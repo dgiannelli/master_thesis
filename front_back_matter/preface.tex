@@ -23,7 +23,7 @@ From pseudorandom numbers, it is possible to sample sequences of real numbers th
 The applications of this principle are very broad: from numerical approximations of integrals and differential equations, to simulation of events that have a probabilistic nature.
 
 The impact on Physics was enormous. Theoretical physicists not only have a powerful method to compute the predictions of a theory, but is also possible to choose, from a wide-ranging class of theories, the one that is most compatible with experiments.
-The Monte Carlo method is also an essential tool for experimental physicists, who can simulate an experimental setup in order to estimate the performance of the setup, or to compare the results with the actual experimental results to find if there are problems with the apparatus, or maybe, to discover weakness in physics theories and start working to expand them.
+The Monte Carlo method is also an essential tool for experimental physicists, who can simulate an experimental setup in order to estimate its performance, or to compare the results with the actual experimental results to find if there are problems with the apparatus, or maybe, to discover weakness in physics theories and start working to expand them.
 
 \section*{From local algorithms to cluster algorithms}
 A class of problems in which the Monte Carlo method shines is the integral in a very high number of dimensions.
@@ -34,7 +34,7 @@ A branch of Physics in which such integrals are very frequent is Statistical Mec
 In order to compute mean values of observables at thermodynamic equilibrium,
 it is necessary to integrate the observable in all configuration in the phase space, weighted in accordance with the Boltzmann distribution.
 If it is possible to sample the configurations from the Boltzmann distribution,
-the arithmetic mean of the observable evaluated in all theese configurations will converge to the correct result of the integral.
+the arithmetic mean of the observable evaluated in all these configurations will converge to the correct result of the integral.
 
 A very important step forward in this topic was achieved when Metropolis et al. introduced in 1953 \cite{metropolis:1953} the Metropolis algorithm,
 which was further generalized by Hastings in 1970 \cite{hastings:1970} and it is usually referred as Metropolis-Hastings algorithm.
@@ -54,7 +54,7 @@ At thermodynamic equilibrium, if the temperature is above the critical temperatu
 Below the critical temperature, most of the spins are aligned in the same direction, producing a non-zero mean magnetization.
 Varying the temperature in a range of values that are still greater than the critical temperature, but very close to it,
 it is possible to observe a critical behaviour: distinct cluster of spins aligned internally all together start arising.
-The size of theese clusters keeps increasing as the temperature approaches the critical value.
+The size of these clusters keeps increasing as the temperature approaches the critical value.
 
 In terms of a Monte Carlo simulation, this cluster structure has important implications.
 The energy of the system has a local nature,
@@ -67,7 +67,40 @@ Updating the spins one per time makes very unlikely that a whole cluster can be 
 and this problem gets worse when the cluster size increases.
 This is the \emph{critical slowing down}: the correlation length between the configurations increases exponentialy approaching the critical temperature.
 
-A solution to the slowing down for the Ising model \footnote{It applies also to the more general Potts model} was found by Swendsen and Wang in 1987 \cite{swendsen-wang:1987}.
+A solution to the slowing down for the Ising model\footnote{It applies also to the more general Potts model} was found by Swendsen and Wang in 1987 \cite{swendsen-wang:1987}.
+They found a way to sample the Boltzman distribution inverting many contiguous and parallel spins all together.
+It is recorded as the first cluster algorithm.
+In 1989, Wolff \cite{wolff:1989} improved this algorithm and extended it also to continuous spin models.
+
+Cluster algorithms have a chance to update big groups of elements, and, if they are well defined,
+the size of these groups is scalable together with the typical size of the clusters present in the system.
+\emph{Critical slowing down} can then be heavily dampened, making the simulations affordable even in critical conditions.
+
+However, the difficulty in creating cluster algorithms is to find a way to efficiently update big parts of the system without compromising the Boltzmann distribution.
+This has to be done exploiting properties of the considered system, and, consequently, the algorithm is specifically tailored for systems that share those properties.
+For example, Wolff algorithm can be extended to the most generic continuous spin system on a lattice,
+but any good solution was not found to extend it to the hard sphere model,
+\ie a system in which solid spheres can move in space without overlapping.
+The first efficient cluster algorithm for this model was found 1995 by Dress and Krauth \cite{dress-krauth:1995}.
+It is called \emph{the pivot algorithm} and was formulated specifically for hard spheres and related systems\footnote{Like binary mixtures or dimers, for example},
+independently from the efforts that have been made to extend Wolff algorithm.
+
+Another important case of \emph{critical slowing down} is \emph{topological freezing}.
+It affects Quantum Cromodynamics\footnote{As well as other quantum theories with a non-trivial topological structure}
+when is studied with the Monte Carlo method in its lattice formulation, \ie Lattice QCD.
+
+\section*{Lattice QCD and topological freezing}
+Quantum Cromodynamics is the quantum field theory that describes the \emph{strong interation},
+which concerns the coupling between \emph{quarks} (the constituents of nucleons) and \emph{gluons} (massless particles, mediators of the interaction).
+It is formulated as a non-abelian gauge theory, with gauge group SU(3),
+in which quark fields lie in the foundamental representation of the group and gluon fields are the gauge fields.
+The conserved charge associated with the gauge group is called \emph{color charge} and is the analogous of the \emph{electric charge} in electrodynamics.
+
+
+
+
+
+
 
 
 
