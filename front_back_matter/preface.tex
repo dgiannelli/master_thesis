@@ -104,13 +104,38 @@ In 1973, Gross, Wilczek \cite{gross-wilczek:1973} and Politzer \cite{politzer:19
 As the energy scale increases, the strenght of the interaction decreases,
 and physical predictions of the theory can be analytically computed with a perturbative power expansion of the coupling constant.
 
-On the other side of the spectrum, when the energy scale decreases, \emph{quark confinement} arises.
-As coupling increases, perturbation theory is not viable, and non-perturbative methods are needed to compute theory predictions.
-Lattice QCD is a different approach which fulfils these requirements, and it was formulated in 1974 by Wilson \cite{wilson:1974}.
-Gauge field theories can be quantized on a finite discrete lattice in euclidean space-time and,
-in this fashion, the theory is equivalent to a finite dimensional system at thermodynamic equilibrium.
-Continuum limit can then be extrapolated performing Monte Carlo simulations on finer and finer lattices.
+On the other side of the spectrum, when the energy scale decreases, \emph{color confinement} arises.
+Quarks and gluons cannot be isolated and observed directly in normal conditions\footnote{It is only possible at extremely high temperature and/or density, when they form a quark-gluon plasma, a new state of matter},
+and they are confined in mesons or nucleons.
+As coupling is higher at this scale of energy, perturbation theory is not viable, and non-perturbative methods are needed to compute theory predictions.
+Lattice QCD is a different approach that fulfils these requirements, and it was formulated in 1974 by Wilson \cite{wilson:1974}.
+Gauge field theories can be quantized on a discrete lattice in euclidean space-time and,
+in this framework, it is possible to compute theory predictions in the strong coupling regime.
 
+In 1979, Creutz et al. \cite{creutz:1979} and Wilson \cite{wilson:1979}
+had the intuition that gauge theories on a finite euclidean lattice are equivalent to a system at thermodynamic equilibrium,
+and mean values of observables can be computed with the same Monte Carlo techniques that had already been employed in Statistical Mechanics.
+The continuum limit can then be extrapolated with the \emph{renormalization group} method, performing simulations on finer and finer lattices.
+Following these precursor works, lattice QCD simulations produced in short time important results in evaluating quark-antiquark potential and hadron masses
+\cite{creutz:1980, weingarten:1981, hamber-parisi:1981}.
+
+However, there is a problem in extrapolating the continuum limit.
+QCD has a non-trivial topological structure, and gluon field configurations are partitioned in homotopy classes, characterized by their integer topological charge.
+It is then impossible to continuously deform a configuration with a charge value into another with a different charge.
+When the theory is discretized on a lattice, it becomes possible to tunnel from one class to another,
+though the effort is harder as continuum is approached.
+
+In the context of Markov chain Monte Carlo simulations, homotopy class partitioning results in a loss of ergodicity.
+The correlation time of topological charge increases exponentially as the lattice gets finer.
+This is an instance of \emph{critical slowing down}, and is called \emph{topological freezing}.
+
+
+
+
+
+
+Monte Carlo simulations of lattice QCD are, in general, very computationally expensive,
+and 
 
 
 
