@@ -150,26 +150,48 @@ They are the discretized version of instantons, which are exact solution of the 
 They have a definite integer topological charge, and their existence proves the non-triviality of QCD topology.
 
 The cluster stucture of topologically frozen configurations suggests that a cluster algorithm would be the perfect solution to the problem.
-However, it hasn't been found yet, and only partial solutions of the problem have been developed.
+However, it hasn't been found yet, and only partial solutions of the problem have been developed.%
+\marginpar{Chiedere ai prof. una breve descrizione dei principali metodi usati per aggirare il top. freezing}
 
+\section*{A toy model for QCD}
+Lattice QCD simulations are, in general, difficult to implement and computationally very expensive.
+For this reason, many new ideas and algorithms are firstly applied to simplified models that share the same properties.
+This can be useful both for testing and benchmarking purposes.
 
-\section*{Toy models for QCD}
-Monte Carlo simulations of lattice QCD are, in general, very computationally expensive,
-Theand 
+In particular, in order to study the problem of \emph{topological freezing},
+it is needed a gauge field theory that has a good definition of local topological charge and exhibits topological freezing in the form of the cluster stucture described before.
+The simplest model that share these properties with QCD is the two dimensional pure gauge U(1) theory, which is the subject of this thesis.
 
+A new cluster algorithm for this model will be presented.
+It constructs closed paths lattice links and reverse the sign of all gauge fields configurations in the region surrounded by the path,
+accepting or rejecting the operation with the Metropolis-Hastings algorithm.
+A well targeted use of local gauge invariance can make the acceptance for the cluster inverting to be the same that would be due to a local update,
+which is reasonably high%
+\marginpar{Aggiungere l'andamento dell'accettanza con $\beta$}
+and independent of the cluster size.
 
+This algorithm is not extensible to more than two dimensions,
+because regions of space could not be completely surrounded with a one dimensional path.
+However, it solves the critical behaviour in two dimensions, and it is efficient, parallelizable, and simple to implement, especially with modern programming languages techniques.
+It yields exact results that can be used to test all the workarounds that are used to fight the \emph{topological freezing} in QCD. 
 
-
-
-
-
-
-
-
-
-
-
-
+The only other cluster algorithm for this theory that is present in literature was published in 1992 by Robert Sinclair \cite{sinclair:1992}.
+His algorithm uses the local gauge invariance to map all the system to a one dimensional XY model, and updates it using the extension of the Wolff algorithm.
+Although it is a valid solution, the work of Dress and Krauth in 1995 proves that, in some cases, instead of extending Wolff algorithm,
+it may be simpler and more efficient to create a new algorithm that is well suited for the specific task, and, being closer to the underlying Physics,
+it may be easier to debug and understand.
+\ \\ \ \\
+The exposure of the thesis work will fit in the following scheme:
+\begin{description}
+    \item{Chapter \ref{ch:toy_model}:} Definition of the two dimensional pure gauge U(1) theory and its topological charge density,
+    both in the continuum space and in their discretized version on a lattice.
+    \item{Chapter \ref{ch:lattice}:} Implementation of the lattice theory that has been used.
+    \item{Chapter \ref{ch:local}:} Formulation and implementation of a local Metropolis-Hastings algorithm.
+    \item{Chapter \ref{ch:cluster}:} Discussion of topological freezing, and introduction of a new cluster Metropolis-Hastings algorithm that solves the problem.
+    \item{Chapter \ref{ch:results}:} Numerical results obtained with the cluster algorithm and conclusions.\\
+    \item{Appendix \ref{ap:code}:} Complete implementation of the algorithms.
+    \item{Appendix \ref{ap:data}:} Methods used for data analysis.
+\end{description}
 
 \endgroup
 
