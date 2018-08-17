@@ -38,7 +38,7 @@ the arithmetic mean of the observable evaluated in all these configurations will
 
 A very important step forward in this topic was achieved when Metropolis et al. introduced in 1953 \cite{metropolis:1953} the Metropolis algorithm,
 which was further generalized by Hastings in 1970 \cite{hastings:1970} and it is usually referred as Metropolis-Hastings algorithm.
-It allows to generate Markov chains of configurations in the phase space that follow a given probability density function.
+Applying an accept/reject principle, it allows to generate Markov chains of configurations in the phase space that follow a given probability density function.
 Its generality and simplicity potentially allow to compute almost any integral that appears in Statistical Mechanics with an improved convergence rate.
 
 An important challenge in Markov chain sampling is achieving ergodicity,
@@ -112,12 +112,12 @@ Lattice QCD is a different approach that fulfils these requirements, and it was 
 Gauge field theories can be quantized on a discrete lattice in euclidean space-time and,
 in this framework, it is possible to compute theory predictions in the strong coupling regime.
 
-In 1979, Creutz et al. \cite{creutz:1979} and Wilson \cite{wilson:1979}
+In 1979, Creutz et al. \cite{creutz:1979} and Wilson \cite{wilson:1980}
 had the intuition that gauge theories on a finite euclidean lattice are equivalent to a system at thermodynamic equilibrium,
 and mean values of observables can be computed with the same Monte Carlo techniques that had already been employed in Statistical Mechanics.
 The continuum limit can then be extrapolated with the \emph{renormalization group} method, performing simulations on finer and finer lattices.
 Following these precursor works, lattice QCD simulations produced in short time important results in evaluating quark-antiquark potential and hadron masses
-\cite{creutz:1980, weingarten:1981, hamber-parisi:1981}.
+\cite{creutz:1980, hamber-parisi:1981, weingarten:1982}.
 
 However, there is a problem in extrapolating the continuum limit.
 QCD has a non-trivial topological structure, and gluon field configurations are partitioned in homotopy classes, characterized by their integer topological charge.
@@ -129,13 +129,33 @@ In the context of Markov chain Monte Carlo simulations, homotopy class partition
 The correlation time of topological charge increases exponentially as the lattice gets finer.
 This is an instance of \emph{critical slowing down}, and is called \emph{topological freezing}.
 
+The demand for an efficient topological charge sampling is very high, and it is a problem that is currently not resolved.
+It is of a great physical interest, especially because there are particle masses directly related to topological charge:
+the $\eta'$ meson mass, whose high value has an explaination with the Witten-Veneziano mechanism \cite{witten:1979-1, witten:1979-2, veneziano:1979},
+and the mass of the axion, which is an hypothetical particle postulated by Weinberg \cite{weinberg:1978} and Wilczek \cite{wilczek:1978}
+in the context of Peccei-Quinn model \cite{peccei-quinn:1977-1, peccei-quinn:1977-2}.
+The weakness of the coupling between the axion and the Standard Model, makes it a good candidate to be \emph{dark matter}.
+The experimental dicovery of the axion could be a great step in understanding the nature of \emph{dark matter}, which is one of the main problems in modern Physics.
+An accurate value of the axion mass from lattice QCD simulations would indicate the point of the energy spectrum in which the axion should be,
+and its existence could be verified experimentally.
+
+The topological charge is the integral of a local quantity, the topological charge density%
+\footnote{In QCD, topological charge density rose from studies about anomalous symmetries, as it is proportional to the anomaly of the axial U(1) symmetry},
+which is a functional of gauge fields configurations.
+Studying its spatial distribution in lattice QCD simulations close enough to continuum limit, in condition of \emph{topological freezing}, it exhibits an interesting structure.
+Some regions of the space contribute with a certain topological charge, which can be positive or negative, and,
+fast forwarding the configurations of the Markov chain,
+those regions may deform and move around in the space, but their single contribute to the total charge doesn't change.
+They are the discretized version of instantons, which are exact solution of the classical equation of motion.
+They have a definite integer topological charge, and their existence proves the non-triviality of QCD topology.
+
+The cluster stucture of topologically frozen configurations suggests that a cluster algorithm would be the perfect solution to the problem.
+However, it hasn't been found yet, and only partial solutions of the problem have been developed.
 
 
-
-
-
+\section*{Toy models for QCD}
 Monte Carlo simulations of lattice QCD are, in general, very computationally expensive,
-and 
+Theand 
 
 
 
