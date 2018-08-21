@@ -2,8 +2,10 @@
 \chapter{Toy Model}\label{ch:toy_model}
 %************************************************
 
-The definition of the $U(1)$ pure gauge theory will follow.
-The lagrangian, the path integral formulation and the topological charge will be firstly defined in the continuum, and then, on the lattice.
+In this chapter will be defined the two dimensional $U(1)$ pure gauge theory.
+Starting from the lagrangian of classic electrodynamics in a $1+1$ Minkowski space-time and its quantum field theory path integral formulation,
+it will be discussed the analytic continuation to euclidean space, the definition of the topological charge and its physical interpetation.
+Then, the theory will be extended to a discrete and finite lattice space, and it will be described the method used to compute physical quantities with Monte Carlo simulations.
 
 \section{Theory in the continuum}
 
@@ -119,10 +121,30 @@ The path integrals are then approximated with finite dimensional integrals,
 and the continuum expectation value \eqref{eq:cont_exp} is obtained as the continuum limit of the lattice approximated expectation value.
 
 It is then necessary to provide new definition for the action and the topological charge on the lattice,
-and they need to recover the continuum definition when the lattice spacing approaches zero.
+and they need to converge to the continuum definition when the lattice spacing approaches zero.
 
+Once the lattice theory is defined, it remains to describe how to compute expectation values with Monte Carlo simulations, and how to extrapolate the continuum limit.
 
-\subsection*{
+\subsection*{Dimensionless quantities}
+Numerical studies are usually performed with dimensionless parameters, because it simplifies the implementation and result comparisons.
+For this reason, it is clearer if this convention is adopted from the beginning of the lattice formulation.
+
+\subsection*{Gauge invariant objects}
+It is convenient to define an action that is already exactly gauge invariant, even when far from the continuum limit.
+By doing so, not only it prevents a further bias to be added when extrapolating the continuum limit,
+but it is also possible to apply gauge transformations of the fields without modifying the energy of the system.
+It will be shown that the latter property is crucial for the performance of the cluster algorithm described in Chapter \ref{ch:cluster}.
+
+To easily implement gauge invariance, it is useful to encapsulate gauge fields inside \emph{Wilson lines}:
+\[
+    U(x,y) = 
+\]
+
+\subsection*{Lattice topological charge}
+
+\subsection*{Monte Carlo simulation}
+
+\subsection*{Continuum limit}
 
 
 
