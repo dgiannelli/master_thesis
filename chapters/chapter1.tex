@@ -48,14 +48,85 @@ Indicating with the index $M$ the objects defined in Minkowski space, the Wick r
 \end{align*}
 induce the following transformation of the action:
 \[
-    S^M[A] = -\frac{1}{4}\int\mathrm d^2x\,F^M_{\mu\nu}F_M^{\mu\nu} \rightarrow  S[A] = \frac{i}{4}\int\mathrm d^2x\,F_{\mu\nu}F_{\mu\nu}
+    S^M[A] = -\frac{1}{4}\int\mathrm d^2x^M\,F^M_{\mu\nu}F_M^{\mu\nu} \rightarrow  S[A] = \frac{i}{4}\int\mathrm d^2x\,F_{\mu\nu}F_{\mu\nu}
 \]
 Thus, the expectation value of an operator $\widehat{\mathcal O}[A]$ is:
-\[
+\begin{equation}\label{eq:cont_exp}
     \left< \widehat{\mathcal O}[A] \right> = \frac{\int[\mathrm dA]\, \mathcal O[A] e^{-S[A]}}{\int[\mathrm dA]\,e^{-S[A]}}
+\end{equation}
+Here, the factor $e^{-S[A]}$ is real and positive, and can be enterpreted as a probability density function of field configurations.
+
+The Minkowski formulation will not be needed anymore in later discussions.
+For this reason, every object will be implied to be defined in euclidean two dimensional space.
+
+\subsection*{Topological charge}
+
+The gauge field, expressed in a generic gauge $G(x) \equiv e^{i\theta(x)} \in U(1)$ is:
+\[
+    A^G_\mu(x) \equiv A_\mu(x) - \frac{1}{g}\partial_\mu\theta(x)
 \]
 
-Here, the factor $e^{-S[A]}$ is real and positive, and can be enterpreted as a probability density function of field configurations.
+Let $S$ be a disk in the space, $\partial S$ its boundary and $R$ its radius.
+If $R \to \infty$, the gauge field, evaluated on $\partial S$,
+has only the contribution induced by the gauge transformation:
+\[
+    \lim_{R\to\infty}A^G_\mu(x) = -\frac{1}{g}\partial_\mu\theta(x)
+\]
+and its circulation integral over the border is:
+\[
+    \lim_{R\to\infty}\oint\limits_{\partial S}\mathrm dl_\mu\,A^G_\mu(x) = -\frac{1}{g}\oint\limits_{\partial S}\mathrm dl_\mu\partial_\mu\theta(x)
+\]
+
+The definition of $\theta(x)$ leaves a further unfixed constant term:
+\[
+    \theta(x) \rightarrow \theta(x) + 2\pi n, \quad \text{with}\ n \in \mathbb Z
+\]
+thus, being $\theta(x)$ a conservative function, only the constant term contributes to the circulation integral:
+\[
+    \lim_{R\to\infty}\oint\limits_{\partial S}\mathrm dl_\mu\,A^G_\mu(x) = \frac{2\pi}{g} Q, \quad \text{with}\ Q \in \mathbb Z \\
+\]
+where $Q$ is the topological charge.
+
+Applying then Stokes theorem:
+\begin{align*}
+    Q &= \frac{g}{2\pi}\lim_{R\to\infty}\oint\limits_{\partial S}\mathrm dl_\mu\,A^G_\mu(x) = \\
+      &= \frac{g}{2\pi}\lim_{R\to\infty}\int\limits_S\mathrm d\vv s\,\cdot \vv\nabla \times \vv A^G(x) = \\
+      &= \frac{g}{2\pi}\lim_{R\to\infty}\int\limits_S\mathrm d^2x\, \left(\partial_1 A^G_2(x) - \partial_2 A^G_1(x)\right) = \\
+      &= \frac{g}{2\pi}\lim_{R\to\infty}\int\limits_S\mathrm d^2x\, F^G_{12}(x) = \\
+      &= \frac{g}{4\pi}\lim_{R\to\infty}\int\limits_S\mathrm d^2x\, \epsilon_{\mu\nu}F^G_{\mu\nu}(x)
+\end{align*}
+the definition of the topological charge density becomes clear:
+\[
+    q(x) \equiv \frac{g}{4\pi}\epsilon_{\mu\nu}F_{\mu\nu}(x)
+\]
+and its integral over all the space is the topological charge is:
+\[
+    Q = \int\mathrm d^2x\,q(x)
+\]
+
+Finally, being $\vv B(x) = \vv\nabla \times \vv A(x)$, the charge density is proportional to the flux of the magnetic field across an infinitesimal surface,
+and the total charge is proportional to the total flux.
+
+\section{Lattice formulation}
+The goal is to compute physical observables numerically, and the expectation value \eqref{eq:cont_exp} provide a way to do that.
+However, both the numerator and the denominator are divergent in the continuum, and it is necessary an integral regularization to isolate the divergent term,
+and hence remove it.
+
+The idea of lattice regularization is to define a theory on a discrete space time lattice with the requirement that,
+when the lattice becomes finer, the lattice theory approaches to the continuum theory.
+
+The path integrals are then approximated with finite dimensional integrals,
+and the continuum expectation value \eqref{eq:cont_exp} is obtained as the continuum limit of the lattice approximated expectation value.
+
+It is then necessary to provide new definition for the action and the topological charge on the lattice,
+and they need to recover the continuum definition when the lattice spacing approaches zero.
+
+
+\subsection*{
+
+
+
+
 
 
 
