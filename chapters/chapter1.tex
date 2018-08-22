@@ -21,6 +21,7 @@ The classic lagrangian of the theory is:
     \mathcal L[A] = -\frac{1}{4} F_{\mu\nu}F^{\mu\nu}
 \]
 with $F_{\mu\nu}(x) \equiv \partial_\mu A_\nu(x) - \partial_\nu A_\mu(x)$.
+In natural units, the energy dimension of the gauge field is zero.
 
 The $U(1)$ local gauge transformation is a symmetry of this lagrangian, in fact,
 under a transformation $G(x) \equiv e^{i\theta(x)} \in U(1)$,
@@ -29,7 +30,7 @@ the gauge field transformation is:
     A_\mu(x) \rightarrow A'_\mu(x) &= G(x) A_\mu(x) G^{-1}(x) - \frac{i}{g} G(x) \partial_\mu G^{-1}(x) = \\
                                    &= A_\mu(x) - \frac{1}{g} \partial_\mu \theta(x)
 \end{align*}
-where $g$ is the coupling constant.
+where $g$ is the coupling constant, and it has energy dimension equal to one.
 
 The action is: \[ S[A] = \int \mathrm d^2x\, \mathcal L[A(x)] \] and the expectation value of an operator $\widehat{\mathcal O}[A]$ is:
 \[
@@ -43,23 +44,30 @@ In this theory, the integrands can be made real and positive switching the theor
 
 \subsection*{Euclidean metric}
 
-Indicating with the index $M$ the objects defined in Minkowski space, the Wick rotation:
+Indicating with the index $M$ the objects defined in Minkowski space and with $E$ the ones in the euclidean, the Wick rotation:
 \begin{align*}
-    x^M_0 &\rightarrow -i x_2 & x^M_1 &\rightarrow x_1 \\
-    A^M_0 &\rightarrow i A_2 & A^M_1 &\rightarrow A_1 
+    &\begin{dcases}
+        x^M_0 &\rightarrow -i x^E_2 \\
+        x^M_1 &\rightarrow x^E_1
+    \end{dcases}%
+    &%
+    \begin{dcases}
+        A^M_0 &\rightarrow i A^E_2 \\
+        A^M_1 &\rightarrow A^E_1 
+    \end{dcases}&
 \end{align*}
 induce the following transformation of the action:
 \[
-    S^M[A] = -\frac{1}{4}\int\mathrm d^2x^M\,F^M_{\mu\nu}F_M^{\mu\nu} \rightarrow  S[A] = \frac{i}{4}\int\mathrm d^2x\,F_{\mu\nu}F_{\mu\nu}
+    S^M[A] = -\frac{1}{4}\int\mathrm d^2x^M\,F^M_{\mu\nu}F_M^{\mu\nu} \rightarrow  S^E[A] = \frac{i}{4}\int\mathrm d^2x\,F^E_{\mu\nu}F^E_{\mu\nu}
 \]
 Thus, the expectation value of an operator $\widehat{\mathcal O}[A]$ is:
 \begin{equation}\label{eq:cont_exp}
-    \left< \widehat{\mathcal O}[A] \right> = \frac{\int[\mathrm dA]\, \mathcal O[A] e^{-S[A]}}{\int[\mathrm dA]\,e^{-S[A]}}
+    \left< \widehat{\mathcal O}[A] \right> = \frac{\int[\mathrm dA]\, \mathcal O[A] e^{-S^E[A]}}{\int[\mathrm dA]\,e^{-S^E[A]}}
 \end{equation}
 Here, the factor $e^{-S[A]}$ is real and positive, and can be enterpreted as a probability density function of field configurations.
 
 The Minkowski formulation will not be needed anymore in later discussions.
-For this reason, every object will be implied to be defined in euclidean two dimensional space.
+For this reason, every object will be considered defined in euclidean two dimensional space.
 
 \subsection*{Topological charge}
 
@@ -125,32 +133,61 @@ and they need to converge to the continuum definition when the lattice spacing a
 
 Once the lattice theory is defined, it remains to describe how to compute expectation values with Monte Carlo simulations, and how to extrapolate the continuum limit.
 
-\subsection*{Dimensionless quantities}
-Numerical studies are usually performed with dimensionless parameters, because it simplifies the implementation and result comparisons.
-For this reason, it is clearer if this convention is adopted from the beginning of the lattice formulation.
+%\subsection*{Dimensionless quantities}
+%Numerical studies are usually performed with dimensionless parameters because it simplifies result comparisons and the implementation.
+%For this reason, it is clearer if this convention is adopted from the beginning of the lattice formulation.
+%
+%Let $a$ be the lattice spacing in both direction. It has energy dimension $[a] = -1$ and it can be used to define dimensionless quantities.
 
 \subsection*{Gauge invariant objects}
+
 It is convenient to define an action that is already exactly gauge invariant, even when far from the continuum limit.
 By doing so, not only it prevents a further bias to be added when extrapolating the continuum limit,
 but it is also possible to apply gauge transformations of the fields without modifying the energy of the system.
 It will be shown that the latter property is crucial for the performance of the cluster algorithm described in Chapter \ref{ch:cluster}.
 
-To easily implement gauge invariance, it is useful to encapsulate gauge fields inside \emph{Wilson lines}:
+To easily implement gauge invariance, it is useful to encapsulate gauge fields inside \emph{Wilson lines}, which are defined over continuous paths in the space.
+Let $\mathcal C(x,y)$ be a path that goes from $x$ to $y$. The correspondent Wilson line is:
 \[
-    U(x,y) = 
+    U[\mathcal C(x,y)] = e^{ig\int_{\mathcal C(x,y)}\mathrm dz_\mu\,A_\mu(z)} \in U(1)
 \]
+Under a gauge transformation $G(x) \equiv e^{i\theta(x)}$, the \emph{Wilson line} transformation is:
+\begin{align*}
+    U[\mathcal C(x,y)] \rightarrow U'[\mathcal C(x,y)] &= e^{ig\int_{\mathcal C(x,y)}\mathrm dz_\mu\,\left(A_\mu(z) - \frac{1}{g}\partial_\mu\theta(x)\right)} = \\
+                                                       &= U[\mathcal C(x,y)]\,e^{i(\theta(x) - \theta(y))} = \\
+                                                       &= G(x)U[\mathcal C(x,y)]G^{-1}(y)
+\end{align*}
+If the path is closed, the the correspondent Wilson line, \ie a \emph{Wilson loop}, is gauge invariant:
+\[
+    U[\mathcal C(x,x)] \rightarrow U[\mathcal C(x,x)]
+\]
+
+Wilson loops are then the required invariant objects since they can be constructed also on a discrete space,
+and the lattice gauge invariant action will be expressed in terms of them.
+
+\subsection*{Lattice links and plaquettes}
+Let the two dimensional space be discretized into a squared grid of points, \ie a lattice, and let $a$ be the side of the squares.
+A grid point is usually called \emph{site} and its coordinates labelled with an index $n$.
+The site of coordinates $n + \hat\mu$ with $\mu \in {1,2}$ corresponds to the point that has the $\mu$th coordinate increased by $a$.
+
+The most elementary path that can be defined on the lattice is a \emph{link}, \ie a straight line of length $a$ that connects two adjacent sites.
+The notation $U_\mu(n)$ refers to the Wilson line evaluated over the link that connects $n$ to $n+\hat\mu$, and it is also called \emph{link variable}.
+A link variable is an element of $U(1)$ and, if the link path is evaluated in the opposite direction, the value is its complex conjugate (or its inverse):
+\[
+    U^*_\mu(n) = U_{-\mu}(n+\hat\mu)
+\]
+For a finite lattice, the number of \emph{independent} link variables is then equal to the number of sites multiplied by the number of dimensions.
+
+A local gauge transform applied to site $n$ affects all links connected.
+
+
+\subsection*{Lattice action}
 
 \subsection*{Lattice topological charge}
 
 \subsection*{Monte Carlo simulation}
 
 \subsection*{Continuum limit}
-
-
-
-
-
-
 
 
 
