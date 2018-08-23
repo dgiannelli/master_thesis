@@ -152,11 +152,13 @@ Let $\mathcal C(x,y)$ be a path that goes from $x$ to $y$. The correspondent Wil
     U[\mathcal C(x,y)] = e^{ig\int_{\mathcal C(x,y)}\mathrm dz_\mu\,A_\mu(z)} \in U(1)
 \]
 Under a gauge transformation $G(x) \equiv e^{i\theta(x)}$, the \emph{Wilson line} transformation is:
-\begin{align*}
+\begin{equation}\label{eq:path_gauge}
+    \begin{aligned}
     U[\mathcal C(x,y)] \rightarrow U'[\mathcal C(x,y)] &= e^{ig\int_{\mathcal C(x,y)}\mathrm dz_\mu\,\left(A_\mu(z) - \frac{1}{g}\partial_\mu\theta(x)\right)} = \\
                                                        &= U[\mathcal C(x,y)]\,e^{i(\theta(x) - \theta(y))} = \\
                                                        &= G(x)U[\mathcal C(x,y)]G^{-1}(y)
-\end{align*}
+    \end{aligned}
+\end{equation}
 If the path is closed, the the correspondent Wilson line, \ie a \emph{Wilson loop}, is gauge invariant:
 \[
     U[\mathcal C(x,x)] \rightarrow U[\mathcal C(x,x)]
@@ -165,23 +167,99 @@ If the path is closed, the the correspondent Wilson line, \ie a \emph{Wilson loo
 Wilson loops are then the required invariant objects since they can be constructed also on a discrete space,
 and the lattice gauge invariant action will be expressed in terms of them.
 
-\subsection*{Lattice links and plaquettes}
+\subsection*{Lattice sites, links and plaquettes}
 Let the two dimensional space be discretized into a squared grid of points, \ie a lattice, and let $a$ be the side of the squares.
 A grid point is usually called \emph{site} and its coordinates labelled with an index $n$.
 The site of coordinates $n + \hat\mu$ with $\mu \in {1,2}$ corresponds to the point that has the $\mu$th coordinate increased by $a$.
 
-The most elementary path that can be defined on the lattice is a \emph{link}, \ie a straight line of length $a$ that connects two adjacent sites.
-The notation $U_\mu(n)$ refers to the Wilson line evaluated over the link that connects $n$ to $n+\hat\mu$, and it is also called \emph{link variable}.
-A link variable is an element of $U(1)$ and, if the link path is evaluated in the opposite direction, the value is its complex conjugate (or its inverse):
+The most elementary path that can be defined on the lattice is a \emph{link},
+\ie a straight line of length $a$ that connects two adjacent sites (Figure \ref{fig:links}).
+\begin{figure}[!htb]
+    \centering
+    \rule{3in}{1.5in}
+    \caption{Wilson lines over links}
+    \label{fig:links}
+\end{figure}
+The Wilson line evaluated over the link that connects $n$ to $n+\hat\mu$ is:
+\begin{equation}\label{eq:link}
+    \begin{aligned}
+        U_{\hat\mu}(n) &\equiv e^{ig\int_n^{n+\hat\mu}\mathrm dz_\mu\,A_\mu(z)} = \\
+                       &= e^{ig\int_n^{n+\hat\mu}\mathrm dz_\mu\,\left[A_\mu(n+\hat\mu/2) + (z_\mu-n-\hat\mu/2)\partial_\mu A_\mu(n+\hat\mu/2)%
+                                                                                     + \mathcal O\left((z_\mu-n-\hat\mu/2)^2\right)\right]} = \\
+                       &= e^{igaA_\mu(n+\hat\mu/2) + \mathcal O\left(a^3\right)}
+    \end{aligned}
+\end{equation}
+Thus, in the limit $a \to 0$, it is related to the gauge field evaluated at the midpoint of the link.
+These link Wilson lines are also called \emph{link variables}, and the lattice action will be expressed in terms of them,
+encapsulating the gauge fields inside link variables.
+
+If the link path is evaluated in the opposite direction, the value is its complex conjugate (or its inverse):
 \[
-    U^*_\mu(n) = U_{-\mu}(n+\hat\mu)
+    U_{-\hat\mu}(n+\hat\mu) = e^{ig\int^n_{n+\hat\mu}\mathrm dz_\mu\,A_\mu(z)} = e^{-ig\int_n^{n+\hat\mu}\mathrm dz_\mu\,A_\mu(z)} = U^*_{\hat\mu}(n)
 \]
 For a finite lattice, the number of \emph{independent} link variables is then equal to the number of sites multiplied by the number of dimensions.
 
-A local gauge transform applied to site $n$ affects all links connected.
+A local gauge transform $G(n) \in U(1)$ applied to site $n$ affects all links connected to it.
+Using Equation \eqref{eq:path_gauge}, the transformation of link variables is:
+\begin{equation}\label{eq:site_gauge}
+    \begin{aligned}
+        &\begin{dcases}
+        U_\mu(n) \rightarrow G(n)U_\mu(n) \\
+        U_{-\mu}(n) \rightarrow G(n)U_{-\mu}(n)
+        \end{dcases}%
+        &%
+        \begin{dcases}
+        U_\mu(n-\hat\mu) \rightarrow U_\mu(n-\hat\mu)G^*(n) \\
+        U_{-\mu}(n+\hat\mu) \rightarrow U_{-\mu}(n+\hat\mu)G^*(n)
+        \end{dcases}&
+    \end{aligned}
+\end{equation}
+This means that if a link variable is coming from site $n$, it will be multiplied by $G(n)$, but,
+if it is going toward site $n$, it will be multiplied by $G^*(n)$.
+This kind of gauge transformations is very important for this work because the cluster algorithm described in Chapter \ref{ch:cluster}
+will perform a sequence of them before cluster inversion.
 
+Any Wilson line on the lattice can be expressed in terms of link variables,
+in fact, decomposing a lattice line $\ell$ as a sequence $\ell_1, \ell_2, \ldots$ of links (Figure \ref{fig:line}),
+the Wilson line evaluated over $\ell$ is simply given by the product of the correspondent links variables:
+\begin{figure}[!htb]
+    \centering
+    \rule{3in}{1.5in}
+    \caption{Generic lattice Wilson line}
+    \label{fig:line}
+\end{figure}
+\[
+    prova
+\]
+
+It remains to define the elementary gauge invariant object: the \emph{plaquette} Wilson loop.
+A lattice plaquette is a grid square. Its sides are four links and its corners are four sites.
+The shortest possible Wilson loop is a closed loop around a plaquette.
+It has a very important physical relevance, and, to understand why,
+it is necessary to express it in terms of the gauge fields.
+Considering a link loop that starts from site $s$ and runs anticlockwise (Figure \ref{fig:plaq}),
+the corresponding Wilson line is:
+\begin{figure}[!htb]
+    \centering
+    \rule{3in}{1.5in}
+    \caption{Plaquette Wilson loop}
+    \label{fig:plaq}
+\end{figure}
+\begin{equation}\label{eq:plaq}
+    \begin{aligned}
+        \Pi_{\hat x\hat y}(s) &\equiv U_{\hat x}(s) U_{\hat y}(s+\hat x) U_{-\hat x}(s+\hat x+\hat y) U_{-\hat y}(s+\hat y) = \\
+                              &= U_{\hat x}(s) U_{\hat y}(s+\hat x) U^*_{\hat x}(s+\hat y) U^*_{\hat y}(s) = \\
+                              &= e^{iga[A_1(s+\hat x/2) + A_2(s+\hat x+\hat y/2) - A_1(s+\hat x/2+\hat y) - A_2(s+\hat y/2)]+ \mathcal O\left(a^3\right)} = \\
+                              &= e^{iga^2[\partial_1A_1(s)/2 + \partial_1A_2(s) + \partial_2A_2(s)/2 - \partial_1A_1(s)/2 - \partial_2A_1(s) - \partial_2A_2(s)/2] %
+                                    + \mathcal O\left(a^3\right)} = \\
+                              &= e^{iga^2F_{12}(s) + \mathcal O\left(a^3\right)}
+    \end{aligned}
+\end{equation}
+If $a \to 0$, from the plaquette Wilson loop starting at site $s$, is then possible to recover the gauge field tensor evaluated at $s$.
 
 \subsection*{Lattice action}
+
+Equation \eqref{eq:plaq} 
 
 \subsection*{Lattice topological charge}
 
