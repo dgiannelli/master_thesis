@@ -27,7 +27,7 @@ The $U(1)$ local gauge transformation is a symmetry of this lagrangian, in fact,
 under a transformation $G(x) \equiv e^{i\theta(x)} \in U(1)$,
 the gauge field transformation is:
 \begin{align*}
-    A_\mu(x) \rightarrow A'_\mu(x) &= G(x) A_\mu(x) G^{-1}(x) - \frac{i}{g} G(x) \partial_\mu G^{-1}(x) = \\
+    A_\mu(x) \rightarrow A'_\mu(x) &= G(x) A_\mu(x) G^{-1}(x) - \frac{i}{g} G(x) \partial_\mu G^{-1}(x) \\
                                    &= A_\mu(x) - \frac{1}{g} \partial_\mu \theta(x)
 \end{align*}
 where $g$ is the coupling constant, and it has energy dimension equal to one.
@@ -57,9 +57,9 @@ Indicating with the index $M$ the objects defined in Minkowski space and with $E
     \end{dcases}&
 \end{align*}
 induce the following transformation of the action:
-\[
+\begin{equation}\label{eq:cont_action}
     S^M[A] = -\frac{1}{4}\int\mathrm d^2x^M\,F^M_{\mu\nu}F_M^{\mu\nu} \rightarrow  S^E[A] = \frac{i}{4}\int\mathrm d^2x\,F^E_{\mu\nu}F^E_{\mu\nu}
-\]
+\end{equation}
 Thus, the expectation value of an operator $\widehat{\mathcal O}[A]$ is:
 \begin{equation}\label{eq:cont_exp}
     \left< \widehat{\mathcal O}[A] \right> = \frac{\int[\mathrm dA]\, \mathcal O[A] e^{-S^E[A]}}{\int[\mathrm dA]\,e^{-S^E[A]}}
@@ -99,10 +99,10 @@ where $Q$ is the topological charge.
 
 Applying then Stokes theorem:
 \begin{align*}
-    Q &= \frac{g}{2\pi}\lim_{R\to\infty}\oint\limits_{\partial S}\mathrm dl_\mu\,A^G_\mu(x) = \\
-      &= \frac{g}{2\pi}\lim_{R\to\infty}\int\limits_S\mathrm d\vv s\,\cdot \vv\nabla \times \vv A^G(x) = \\
-      &= \frac{g}{2\pi}\lim_{R\to\infty}\int\limits_S\mathrm d^2x\, \left(\partial_1 A^G_2(x) - \partial_2 A^G_1(x)\right) = \\
-      &= \frac{g}{2\pi}\lim_{R\to\infty}\int\limits_S\mathrm d^2x\, F^G_{12}(x) = \\
+    Q &= \frac{g}{2\pi}\lim_{R\to\infty}\oint\limits_{\partial S}\mathrm dl_\mu\,A^G_\mu(x) \\
+      &= \frac{g}{2\pi}\lim_{R\to\infty}\int\limits_S\mathrm d\vv s\,\cdot \vv\nabla \times \vv A^G(x) \\
+      &= \frac{g}{2\pi}\lim_{R\to\infty}\int\limits_S\mathrm d^2x\, \left(\partial_1 A^G_2(x) - \partial_2 A^G_1(x)\right) \\
+      &= \frac{g}{2\pi}\lim_{R\to\infty}\int\limits_S\mathrm d^2x\, F^G_{12}(x) \\
       &= \frac{g}{4\pi}\lim_{R\to\infty}\int\limits_S\mathrm d^2x\, \epsilon_{\mu\nu}F^G_{\mu\nu}(x)
 \end{align*}
 the definition of the topological charge density becomes clear:
@@ -154,8 +154,8 @@ Let $\mathcal C(x,y)$ be a path that goes from $x$ to $y$. The correspondent Wil
 Under a gauge transformation $G(x) \equiv e^{i\theta(x)}$, the \emph{Wilson line} transformation is:
 \begin{equation}\label{eq:path_gauge}
     \begin{aligned}
-    U[\mathcal C(x,y)] \rightarrow U'[\mathcal C(x,y)] &= e^{ig\int_{\mathcal C(x,y)}\mathrm dz_\mu\,\left(A_\mu(z) - \frac{1}{g}\partial_\mu\theta(x)\right)} = \\
-                                                       &= U[\mathcal C(x,y)]\,e^{i(\theta(x) - \theta(y))} = \\
+    U[\mathcal C(x,y)] \rightarrow U'[\mathcal C(x,y)] &= e^{ig\int_{\mathcal C(x,y)}\mathrm dz_\mu\,\left(A_\mu(z) - \frac{1}{g}\partial_\mu\theta(x)\right)} \\
+                                                       &= U[\mathcal C(x,y)]\,e^{i(\theta(x) - \theta(y))} \\
                                                        &= G(x)U[\mathcal C(x,y)]G^{-1}(y)
     \end{aligned}
 \end{equation}
@@ -183,10 +183,10 @@ The most elementary path that can be defined on the lattice is a \emph{link},
 The Wilson line evaluated over the link that connects $n$ to $n+\hat\mu$ is:
 \begin{equation}\label{eq:link}
     \begin{aligned}
-        U_{\hat\mu}(n) &\equiv e^{ig\int_n^{n+\hat\mu}\mathrm dz_\mu\,A_\mu(z)} = \\
+        U_{\hat\mu}(n) &\equiv e^{ig\int_n^{n+\hat\mu}\mathrm dz_\mu\,A_\mu(z)} \\
                        &= e^{ig\int_n^{n+\hat\mu}\mathrm dz_\mu\,\left[A_\mu(n+\hat\mu/2) + (z_\mu-n-\hat\mu/2)\partial_\mu A_\mu(n+\hat\mu/2)%
-                                                                                     + \mathcal O\left((z_\mu-n-\hat\mu/2)^2\right)\right]} = \\
-                       &= e^{igaA_\mu(n+\hat\mu/2) + \mathcal O\left(a^3\right)}
+                                                                                     + \mathcal O\left((z_\mu-n-\hat\mu/2)^2\right)\right]} \\
+                       &= e^{ig\left[aA_\mu(n+\hat\mu/2) + \mathcal O\left(a^3\right)\right]}
     \end{aligned}
 \end{equation}
 Thus, in the limit $a \to 0$, it is related to the gauge field evaluated at the midpoint of the link.
@@ -221,16 +221,18 @@ will perform a sequence of them before cluster inversion.
 
 Any Wilson line on the lattice can be expressed in terms of link variables,
 in fact, decomposing a lattice line $\ell$ as a sequence $\ell_1, \ell_2, \ldots$ of links (Figure \ref{fig:line}),
-the Wilson line evaluated over $\ell$ is simply given by the product of the correspondent links variables:
 \begin{figure}[!htb]
     \centering
     \rule{3in}{1.5in}
     \caption{Generic lattice Wilson line}
     \label{fig:line}
 \end{figure}
-\[
-    prova
-\]
+the Wilson line evaluated over $\ell$ is simply given by the product of the correspondent links variables:
+\begin{align*}
+    U[\ell] &= e^{ig\int_\ell\mathrm dz_\mu\,A_\mu(z)} \\
+            &= e^{ig\left[\int_{\ell_1}\mathrm dz_\mu\,A_\mu(z) + \int_{\ell_2}\mathrm dz_\mu\,A_\mu(z) + \cdots \right]} \\
+            &= U[\ell_1]U[\ell_2] \cdots
+\end{align*}
 
 It remains to define the elementary gauge invariant object: the \emph{plaquette} Wilson loop.
 A lattice plaquette is a grid square. Its sides are four links and its corners are four sites.
@@ -245,27 +247,112 @@ the corresponding Wilson line is:
     \caption{Plaquette Wilson loop}
     \label{fig:plaq}
 \end{figure}
-\begin{equation}\label{eq:plaq}
+\begin{equation*}%\label{eq:plaq}
     \begin{aligned}
-        \Pi_{\hat x\hat y}(s) &\equiv U_{\hat x}(s) U_{\hat y}(s+\hat x) U_{-\hat x}(s+\hat x+\hat y) U_{-\hat y}(s+\hat y) = \\
-                              &= U_{\hat x}(s) U_{\hat y}(s+\hat x) U^*_{\hat x}(s+\hat y) U^*_{\hat y}(s) = \\
-                              &= e^{iga[A_1(s+\hat x/2) + A_2(s+\hat x+\hat y/2) - A_1(s+\hat x/2+\hat y) - A_2(s+\hat y/2)]+ \mathcal O\left(a^3\right)} = \\
+        \Pi_{\hat x\hat y}(s) &\equiv U_{\hat x}(s) U_{\hat y}(s+\hat x) U_{-\hat x}(s+\hat x+\hat y) U_{-\hat y}(s+\hat y) \\
+                              &= U_{\hat x}(s) U_{\hat y}(s+\hat x) U^*_{\hat x}(s+\hat y) U^*_{\hat y}(s) \\
+                              &= e^{iga[A_1(s+\hat x/2) + A_2(s+\hat x+\hat y/2) - A_1(s+\hat x/2+\hat y) - A_2(s+\hat y/2)]+ \mathcal O\left(a^3\right)} \\
                               &= e^{iga^2[\partial_1A_1(s)/2 + \partial_1A_2(s) + \partial_2A_2(s)/2 - \partial_1A_1(s)/2 - \partial_2A_1(s) - \partial_2A_2(s)/2] %
-                                    + \mathcal O\left(a^3\right)} = \\
-                              &= e^{iga^2F_{12}(s) + \mathcal O\left(a^3\right)}
+                                    + \mathcal O\left(a^3\right)} \\
+                              &= e^{ig\left[a^2F_{12}(s) + \mathcal O\left(a^3\right)\right]}
     \end{aligned}
-\end{equation}
+\end{equation*}
 If $a \to 0$, from the plaquette Wilson loop starting at site $s$, is then possible to recover the gauge field tensor evaluated at $s$.
 
 \subsection*{Lattice action}
 
-Equation \eqref{eq:plaq} 
+The continuum action \eqref{eq:cont_action}, depends quadratically on the gauge field tensor.
+In order recover this dependence, it is useful to take the real part of the plaquette loop and expand it in terms of the field tensor:
+\begin{align*}
+    \Re\,\Pi_{\hat x\hat y}(s) &= \Re\,e^{ig\left[a^2F_{12}(s) + \mathcal O\left(a^3\right)\right]} \\
+                                          &= \cos\left[ga^2F_{12}(s) + \mathcal O\left(a^3\right)\right] \\
+                                          &= 1 - \frac{1}{2}g^2a^4F_{12}(s)^2 + \mathcal O\left(a^5\right) \\
+                                          &= 1 - \frac{1}{4}g^2a^4F_{\mu\nu}(s)F_{\mu\nu}(s) + \mathcal O\left(a^5\right)
+\end{align*}
 
-\subsection*{Lattice topological charge}
+The lattice action in terms of the link variables can be written in the following form:
+\begin{equation}\label{eq:lat_action}
+    \begin{aligned}
+        S^L[U] \equiv \beta\sum_s\left(1-\Re\,\Pi_{\hat x\hat y}(s)\right)
+    \end{aligned}
+\end{equation}
+In fact, using the fine lattice limit $a^2\sum_s \xrightarrow{a\to0} \int\mathrm d^2x$:
+\[
+    S^L = \beta\sum_s\frac{1}{4}g^2a^4F_{\mu\nu}(s)F_{\mu\nu}(s) + \mathcal O\left(a^5\right)
+      \xrightarrow{a\to0} \beta g^2a^2\int\mathrm d^2x\,\frac{1}{4}F_{\mu\nu}(x)F_{\mu\nu}(x)
+\]
+Thus, if the $\beta$ parameter is set to $\beta \equiv 1/(g^2a^2)$,
+the lattice action converges to the continuum action of Equation \eqref{eq:cont_action}.
 
-\subsection*{Monte Carlo simulation}
+\subsection*{Monte Carlo simulations and continuum limit}
 
-\subsection*{Continuum limit}
+Equation \eqref{eq:cont_exp} gives the expectation value of an observable $\mathcal O[A]$.
+If it is possible to define an operator $\mathcal O^L$ in terms of the link variables such that $\mathcal O^L[U] \xrightarrow{a\to0} \mathcal O[A]$,
+the lattice variant of the expectation value will be:
+\begin{equation}\label{eq:lat_exp}
+    \left<\mathcal O[U]\right>_L \equiv \frac{\int[\mathrm dU]\, \mathcal O[U] e^{-S^L[U]}}{\int[\mathrm dU]\,e^{-S^L[U]}}
+\end{equation}
+Here, the dynamical variables are the lattice links $U \in U(1)$, and $dU$ is the Haar measure of $U(1)$.
+
+It is useful to describe the problem with concepts of \emph{probability theory}:
+$\mathcal O[U]$ can be seen as a function of random variables $\{U\}$ that follow a probability density function proportional to $e^{-S^L[U]}$,
+and the mean value of $\mathcal O[U]$ corresponds to the expectation value of Equation \eqref{eq:lat_exp}.
+
+To compute $\left<\mathcal O[U]\right>_L$, the most common strategy employs Monte Carlo algorithms.
+The procedure is organized in these steps:
+\begin{itemize}
+    \item The physical system has to be implemented on a computer: dynamical variables are stored in computer memory,
+        and appropriate functions are defined to evaluate the action and other physical observables in terms of the dynamical variables.
+        This step will be discussed in Chapter \ref{ch:lattice}.
+    \item A sequence of dynamical variable configurations is generated in agreement with the weight function $e^{-S^L}$, and, at each step,
+        the observables are evaluated in the current configuration and stored in computer memory. The details will be explained in Chapter \ref{ch:local}.
+    \item The average of the stored values is computed, and, for the law of large numbers,
+        it converges to the value of Equation \ref{eq:lat_exp} if the sequence is long enough.
+\end{itemize}
+
+However, the lattice expectation value \eqref{eq:lat_exp} converges to the value in the continuum \eqref{eq:cont_exp} only in the limit of infinitesimal lattice:
+\[
+    \left<\mathcal O^L[U]\right>_L \xrightarrow{a\to0} \left<\mathcal O[A]\right>_E
+\]
+and this limit is not achievable on a computer because it would imply to operate on an infinite number of dynamical variables.
+Two \emph{cutoffs} are then necessary: a finite lattice spacing $a$ (ultraviolet cutoff),
+and a finite volume, \ie a finite number $N$ of lattice sites along every direction (infrared cutoff).
+Usually, the finite volume is implemented with periodic boundary conditions, because ... 
+\marginpar{Chiedere chiarimenti sulle condizioni periodiche. Riducono il bias dovuto al volume finito?}
+
+To recover the continuum limit and the infinite volume e limit,
+it is necessary to evaluate the expectation value at different parameter values in order to extrapolate the limits.
+In quantum field theories, this is in general a complicated problem,
+since theory parameters have to be renormalized and their value depends on the energy cutoff.
+
+Considering the space to be a finite sized cubic box with a side of length $L=Na$,
+the continuum limit is evaluated performing diffent simulations with different values of $N$, changing $a$ accordingly in order to maintain $L$ fixed.
+In the considered theory, the action \eqref{eq:lat_action} depends on $a$ implicitly through the parameter $\beta = 1/(g^2a^2)$.
+
+In general, if the coupling constant $g$ needs to be renormalized,
+the renormalization group equations establish for $g$ a non-trivial dependence on the lattice spacing (\emph{running coupling constant}).
+If the theory exhibit asymptotic freedom (like QCD, for example), the continuum limit dependence of $g(a)$ can be studied perturbatively computing the $\beta_L$ function:
+\[
+    \beta_L(g) \equiv -a\frac{\partial g}{\partial a}
+\]
+
+However, for the two dimensional $U(1)$ gauge theory, the $\beta_L$ function is zero, and the coupling constant $g$ is then independent from the lattice spacing $a$.
+Thus, the action parameter $beta$ dependence on $a$ is:
+\begin{equation}
+    \begin{aligned}
+        \beta &\propto a^{-2} \\
+              &\propto 
+    \end{aligned}
+\end{equation}
+
+
+
+To evaluate the continuum limit, simulations are perfomed in a constant and finite sized box of lenght $L=Na$.
+The 
+
+The infinite volume limit will not be treated in this work, since the topological freezing affects only the extrapolation of the continuum limit.
+
+
 
 
 
