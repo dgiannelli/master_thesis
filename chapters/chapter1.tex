@@ -311,14 +311,14 @@ The procedure is organized in these steps:
 \end{itemize}
 
 However, the lattice expectation value \eqref{eq:lat_exp} converges to the value in the continuum \eqref{eq:cont_exp} only in the limit of infinitesimal lattice:
-\[
+\begin{equation}\label{eq:cont_limit}
     \left<\mathcal O^L[U]\right>_L \xrightarrow{a\to0} \left<\mathcal O[A]\right>_E
-\]
+\end{equation}
 and this limit is not achievable on a computer because it would imply to operate on an infinite number of dynamical variables.
 Two \emph{cutoffs} are then necessary: a finite lattice spacing $a$ (ultraviolet cutoff),
 and a finite volume, \ie a finite number $N$ of lattice sites along every direction (infrared cutoff).
 Usually, the finite volume is implemented with periodic boundary conditions, because ... 
-\marginpar{Chiedere chiarimenti sulle condizioni periodiche. Riducono il bias dovuto al volume finito?}
+\marginpar{Chiedere chiarimenti sull'utilità delle condizioni periodiche. Riducono il bias dovuto al volume finito?}
 
 To recover the continuum limit and the infinite volume e limit,
 it is necessary to evaluate the expectation value at different parameter values in order to extrapolate the limits.
@@ -331,26 +331,38 @@ In the considered theory, the action \eqref{eq:lat_action} depends on $a$ implic
 
 In general, if the coupling constant $g$ needs to be renormalized,
 the renormalization group equations establish for $g$ a non-trivial dependence on the lattice spacing (\emph{running coupling constant}).
-If the theory exhibit asymptotic freedom (like QCD, for example), the continuum limit dependence of $g(a)$ can be studied perturbatively computing the $\beta_L$ function:
+If the theory exhibits asymptotic freedom (like QCD, for example), the continuum limit dependence of $g(a)$ can be studied perturbatively computing the $\beta_L$ function:
 \[
     \beta_L(g) \equiv -a\frac{\partial g}{\partial a}
 \]
 
 However, for the two dimensional $U(1)$ gauge theory, the $\beta_L$ function is zero, and the coupling constant $g$ is then independent from the lattice spacing $a$.
-Thus, the action parameter $beta$ dependence on $a$ is:
-\begin{equation}
-    \begin{aligned}
-        \beta &\propto a^{-2} \\
-              &\propto 
-    \end{aligned}
+Thus, the action parameter $beta$ dependence on $a$ is simply:
+\marginpar{Serve una dimostrazione che $\beta_L=0$? Oppure basta una citazione?}
+\[
+    \beta(a) \propto a^{-2}
+\]
+In order to keep the side of the box $L$ constant, the product of $a$ and $N$ should be constant,
+thus, the action parameter $\beta$ and the number of sites at each direction should follow the \emph{line of constant physics}:
+\begin{equation}\label{eq:const_phys}
+    \frac{\beta}{N^2} = \text{constant}
 \end{equation}
 
+To extrapolate the contunuum limit of Equation \eqref{eq:cont_limit},
+one then needs to evaluate different expectation values of Equation \eqref{eq:lat_exp},
+one for each pair of parameters $(\beta,N)$ chosen on the line of constant physics of Equation \eqref{eq:const_phys}.
+The continuum limit corresponds to the limit $1/\beta\to0$ and it can be extrapolated with a curve fit.
+The more the pair of parameters can be close to the continuum limit, the more the curve fit will be realistic,
+since lattice artifacts would be more suppressed with those parameters. 
 
+As it will be shown in Chapter \ref{ch:local}, the topological freezing sets a threshold to how far it is possible to proceed toward the continuum with a local algorithm.
+However, with the implementation of the cluster algorithm of Chapter \ref{ch:cluster}, this threshold will be removed.
 
-To evaluate the continuum limit, simulations are perfomed in a constant and finite sized box of lenght $L=Na$.
-The 
+The infinite volume limit will not be treated in this work,
+because it would not be useful to evaluate the cluster algorithm,
+since the topological freezing affects only the extrapolation of the continuum limit.
 
-The infinite volume limit will not be treated in this work, since the topological freezing affects only the extrapolation of the continuum limit.
+\subsection*{Lattice topological charge}
 
 
 
