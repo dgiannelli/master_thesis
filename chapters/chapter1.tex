@@ -3,9 +3,9 @@
 %************************************************
 
 In this chapter will be defined the two dimensional $U(1)$ pure gauge theory.
-Starting from the lagrangian of classic electrodynamics in a $1+1$ Minkowski space-time and its quantum field theory path integral formulation,
-it will be discussed the analytic continuation to euclidean space, the definition of the topological charge and its physical interpetation.
-Then, the theory will be extended to a discrete and finite lattice space, and it will be described the method used to compute physical quantities with Monte Carlo simulations.
+Starting from the lagrangian of classic electrodynamics in a $1+1$ Minkowski space-time and its quantum field path integral formulation,
+it will be discussed the analytic continuation to euclidean space, the definition of the topological charge and its physical interpretation.
+Then, the theory will be extended to a discrete lattice space, and it will be described the method used to compute physical quantities with Monte Carlo simulations.
 
 \section{Theory in the continuum}
 
@@ -14,13 +14,13 @@ Since $U(1)$ group has only one generator, there is only one gauge field $A_\mu$
 
 \subsection*{Minkowski metric}
 
-In a $1+1$ dimensional Minkowski space-time, $A_\mu$ has two components, and $\mu = 0, 1$ are respectively the time and space indices.
+In a $1+1$ dimensional Minkowski space-time, $A_\mu$ has two components, where $\mu = 0, 1$ are respectively the time and space indices.
 
 The classic lagrangian of the theory is:
 \[
     \mathcal L[A] = -\frac{1}{4} F_{\mu\nu}F^{\mu\nu}
 \]
-with $F_{\mu\nu}(x) \equiv \partial_\mu A_\nu(x) - \partial_\nu A_\mu(x)$.
+Where $F_{\mu\nu} \equiv \partial_\mu A_\nu - \partial_\nu A_\mu$ is the gauge field tensor.
 In natural units, the energy dimension of the gauge field is zero.
 
 The $U(1)$ local gauge transformation is a symmetry of this lagrangian, in fact,
@@ -30,25 +30,29 @@ the gauge field transformation is:
     A_\mu(x) \rightarrow A'_\mu(x) &= G(x) A_\mu(x) G^{-1}(x) - \frac{i}{g} G(x) \partial_\mu G^{-1}(x) \\
                                    &= A_\mu(x) - \frac{1}{g} \partial_\mu \theta(x)
 \end{align*}
-where $g$ is the coupling constant, and it has energy dimension equal to one.
+and the gauge field tensor is invariant since $\partial_\nu\partial_\mu\theta(x) = \partial_\mu\partial_\nu\theta(x)$:
+\[
+    F_{\mu\nu}(x) \rightarrow F'_{\mu\nu}(x) = F_{\mu\nu}(x)
+\]
+$g$ is the coupling constant, and it has energy dimension equal to one.
 
 The action is: \[ S[A] = \int \mathrm d^2x\, \mathcal L[A(x)] \] and the expectation value of an operator $\widehat{\mathcal O}[A]$ is:
 \[
     \left< \widehat{\mathcal O}[A] \right> = \frac{\int[\mathrm dA]\, \mathcal O[A] e^{iS[A]}}{\int[\mathrm dA]\,e^{iS[A]}}
 \]
 where the integrals are path integrals over field configurations.
-In this formulation, field configurations are multiplied by a complex exponential.
-When the intent is to compute expectation values via Monte Carlo simulations,
-it is necessary to sample configurations from probability density functions.
-In this theory, the integrands can be made real and positive switching the theory to euclidean metric performing a Wick rotation of the time coordinate and an analytic continuation of expectation values.
+The integral ratio can be interpreted as a weighted mean of the value $\mathcal O[A]$ evaluated at all possible configurations, weighted with the function $e^{iS[A]}$.
+However, if the intent is to sample field configurations with the Monte Carlo method, the weight factor have to be a probability density funtion, \ie real and positive.
+Within this theory, the integrands can be made real and positive
+switching the theory to euclidean metric performing a Wick rotation of the time coordinate and an analytic continuation of expectation values.
 
 \subsection*{Euclidean metric}
 
 Indicating with the index $M$ the objects defined in Minkowski space and with $E$ the ones in the euclidean, the Wick rotation:
 \begin{align*}
     &\begin{dcases}
-        x^M_0 &\rightarrow -i x^E_2 \\
-        x^M_1 &\rightarrow x^E_1
+        x_0^M &\rightarrow -i x_2^E \\
+        x_1^M &\rightarrow x_1^E
     \end{dcases}%
     &%
     \begin{dcases}
@@ -57,10 +61,17 @@ Indicating with the index $M$ the objects defined in Minkowski space and with $E
     \end{dcases}&
 \end{align*}
 induce the following transformation of the action:
+\[
+    S^M[A] = -\frac{1}{4}\int\mathrm d^2x^M\,F^M_{\mu\nu}F_M^{\mu\nu} \rightarrow  \frac{i}{4}\int\mathrm d^2x\,F^E_{\mu\nu}F^E_{\mu\nu}
+\]
+Thus, with the following definitions:
 \begin{equation}\label{eq:cont_action}
-    S^M[A] = -\frac{1}{4}\int\mathrm d^2x^M\,F^M_{\mu\nu}F_M^{\mu\nu} \rightarrow  S^E[A] = \frac{i}{4}\int\mathrm d^2x\,F^E_{\mu\nu}F^E_{\mu\nu}
+    \begin{aligned}
+        \mathcal L^E &\equiv \frac{1}{4}F^E_{\mu\nu}F^E_{\mu\nu} \\
+        S^E[A] &\equiv \int\mathrm d^2x\,\mathcal L^E[A(x)]
+    \end{aligned}
 \end{equation}
-Thus, the expectation value of an operator $\widehat{\mathcal O}[A]$ is:
+the expectation value of an operator $\widehat{\mathcal O}[A]$ is:
 \begin{equation}\label{eq:cont_exp}
     \left< \widehat{\mathcal O}[A] \right> = \frac{\int[\mathrm dA]\, \mathcal O[A] e^{-S^E[A]}}{\int[\mathrm dA]\,e^{-S^E[A]}}
 \end{equation}
@@ -87,17 +98,33 @@ and its circulation integral over the border is:
     \lim_{R\to\infty}\oint\limits_{\partial S}\mathrm dl_\mu\,A^G_\mu(x) = -\frac{1}{g}\oint\limits_{\partial S}\mathrm dl_\mu\partial_\mu\theta(x)
 \]
 
-The definition of $\theta(x)$ leaves a further unfixed constant term:
+However, the definition of $\theta(x)$ leaves a further unfixed constant term:
 \[
     \theta(x) \rightarrow \theta(x) + 2\pi n, \quad \text{with}\ n \in \mathbb Z
 \]
-thus, being $\theta(x)$ a conservative function, only the constant term contributes to the circulation integral:
+and this redundancy can be fixed imposing:
 \[
-    \lim_{R\to\infty}\oint\limits_{\partial S}\mathrm dl_\mu\,A^G_\mu(x) = \frac{2\pi}{g} Q, \quad \text{with}\ Q \in \mathbb Z \\
+    \theta(x) \in (-\pi,\pi]
 \]
-where $Q$ is the topological charge.
 
-Applying then Stokes theorem:
+Along the path $\partial S$, every time $\theta(x)$ increases and passes across the superior border at $\pi$, it acquires a new value,
+just above the inferior border $-\pi$.
+On the contrary, when $\theta(x)$ decreases so that it would reach $-\pi$, it becomes $\pi$ instead.
+
+When integrating $\partial_\mu\theta(x)$ over these discontinuities,
+they contribute with $-2\pi$ if $\theta(x)$ pass across the superior border, and with $2\pi$ if across the other side.
+Apart from these discontinuity points, the function $\partial_\mu\theta(x)$ is conservative, thus,
+there is not any other contribution to the circulation apart from the ones that are due to the discontinuities.
+
+Letting $Q_+$ and $Q_-$ be respectively the number of times $\theta(x)$ cuts the superior or the inferior extreme of the interval,
+the result of the circulation is:
+\[
+    \lim_{R\to\infty}\oint\limits_{\partial S}\mathrm dl_\mu\,A^G_\mu(x) = \frac{2\pi}{g} Q
+\]
+where $Q \equiv Q_+ - Q_-$ is the topological charge, \ie the net number of times $\theta(x)$ has wrapped around the interval $(-\pi,\pi]$,
+and $Q$ is positive if the winding has happened from the positive direction, while it is negative if from the other side.
+
+Applying Stokes theorem:
 \begin{align*}
     Q &= \frac{g}{2\pi}\lim_{R\to\infty}\oint\limits_{\partial S}\mathrm dl_\mu\,A^G_\mu(x) \\
       &= \frac{g}{2\pi}\lim_{R\to\infty}\int\limits_S\mathrm d\vv s\,\cdot \vv\nabla \times \vv A^G(x) \\
@@ -105,14 +132,14 @@ Applying then Stokes theorem:
       &= \frac{g}{2\pi}\lim_{R\to\infty}\int\limits_S\mathrm d^2x\, F^G_{12}(x) \\
       &= \frac{g}{4\pi}\lim_{R\to\infty}\int\limits_S\mathrm d^2x\, \epsilon_{\mu\nu}F^G_{\mu\nu}(x)
 \end{align*}
-the definition of the topological charge density becomes clear:
-\[
+the definition of the topological charge density becomes then clear:
+\begin{equation}\label{eq:top_charge_density}
     q(x) \equiv \frac{g}{4\pi}\epsilon_{\mu\nu}F_{\mu\nu}(x)
-\]
-and its integral over all the space is the topological charge is:
-\[
+\end{equation}
+and its integral over all the space is the topological charge:
+\begin{equation}\label{eq:top_charge}
     Q = \int\mathrm d^2x\,q(x)
-\]
+\end{equation}
 
 Finally, being $\vv B(x) = \vv\nabla \times \vv A(x)$, the charge density is proportional to the flux of the magnetic field across an infinitesimal surface,
 and the total charge is proportional to the total flux.
@@ -132,12 +159,6 @@ It is then necessary to provide new definition for the action and the topologica
 and they need to converge to the continuum definition when the lattice spacing approaches zero.
 
 Once the lattice theory is defined, it remains to describe how to compute expectation values with Monte Carlo simulations, and how to extrapolate the continuum limit.
-
-%\subsection*{Dimensionless quantities}
-%Numerical studies are usually performed with dimensionless parameters because it simplifies result comparisons and the implementation.
-%For this reason, it is clearer if this convention is adopted from the beginning of the lattice formulation.
-%
-%Let $a$ be the lattice spacing in both direction. It has energy dimension $[a] = -1$ and it can be used to define dimensionless quantities.
 
 \subsection*{Gauge invariant objects}
 
@@ -247,7 +268,7 @@ the corresponding Wilson line is:
     \caption{Plaquette Wilson loop}
     \label{fig:plaq}
 \end{figure}
-\begin{equation*}%\label{eq:plaq}
+\begin{equation}\label{eq:plaq}
     \begin{aligned}
         \Pi_{\hat x\hat y}(s) &\equiv U_{\hat x}(s) U_{\hat y}(s+\hat x) U_{-\hat x}(s+\hat x+\hat y) U_{-\hat y}(s+\hat y) \\
                               &= U_{\hat x}(s) U_{\hat y}(s+\hat x) U^*_{\hat x}(s+\hat y) U^*_{\hat y}(s) \\
@@ -256,13 +277,13 @@ the corresponding Wilson line is:
                                     + \mathcal O\left(a^3\right)} \\
                               &= e^{ig\left[a^2F_{12}(s) + \mathcal O\left(a^3\right)\right]}
     \end{aligned}
-\end{equation*}
+\end{equation}
 If $a \to 0$, from the plaquette Wilson loop starting at site $s$, is then possible to recover the gauge field tensor evaluated at $s$.
 
 \subsection*{Lattice action}
 
 The continuum action \eqref{eq:cont_action}, depends quadratically on the gauge field tensor.
-In order recover this dependence, it is useful to take the real part of the plaquette loop and expand it in terms of the field tensor:
+In order recover this dependence, it is useful to take the real part of the plaquette loop of Equation \eqref{eq:plaq} and expand it in terms of the field tensor:
 \begin{align*}
     \Re\,\Pi_{\hat x\hat y}(s) &= \Re\,e^{ig\left[a^2F_{12}(s) + \mathcal O\left(a^3\right)\right]} \\
                                           &= \cos\left[ga^2F_{12}(s) + \mathcal O\left(a^3\right)\right] \\
@@ -283,6 +304,42 @@ In fact, using the fine lattice limit $a^2\sum_s \xrightarrow{a\to0} \int\mathrm
 \]
 Thus, if the $\beta$ parameter is set to $\beta \equiv 1/(g^2a^2)$,
 the lattice action converges to the continuum action of Equation \eqref{eq:cont_action}.
+
+\subsection*{Lattice topological charge}
+
+The topological charge was defined in Equation \eqref{eq:top_charge_density} and \eqref{eq:top_charge}.
+It depends linearly on the gauge field tensor, and,
+considering the plaquette loop of Equation \eqref{eq:plaq},
+it is clear that the complex argument if it provides the correct dependence.
+In fact:
+\[
+    \begin{aligned}
+        \sum_s\arg\Pi_{\hat x\hat y}(s) &= \sum_s\arg e^{ig\left[a^2F_{12}(s) + \mathcal O\left(a^3\right)\right]} \\
+                                        &= ga^2\sum_s\left[F_{12}(s) + \mathcal O\left(a\right)\right] \\
+                                        &\xrightarrow{a\to0} g\int\mathrm d^2x\,F_{12}(s) = 2\pi Q
+    \end{aligned}
+\]
+The topological charge on the lattice can than be defined as:
+\begin{equation}\label{eq:lat_top_charge}
+    Q^L \equiv \frac{1}{2\pi}\sum_s\arg\Pi_{\hat x\hat y}(s)
+\end{equation}
+
+Finally, it remains to define $q^L(s)$, the lattice variant of topological charge density.
+In a discretized space, rather than defining a continuous density,
+it is more useful to define a local quantity associated with the most elementary two dimensional object (\ie a plaquette),
+which has an area of $a^2$.
+The local topological charge in the lattice should then converge to the topological charge of a plaquette in the infinitesimal lattice limit:
+\[
+    q^L(s) \xrightarrow{a\to0} a^2q(s)
+\]
+This limit is verified with the following definition:
+\begin{equation}\label{eq:lat_loc_top_charge}
+    q^L(s) \equiv \frac{1}{2\pi}\arg U[\mathcal P(s)]
+\end{equation}
+The sum of all local topological charges returns the total topological charge, as it should be:
+\[
+    Q^L = \sum_sq^L(s)
+\]
 
 \subsection*{Monte Carlo simulations and continuum limit}
 
@@ -361,16 +418,6 @@ However, with the implementation of the cluster algorithm of Chapter \ref{ch:clu
 The infinite volume limit will not be treated in this work,
 because it would not be useful to evaluate the cluster algorithm,
 since the topological freezing affects only the extrapolation of the continuum limit.
-
-\subsection*{Lattice topological charge}
-
-
-
-
-
-
-
-
 
 %*****************************************
 %*****************************************
