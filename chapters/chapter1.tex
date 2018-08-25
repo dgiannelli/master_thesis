@@ -121,13 +121,13 @@ the result of the circulation is:
 \[
     \lim_{R\to\infty}\oint\limits_{\partial S}\mathrm dl_\mu\,A^G_\mu(x) = \frac{2\pi}{g} Q
 \]
-where $Q \equiv Q_+ - Q_-$ is the topological charge, \ie the net number of times $\theta(x)$ has wrapped around the interval $(-\pi,\pi]$,
+where $Q \equiv Q_+ - Q_- \in \mathbb Z$ is the topological charge, \ie the net number of times $\theta(x)$ has wrapped around the interval $(-\pi,\pi]$,
 and $Q$ is positive if the winding has happened from the positive direction, while it is negative if from the other side.
 
 Applying Stokes theorem:
 \begin{align*}
-    Q &= \frac{g}{2\pi}\lim_{R\to\infty}\oint\limits_{\partial S}\mathrm dl_\mu\,A^G_\mu(x) \\
-      &= \frac{g}{2\pi}\lim_{R\to\infty}\int\limits_S\mathrm d\vv s\,\cdot \vv\nabla \times \vv A^G(x) \\
+    Q &= \frac{g}{2\pi}\lim_{R\to\infty}\oint\limits_{\partial S}\mathrm dt_\mu\,A^G_\mu(t) \\
+      &= \frac{g}{2\pi}\lim_{R\to\infty}\int\limits_S\mathrm d\vv s\,\cdot \vv\nabla \times \vv A^G(\vv s) \\
       &= \frac{g}{2\pi}\lim_{R\to\infty}\int\limits_S\mathrm d^2x\, \left(\partial_1 A^G_2(x) - \partial_2 A^G_1(x)\right) \\
       &= \frac{g}{2\pi}\lim_{R\to\infty}\int\limits_S\mathrm d^2x\, F^G_{12}(x) \\
       &= \frac{g}{4\pi}\lim_{R\to\infty}\int\limits_S\mathrm d^2x\, \epsilon_{\mu\nu}F^G_{\mu\nu}(x)
@@ -138,166 +138,183 @@ the definition of the topological charge density becomes then clear:
 \end{equation}
 and its integral over all the space is the topological charge:
 \begin{equation}\label{eq:top_charge}
-    Q = \int\mathrm d^2x\,q(x)
+    Q \equiv \int\mathrm d^2x\,q(x)
 \end{equation}
 
 Finally, being $\vv B(x) = \vv\nabla \times \vv A(x)$, the charge density is proportional to the flux of the magnetic field across an infinitesimal surface,
 and the total charge is proportional to the total flux.
 
 \section{Lattice formulation}
-The goal is to compute physical observables numerically, and the expectation value \eqref{eq:cont_exp} provide a way to do that.
+The goal is to compute physical observables numerically, and the expectation value \eqref{eq:cont_exp} provides a way to do that.
 However, both the numerator and the denominator are divergent in the continuum, and it is necessary an integral regularization to isolate the divergent term,
 and hence remove it.
 
-The idea of lattice regularization is to define a theory on a discrete space time lattice with the requirement that,
-when the lattice becomes finer, the lattice theory approaches to the continuum theory.
+The idea of lattice regularization is to define a theory on a discrete space-time grid of points, \ie a lattice,
+with the requirement that, when the grid spacing becomes finer,
+the lattice theory approaches to the continuum theory.
 
 The path integrals are then approximated with finite dimensional integrals,
 and the continuum expectation value \eqref{eq:cont_exp} is obtained as the continuum limit of the lattice approximated expectation value.
 
-It is then necessary to provide new definition for the action and the topological charge on the lattice,
-and they need to converge to the continuum definition when the lattice spacing approaches zero.
+It is then necessary to provide new definitions for the action and the topological charge on the lattice,
+and they need to converge to the continuum definition if the lattice spacing approaches to zero.
 
 Once the lattice theory is defined, it remains to describe how to compute expectation values with Monte Carlo simulations, and how to extrapolate the continuum limit.
 
 \subsection*{Gauge invariant objects}
 
-It is convenient to define an action that is already exactly gauge invariant, even when far from the continuum limit.
+It is convenient to define an action that is already exactly gauge invariant, even when the space is discrete and far from being continuous.
 By doing so, not only it prevents a further bias to be added when extrapolating the continuum limit,
 but it is also possible to apply gauge transformations of the fields without modifying the energy of the system.
-It will be shown that the latter property is crucial for the performance of the cluster algorithm described in Chapter \ref{ch:cluster}.
+It will be shown that this latter property is crucial for the performance of the cluster algorithm described in Chapter \ref{ch:cluster}.
 
 To easily implement gauge invariance, it is useful to encapsulate gauge fields inside \emph{Wilson lines}, which are defined over continuous paths in the space.
 Let $\mathcal C(x,y)$ be a path that goes from $x$ to $y$. The correspondent Wilson line is:
 \[
-    U[\mathcal C(x,y)] = e^{ig\int_{\mathcal C(x,y)}\mathrm dz_\mu\,A_\mu(z)} \in U(1)
+    U[\mathcal C(x,y)] = e^{ig\int_{\mathcal C(x,y)}\mathrm dt_\mu\,A_\mu(t)} \in U(1)
 \]
-Under a gauge transformation $G(x) \equiv e^{i\theta(x)}$, the \emph{Wilson line} transformation is:
+Under a gauge transformation $G(x) \equiv e^{i\theta(x)}$, the Wilson line transformation is:
 \begin{equation}\label{eq:path_gauge}
     \begin{aligned}
-    U[\mathcal C(x,y)] \rightarrow U'[\mathcal C(x,y)] &= e^{ig\int_{\mathcal C(x,y)}\mathrm dz_\mu\,\left(A_\mu(z) - \frac{1}{g}\partial_\mu\theta(x)\right)} \\
+    U[\mathcal C(x,y)] \rightarrow U'[\mathcal C(x,y)] &= e^{ig\int_{\mathcal C(x,y)}\mathrm dt_\mu\,\left(A_\mu(t) - \frac{1}{g}\partial_\mu\theta(t)\right)} \\
                                                        &= U[\mathcal C(x,y)]\,e^{i(\theta(x) - \theta(y))} \\
                                                        &= G(x)U[\mathcal C(x,y)]G^{-1}(y)
     \end{aligned}
 \end{equation}
-If the path is closed, the the correspondent Wilson line, \ie a \emph{Wilson loop}, is gauge invariant:
+Thus, if the path is closed, the the correspondent Wilson line, \ie a \emph{Wilson loop}, is gauge invariant:
 \[
-    U[\mathcal C(x,x)] \rightarrow U[\mathcal C(x,x)]
+    U[\mathcal C(x,x)] \rightarrow G(x)U[\mathcal C(x,x)]G^{-1}(x) = U[\mathcal C(x,x)]
 \]
 
 Wilson loops are then the required invariant objects since they can be constructed also on a discrete space,
 and the lattice gauge invariant action will be expressed in terms of them.
 
 \subsection*{Lattice sites, links and plaquettes}
-Let the two dimensional space be discretized into a squared grid of points, \ie a lattice, and let $a$ be the side of the squares.
-A grid point is usually called \emph{site} and its coordinates labelled with an index $n$.
-The site of coordinates $n + \hat\mu$ with $\mu \in {1,2}$ corresponds to the point that has the $\mu$th coordinate increased by $a$.
+Let the two dimensional space be discretized into a squared lattice, and let $a$ be the side of the squares.
+A grid point is usually called \emph{site} and its coordinates will be labelled with an index $s$.
+The site $s + \hat\mu$ with $\mu \in {1,2}$ corresponds to the point that has the $\mu$th coordinate increased by $a$.
 
 The most elementary path that can be defined on the lattice is a \emph{link},
-\ie a straight line of length $a$ that connects two adjacent sites (Figure \ref{fig:links}).
+\ie a straight line of length $a$ that connects two adjacent sites.
+The link that connects $s$ to $s+\hat\mu$ will be called $\mathcal L_{\hat\mu}(s)$ (Figure \ref{fig:links}).
 \begin{figure}[!htb]
     \centering
     \rule{3in}{1.5in}
     \caption{Wilson lines over links}
     \label{fig:links}
 \end{figure}
-The Wilson line evaluated over the link that connects $n$ to $n+\hat\mu$ is:
+
+The Wilson line evaluated over $\mathcal L_{\hat\mu}(s)$ is:
 \begin{equation}\label{eq:link}
     \begin{aligned}
-        U_{\hat\mu}(n) &\equiv e^{ig\int_n^{n+\hat\mu}\mathrm dz_\mu\,A_\mu(z)} \\
-                       &= e^{ig\int_n^{n+\hat\mu}\mathrm dz_\mu\,\left[A_\mu(n+\hat\mu/2) + (z_\mu-n-\hat\mu/2)\partial_\mu A_\mu(n+\hat\mu/2)%
-                                                                                     + \mathcal O\left((z_\mu-n-\hat\mu/2)^2\right)\right]} \\
-                       &= e^{ig\left[aA_\mu(n+\hat\mu/2) + \mathcal O\left(a^3\right)\right]}
+        U[\mathcal L_{\hat\mu}(s)] &\equiv e^{ig\int_s^{s+\hat\mu}\mathrm dt_\mu\,A_\mu(t)} \\
+                       &= e^{ig\int_s^{s+\hat\mu}\mathrm dt_\mu\,\left[A_\mu(s) + \mathcal O\left(t_\mu-s\right)\right]} \\
+                       &= e^{iga\left[A_\mu(s) + \mathcal O\left(a\right)\right]}
     \end{aligned}
 \end{equation}
-Thus, in the limit $a \to 0$, it is related to the gauge field evaluated at the midpoint of the link.
-These link Wilson lines are also called \emph{link variables}, and the lattice action will be expressed in terms of them,
+Thus, in the limit $a \to 0$, it is related to the gauge field evaluated at site $s$.
+Wilson lines over links are also called \emph{link variables}, and the lattice action will be expressed in terms of them,
 encapsulating the gauge fields inside link variables.
 
 If the link path is evaluated in the opposite direction, the value is its complex conjugate (or its inverse):
 \[
-    U_{-\hat\mu}(n+\hat\mu) = e^{ig\int^n_{n+\hat\mu}\mathrm dz_\mu\,A_\mu(z)} = e^{-ig\int_n^{n+\hat\mu}\mathrm dz_\mu\,A_\mu(z)} = U^*_{\hat\mu}(n)
+    U[\mathcal L_{-\hat\mu}(n+\hat\mu)] = e^{ig\int^n_{n+\hat\mu}\mathrm dt_\mu\,A_\mu(t)}
+                                        = e^{-ig\int_n^{n+\hat\mu}\mathrm dt_\mu\,A_\mu(t)} = U^*[\mathcal L_{\hat\mu}(n)]
 \]
-For a finite lattice, the number of \emph{independent} link variables is then equal to the number of sites multiplied by the number of dimensions.
+For a finite lattice, the number of \emph{independent} link variables is then equal to the number of links that are present,
+\ie the number of sites multiplied by the number of dimensions.
 
-A local gauge transform $G(n) \in U(1)$ applied to site $n$ affects all links connected to it.
-Using Equation \eqref{eq:path_gauge}, the transformation of link variables is:
+if a local gauge transform $G(s) \in U(1)$ applied to site $s$, it affects all link variables connected to it.
+Using Equation \eqref{eq:path_gauge}, the transformation of link variables are:
 \begin{equation}\label{eq:site_gauge}
     \begin{aligned}
         &\begin{dcases}
-        U_\mu(n) \rightarrow G(n)U_\mu(n) \\
-        U_{-\mu}(n) \rightarrow G(n)U_{-\mu}(n)
-        \end{dcases}%
-        &%
-        \begin{dcases}
-        U_\mu(n-\hat\mu) \rightarrow U_\mu(n-\hat\mu)G^*(n) \\
-        U_{-\mu}(n+\hat\mu) \rightarrow U_{-\mu}(n+\hat\mu)G^*(n)
-        \end{dcases}&
+            U[\mathcal L_\mu(s)] \rightarrow G(s)U[\mathcal L_\mu(s)] \\
+            U[\mathcal L_{-\mu}(s)] \rightarrow G(s)U[\mathcal L_{-\mu}(s)]
+        \end{dcases} \\
+        &\begin{dcases}
+            U[\mathcal L_\mu(s-\hat\mu)] \rightarrow U[\mathcal L_\mu(s-\hat\mu)]G^*(s) \\
+            U[\mathcal L_{-\mu}(s+\hat\mu)] \rightarrow U[\mathcal L_{-\mu}(s+\hat\mu)G^*(s)]
+        \end{dcases}
     \end{aligned}
 \end{equation}
-This means that if a link variable is coming from site $n$, it will be multiplied by $G(n)$, but,
-if it is going toward site $n$, it will be multiplied by $G^*(n)$.
-This kind of gauge transformations is very important for this work because the cluster algorithm described in Chapter \ref{ch:cluster}
-will perform a sequence of them before cluster inversion.
+This means that if a link variable is coming from site $s$, it will be multiplied by $G(s)$, but,
+if it is going toward site $s$, it will be multiplied by $G^*(s)$.
+This kind of gauge transformations are very important for this work, because the cluster algorithm described in Chapter \ref{ch:cluster}
+will perform a sequence of them before being ready for cluster inversion.
 
-Any Wilson line on the lattice can be expressed in terms of link variables,
-in fact, decomposing a lattice line $\ell$ as a sequence $\ell_1, \ell_2, \ldots$ of links (Figure \ref{fig:line}),
-\begin{figure}[!htb]
-    \centering
-    \rule{3in}{1.5in}
-    \caption{Generic lattice Wilson line}
-    \label{fig:line}
-\end{figure}
-the Wilson line evaluated over $\ell$ is simply given by the product of the correspondent links variables:
-\begin{align*}
-    U[\ell] &= e^{ig\int_\ell\mathrm dz_\mu\,A_\mu(z)} \\
-            &= e^{ig\left[\int_{\ell_1}\mathrm dz_\mu\,A_\mu(z) + \int_{\ell_2}\mathrm dz_\mu\,A_\mu(z) + \cdots \right]} \\
-            &= U[\ell_1]U[\ell_2] \cdots
-\end{align*}
+%A generic lattice path consists in a polygonal chain of links (Figure \ref{fig:path}),
+%\begin{figure}[!htb]
+%    \centering
+%    \rule{3in}{1.5in}
+%    \caption{Generic lattice Wilson line}
+%    \label{fig:path}
+%\end{figure}
+%and the corresponding Wilson line can be expressed in terms of the link variables.
+%in fact, calling $\mathcal C$ the generic path, and $\mathcal L_1, \mathcal L_2, \ldots$ ,
+%the Wilson line evaluated over $\ell$ is simply given by the product of the correspondent links variables:
+%\begin{align*}
+%    U[\ell] &= e^{ig\int_\ell\mathrm dz_\mu\,A_\mu(z)} \\
+%            &= e^{ig\left[\int_{\ell_1}\mathrm dz_\mu\,A_\mu(z) + \int_{\ell_2}\mathrm dz_\mu\,A_\mu(z) + \cdots \right]} \\
+%            &= U[\ell_1]U[\ell_2] \cdots
+%\end{align*}
 
 It remains to define the elementary gauge invariant object: the \emph{plaquette} Wilson loop.
-A lattice plaquette is a grid square. Its sides are four links and its corners are four sites.
-The shortest possible Wilson loop is a closed loop around a plaquette.
+A lattice plaquette is a grid square, and the shortest possible Wilson loop is a closed loop around a plaquette.
 It has a very important physical relevance, and, to understand why,
 it is necessary to express it in terms of the gauge fields.
-Considering a link loop that starts from site $s$ and runs anticlockwise (Figure \ref{fig:plaq}),
-the corresponding Wilson line is:
+
 \begin{figure}[!htb]
     \centering
     \rule{3in}{1.5in}
     \caption{Plaquette Wilson loop}
     \label{fig:plaq}
 \end{figure}
+Let $\mathcal P(s)$ be the path that starts from site $s$ and runs counter-clockwise around the plaquette (Figure \ref{fig:plaq}).
+Computing the corresponding Wilson loop using Equation \eqref{eq:link}:
+\begin{equation*}
+    \begin{aligned}
+        U[\mathcal P(s)] &\equiv U[\mathcal L_{\hat 1}(s)] U[\mathcal L_{\hat 2}(s+\hat 1)] U[\mathcal L_{-\hat 1}(s+\hat 1+\hat 2)] U[\mathcal L_{-\hat 2}(s+\hat 2)] \\
+                              &= U[\mathcal L_{\hat 1}(s)] U[\mathcal L_{\hat 2}(s+\hat 1)] U^*[\mathcal L_{\hat 1}(s+\hat 2)] U^*[\mathcal L_{\hat 2}(s)] \\
+                              &= e^{iga[A_1(s) + A_2(s+\hat 1) - A_1(s+\hat 2) - A_2(s) + \mathcal O\left(a\right)]} \\
+                              &= e^{iga[a\partial_1A_2(s) - a\partial_2A_1(s) + \mathcal O\left(a\right)]} \\
+                              &= e^{iga\left[\mathcal O\left(a\right)\right]}
+    \end{aligned}
+\end{equation*}
+does not provide any useful result. However, expanding further Equation \eqref{eq:link}:
+\begin{equation*}%\label{eq:link}
+    \begin{aligned}
+        U[\mathcal L_{\hat\mu}(s)] &\equiv e^{ig\int_s^{s+\hat\mu}\mathrm dt_\mu\,A_\mu(t)} \\
+                       &= e^{ig\int_s^{s+\hat\mu}\mathrm dt_\mu\,\left[A_\mu(s) + (t_\mu-s)\partial_\mu A_\mu(s) + \mathcal O\left((t_\mu-s)^2\right)\right]} \\
+                       &= e^{iga\left[A_\mu(s) + \frac{a}{2}\partial_\mu A_\mu(s) + \mathcal O\left(a^2\right)\right]} \\
+    \end{aligned}
+\end{equation*}
+it is possible to compute the leading order of the plaquette Wilson loop:
 \begin{equation}\label{eq:plaq}
     \begin{aligned}
-        \Pi_{\hat x\hat y}(s) &\equiv U_{\hat x}(s) U_{\hat y}(s+\hat x) U_{-\hat x}(s+\hat x+\hat y) U_{-\hat y}(s+\hat y) \\
-                              &= U_{\hat x}(s) U_{\hat y}(s+\hat x) U^*_{\hat x}(s+\hat y) U^*_{\hat y}(s) \\
-                              &= e^{iga[A_1(s+\hat x/2) + A_2(s+\hat x+\hat y/2) - A_1(s+\hat x/2+\hat y) - A_2(s+\hat y/2)]+ \mathcal O\left(a^3\right)} \\
-                              &= e^{iga^2[\partial_1A_1(s)/2 + \partial_1A_2(s) + \partial_2A_2(s)/2 - \partial_1A_1(s)/2 - \partial_2A_1(s) - \partial_2A_2(s)/2] %
-                                    + \mathcal O\left(a^3\right)} \\
-                              &= e^{ig\left[a^2F_{12}(s) + \mathcal O\left(a^3\right)\right]}
+        U[\mathcal P(s)] &= e^{iga^2[\partial_1A_2(s) - \partial_2A_1(s) + \frac{1}{2}(\partial_1A_1(s) + \partial_2A_2(s) - \partial_1A_1(s) - \partial_2A_2(s)) %
+                                   + \mathcal O\left(a\right)]} \\
+                         &= e^{iga^2\left[F_{12}(s) + \mathcal O\left(a\right)\right]}
     \end{aligned}
 \end{equation}
-If $a \to 0$, from the plaquette Wilson loop starting at site $s$, is then possible to recover the gauge field tensor evaluated at $s$.
+If $a \to 0$, it is then related the gauge field tensor evaluated at $s$.
 
 \subsection*{Lattice action}
 
 The continuum action \eqref{eq:cont_action}, depends quadratically on the gauge field tensor.
 In order recover this dependence, it is useful to take the real part of the plaquette loop of Equation \eqref{eq:plaq} and expand it in terms of the field tensor:
 \begin{align*}
-    \Re\,\Pi_{\hat x\hat y}(s) &= \Re\,e^{ig\left[a^2F_{12}(s) + \mathcal O\left(a^3\right)\right]} \\
-                                          &= \cos\left[ga^2F_{12}(s) + \mathcal O\left(a^3\right)\right] \\
-                                          &= 1 - \frac{1}{2}g^2a^4F_{12}(s)^2 + \mathcal O\left(a^5\right) \\
-                                          &= 1 - \frac{1}{4}g^2a^4F_{\mu\nu}(s)F_{\mu\nu}(s) + \mathcal O\left(a^5\right)
+    \Re\,U[\mathcal P(s)] &= \cos\left[ga^2F_{12}(s) + \mathcal O\left(a^3\right)\right] \\
+                          &= 1 - \frac{1}{2}g^2a^4F_{12}(s)^2 + \mathcal O\left(a^5\right) \\
+                          &= 1 - \frac{1}{4}g^2a^4F_{\mu\nu}(s)F_{\mu\nu}(s) + \mathcal O\left(a^5\right)
 \end{align*}
-
-The lattice action in terms of the link variables can be written in the following form:
+In fact, defining the lattice action in the following form:
 \begin{equation}\label{eq:lat_action}
     \begin{aligned}
-        S^L[U] \equiv \beta\sum_s\left(1-\Re\,\Pi_{\hat x\hat y}(s)\right)
+        S^L[U] \equiv \beta\sum_s\left(1-\Re\,U[\mathcal P(s)]\right)
     \end{aligned}
 \end{equation}
-In fact, using the fine lattice limit $a^2\sum_s \xrightarrow{a\to0} \int\mathrm d^2x$:
+and using $a^2\sum_s \xrightarrow{a\to0} \int\mathrm d^2x$, the infinitesimal lattice limit is:
 \[
     S^L = \beta\sum_s\frac{1}{4}g^2a^4F_{\mu\nu}(s)F_{\mu\nu}(s) + \mathcal O\left(a^5\right)
       \xrightarrow{a\to0} \beta g^2a^2\int\mathrm d^2x\,\frac{1}{4}F_{\mu\nu}(x)F_{\mu\nu}(x)
