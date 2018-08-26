@@ -15,37 +15,40 @@
 \section*{The renascence of statistical sampling}
 Nicholas Metropolis defined in this way \cite{metropolis:1987} the period that began in 1945, after the building of ENIAC, the first general purpose electronic computer.
 Its first usage was in relation to the problem of the nuclear chain reaction.
-The success obtained brought a renascence of a mathematical technique known as statistical sampling, and its usage spread with a new name: the Monte Carlo method.
+The immediate success brought a renascence of a mathematical technique known as statistical sampling, and its usage spread with a new name: the Monte Carlo method.
 This name was used in scientific literature for the first time in 1949 by Metropolis and Ulam \cite{metropolis-ulam:1949}.
 
 The main idea of the Monte Carlo method is based on pseudorandom numbers, which are sequences of integer numbers whose properties approximate the properties of random numbers sequences.
 From pseudorandom numbers, it is possible to sample sequences of real numbers that are distributed according to a given probability density function.
 The applications of this principle are very broad: from numerical approximations of integrals and differential equations, to simulation of events that have a probabilistic nature.
 
-The impact on Physics was enormous. Theoretical physicists not only have a powerful method to compute the predictions of a theory, but is also possible to choose, from a wide-ranging class of theories, the one that is most compatible with experiments.
-The Monte Carlo method is also an essential tool for experimental physicists, who can simulate an experimental setup in order to estimate its performance, or to compare the results with the actual experimental results to find if there are problems with the apparatus, or maybe, to discover weakness in physics theories and start working to expand them.
+The impact on Physics was enormous. Theoretical Physics not only has a powerful method to compute the predictions of a theory, but it is also possible to choose
+from a wide-ranging class of theories, through simulation, the one that is most compatible with experiments.
+The Monte Carlo method is also an essential tool for Experimental Physics: it is possible to simulate an experimental setup to estimate its performance, or to compare the results with the actual experiments to find out if there are problems with the apparatus, or maybe, to discover weakness in Physics theories, and start working to expand them.
 
 \section*{From local algorithms to cluster algorithms}
-A class of problems in which the Monte Carlo method shines is the integral in a very high number of dimensions.
-Other methods, like the quadrature rules, suffer the so called \emph{curse of dimensionality}: the error of the approximation in terms of the number of function evaluations scales exponentially with the number of dimensions.
-For Monte Carlo, on the other hand, the scaling is independent from the number of dimensions.
+A class of problems in which the Monte Carlo method shines is the integration in a very high number of dimensions.
+Other methods, like quadrature rules, suffer the so called \emph{curse of dimensionality}:
+the error of the approximation in terms of the number of function evaluations scales exponentially with the number of dimensions.
+For Monte Carlo integration, on the other hand, the scaling is independent from the number of dimensions.
 
 A branch of Physics in which such integrals are very frequent is Statistical Mechanics.
-In order to compute mean values of observables at thermodynamic equilibrium,
-it is necessary to integrate the observable in all configuration in the phase space, weighted in accordance with the Boltzmann distribution.
-If it is possible to sample the configurations from the Boltzmann distribution,
-the arithmetic mean of the observable evaluated in all these configurations will converge to the correct result of the integral.
+In order to compute the mean value of an observable at thermodynamic equilibrium,
+it is necessary to integrate the observable in all configurations of the phase space, weighting them in accordance with the Boltzmann distribution.
 
 A very important step forward in this topic was achieved when Metropolis et al.\@ introduced in 1953 \cite{metropolis:1953} the Metropolis algorithm,
 which was further generalized by Hastings in 1970 \cite{hastings:1970} and it is usually referred as Metropolis-Hastings algorithm.
-Applying an accept/reject principle, it allows to generate Markov chains of configurations in the phase space that follow a given probability density function.
-Its generality and simplicity potentially allow to compute almost any integral that appears in Statistical Mechanics with an improved convergence rate.
+Applying an accept/reject principle, it allows to generate Markov chains of configurations of the phase space that follow a generic probability density function.
+It makes then possible to generate configurations in accordance with the Boltzmann distribution,
+and the expectation value of an observable can be approximated with its average over these configurations.
+This procedure is in general far simpler and more efficient than generating all possible configurations and weighting them afterwards.
 
-An important challenge in Markov chain sampling is achieving ergodicity,
-\ie the property according to which the sequence will eventually reach every point in the phase space in a finite number of steps.
+An important challenge in defining Markov chains is making them \emph{ergodic},
+\ie give them the possibility to eventually reach every point in the phase space in a finite number of steps.
 Without ergodicity, the Markov chain is actually sampling only a subset of the domain, thus, the integral result will probably be incorrect.
-Even if the algorithm is ergodic, if the number of steps needed to reach all relevant sectors of the phase space is too high
-with respect to the number of iterations the computer can perform in the available amount of time, the algorithm will effectively behave as it is not ergodic.
+Even if the algorithm is ergodic in principle,
+it can effectively behave as it was not ergodic if the number of steps needed to reach all relevant sectors of the phase space is too high
+with respect to the number of iterations the computer can perform in the available amount of time.
 
 An example of this problem is the two dimensional Ising model near the critical temperature.
 This system comprises a lattice of spins which can be oriented in two directions.

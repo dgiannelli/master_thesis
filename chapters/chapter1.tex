@@ -192,7 +192,7 @@ and the lattice gauge invariant action will be expressed in terms of them.
 \subsection*{Lattice sites, links and plaquettes}
 Let the two dimensional space be discretized into a squared lattice, and let $a$ be the side of the squares.
 A grid point is usually called \emph{site} and its coordinates will be labelled with an index $s$.
-The site $s + \hat\mu$ with $\mu \in {1,2}$ corresponds to the point that has the $\mu$th coordinate increased by $a$.
+The site $s + \hat\mu$, with $\hat\mu = \hat1,\hat2$, corresponds to the point that has the $\mu$th coordinate increased by $a$.
 
 The most elementary path that can be defined on the lattice is a \emph{link},
 \ie a straight line of length $a$ that connects two adjacent sites.
@@ -224,7 +224,7 @@ If the link path is evaluated in the opposite direction, the value is its comple
 For a finite lattice, the number of \emph{independent} link variables is then equal to the number of links that are present,
 \ie the number of sites multiplied by the number of dimensions.
 
-if a local gauge transform $G(s) \in U(1)$ applied to site $s$, it affects all link variables connected to it.
+If a local gauge transformation $G(s) \in U(1)$ is applied to site $s$, it affects all link variables connected to it.
 Using Equation \eqref{eq:path_gauge}, the transformation of link variables are:
 \begin{equation}\label{eq:site_gauge}
     \begin{aligned}
@@ -243,21 +243,21 @@ if it is going toward site $s$, it will be multiplied by $G^*(s)$.
 This kind of gauge transformations are very important for this work, because the cluster algorithm described in Chapter \ref{ch:cluster}
 will perform a sequence of them before being ready for cluster inversion.
 
-%A generic lattice path consists in a polygonal chain of links (Figure \ref{fig:path}),
-%\begin{figure}[!htb]
-%    \centering
-%    \rule{3in}{1.5in}
-%    \caption{Generic lattice Wilson line}
-%    \label{fig:path}
-%\end{figure}
-%and the corresponding Wilson line can be expressed in terms of the link variables.
-%in fact, calling $\mathcal C$ the generic path, and $\mathcal L_1, \mathcal L_2, \ldots$ ,
-%the Wilson line evaluated over $\ell$ is simply given by the product of the correspondent links variables:
-%\begin{align*}
-%    U[\ell] &= e^{ig\int_\ell\mathrm dz_\mu\,A_\mu(z)} \\
-%            &= e^{ig\left[\int_{\ell_1}\mathrm dz_\mu\,A_\mu(z) + \int_{\ell_2}\mathrm dz_\mu\,A_\mu(z) + \cdots \right]} \\
-%            &= U[\ell_1]U[\ell_2] \cdots
-%\end{align*}
+A generic lattice path consists in a polygonal chain of links (Figure \ref{fig:path}),
+\begin{figure}[!htb]
+    \centering
+    \rule{3in}{1.5in}
+    \caption{Generic lattice Wilson line}
+    \label{fig:path}
+\end{figure}
+and the corresponding Wilson line can be expressed in terms of the link variables.
+In fact, calling $\mathcal C$ the generic path, and $\mathcal L_1, \mathcal L_2, \ldots$ the links that form it,
+the Wilson line evaluated over $\mathcal C$ is the product of the link variables:
+\begin{align*}
+    U[\ell] &= e^{ig\int_{\mathcal C}\mathrm dt_\mu\,A_\mu(t)} \\
+            &= e^{ig\left[\int_{\mathcal L_1}\mathrm dt_\mu\,A_\mu(t) + \int_{\mathcal L_2}\mathrm dt_\mu\,A_\mu(t) + \cdots \right]} \\
+            &= U[\mathcal L_1]U[\mathcal L_2] \cdots
+\end{align*}
 
 It remains to define the elementary gauge invariant object: the \emph{plaquette} Wilson loop.
 A lattice plaquette is a grid square, and the shortest possible Wilson loop is a closed loop around a plaquette.
@@ -297,12 +297,12 @@ it is possible to compute the leading order of the plaquette Wilson loop:
                          &= e^{iga^2\left[F_{12}(s) + \mathcal O\left(a\right)\right]}
     \end{aligned}
 \end{equation}
-If $a \to 0$, it is then related the gauge field tensor evaluated at $s$.
+If $a \to 0$, it is then related the gauge field tensor evaluated at site $s$.
 
 \subsection*{Lattice action}
 
 The continuum action \eqref{eq:cont_action}, depends quadratically on the gauge field tensor.
-In order recover this dependence, it is useful to take the real part of the plaquette loop of Equation \eqref{eq:plaq} and expand it in terms of the field tensor:
+In order recover this dependence, it is useful to take the real part of the plaquette loop of Equation \eqref{eq:plaq} and expand it:
 \begin{align*}
     \Re\,U[\mathcal P(s)] &= \cos\left[ga^2F_{12}(s) + \mathcal O\left(a^3\right)\right] \\
                           &= 1 - \frac{1}{2}g^2a^4F_{12}(s)^2 + \mathcal O\left(a^5\right) \\
@@ -327,18 +327,18 @@ the lattice action converges to the continuum action of Equation \eqref{eq:cont_
 The topological charge was defined in Equation \eqref{eq:top_charge_density} and \eqref{eq:top_charge}.
 It depends linearly on the gauge field tensor, and,
 considering the plaquette loop of Equation \eqref{eq:plaq},
-it is clear that the complex argument if it provides the correct dependence.
+it is clear that the complex argument of it provides the correct dependence.
 In fact:
 \[
     \begin{aligned}
-        \sum_s\arg\Pi_{\hat x\hat y}(s) &= \sum_s\arg e^{ig\left[a^2F_{12}(s) + \mathcal O\left(a^3\right)\right]} \\
+        \sum_s\arg U[\mathcal P(s)] &= \sum_s\arg e^{iga^2\left[F_{12}(s) + \mathcal O\left(a\right)\right]} \\
                                         &= ga^2\sum_s\left[F_{12}(s) + \mathcal O\left(a\right)\right] \\
                                         &\xrightarrow{a\to0} g\int\mathrm d^2x\,F_{12}(s) = 2\pi Q
     \end{aligned}
 \]
 The topological charge on the lattice can than be defined as:
 \begin{equation}\label{eq:lat_top_charge}
-    Q^L \equiv \frac{1}{2\pi}\sum_s\arg\Pi_{\hat x\hat y}(s)
+    Q^L \equiv \frac{1}{2\pi}\sum_s\arg U[\mathcal P(s)]
 \end{equation}
 
 Finally, it remains to define $q^L(s)$, the lattice variant of topological charge density.
@@ -360,76 +360,77 @@ The sum of all local topological charges returns the total topological charge, a
 
 \subsection*{Monte Carlo simulations and continuum limit}
 
-Equation \eqref{eq:cont_exp} gives the expectation value of an observable $\mathcal O[A]$.
-If it is possible to define an operator $\mathcal O^L$ in terms of the link variables such that $\mathcal O^L[U] \xrightarrow{a\to0} \mathcal O[A]$,
+Equation \eqref{eq:cont_exp} gives the expectation value of an operator $\hat{\mathcal O}[A]$.
+If it is possible to define a function $\mathcal O^L$ of the link variables such that $\mathcal O^L[U] \xrightarrow{a\to0} \mathcal O[A]$,
 the lattice variant of the expectation value will be:
 \begin{equation}\label{eq:lat_exp}
-    \left<\mathcal O[U]\right>_L \equiv \frac{\int[\mathrm dU]\, \mathcal O[U] e^{-S^L[U]}}{\int[\mathrm dU]\,e^{-S^L[U]}}
+    \left<\hat{\mathcal O}^L[U]\right>_L \equiv \frac{\int[\mathrm dU]\, \mathcal O^L[U] e^{-S^L[U]}}{\int[\mathrm dU]\,e^{-S^L[U]}}
 \end{equation}
-Here, the dynamical variables are the lattice links $U \in U(1)$, and $dU$ is the Haar measure of $U(1)$.
+Here, the dynamical variables are the lattice Wilson lines $U \in U(1)$, \ie all the link variables, and $\mathrm dU$ is the Haar measure of $U(1)$.
 
-It is useful to describe the problem with concepts of \emph{probability theory}:
-$\mathcal O[U]$ can be seen as a function of random variables $\{U\}$ that follow a probability density function proportional to $e^{-S^L[U]}$,
-and the mean value of $\mathcal O[U]$ corresponds to the expectation value of Equation \eqref{eq:lat_exp}.
+It is useful to describe the problem in terms of \emph{probability theory} concepts:
+$\mathcal O^L[U]$ can be seen as a function of random variables $\{U\}$ that follow a probability density function proportional to $e^{-S^L[U]}$,
+and the mean value of $\mathcal O^L[U]$ corresponds to the expectation value of Equation \eqref{eq:lat_exp}.
 
-To compute $\left<\mathcal O[U]\right>_L$, the most common strategy employs Monte Carlo algorithms.
+To compute $\left<\mathcal O^L[U]\right>_L$, the most common strategy employs Monte Carlo algorithms.
 The procedure is organized in these steps:
 \begin{itemize}
-    \item The physical system has to be implemented on a computer: dynamical variables are stored in computer memory,
-        and appropriate functions are defined to evaluate the action and other physical observables in terms of the dynamical variables.
+    \item The physical system has to be implemented on a computer: link variables are stored in computer memory,
+        and appropriate functions are defined to evaluate $S^L$ and $\mathcal O^L$ in terms of the links.
         This step will be discussed in Chapter \ref{ch:lattice}.
-    \item A sequence of dynamical variable configurations is generated in agreement with the weight function $e^{-S^L}$, and, at each step,
-        the observables are evaluated in the current configuration and stored in computer memory. The details will be explained in Chapter \ref{ch:local}.
+    \item A sequence of link configurations is generated in agreement with the weight function $e^{-S^L}$ with the Monte Carlo method, and, at each step,
+        $\mathcal O^L$ is evaluated at the current configuration, and stored in computer memory. The details will be explained in Chapter \ref{ch:local}.
     \item The average of the stored values is computed, and, for the law of large numbers,
         it converges to the value of Equation \ref{eq:lat_exp} if the sequence is long enough.
 \end{itemize}
 
 However, the lattice expectation value \eqref{eq:lat_exp} converges to the value in the continuum \eqref{eq:cont_exp} only in the limit of infinitesimal lattice:
 \begin{equation}\label{eq:cont_limit}
-    \left<\mathcal O^L[U]\right>_L \xrightarrow{a\to0} \left<\mathcal O[A]\right>_E
+    \left<\hat{\mathcal O}^L[U]\right>_L \xrightarrow{a\to0} \left<\hat{\mathcal O}[A]\right>_E
 \end{equation}
-and this limit is not achievable on a computer because it would imply to operate on an infinite number of dynamical variables.
+and this limit is not achievable on a computer, because it would imply to operate on an infinite number of links.
 Two \emph{cutoffs} are then necessary: a finite lattice spacing $a$ (ultraviolet cutoff),
 and a finite volume, \ie a finite number $N$ of lattice sites along every direction (infrared cutoff).
 Usually, the finite volume is implemented with periodic boundary conditions, because ... 
 \marginpar{Chiedere chiarimenti sull'utilità delle condizioni periodiche. Riducono il bias dovuto al volume finito?}
 
 To recover the continuum limit and the infinite volume e limit,
-it is necessary to evaluate the expectation value at different parameter values in order to extrapolate the limits.
+it is necessary to evaluate the expectation value with different parameters in order to extrapolate the limits.
 In quantum field theories, this is in general a complicated problem,
-since theory parameters have to be renormalized and their value depends on the energy cutoff.
+since theory parameters have to be renormalized, and their value depends on the energy cutoff.
 
-Considering the space to be a finite sized cubic box with a side of length $L=Na$,
-the continuum limit is evaluated performing diffent simulations with different values of $N$, changing $a$ accordingly in order to maintain $L$ fixed.
+Letting the space be a finite sized cubic box with a side of length $L=Na$,
+the continuum limit can be evaluated performing diffent simulations with different values of $N$, changing $a$ accordingly in order to maintain $L$ fixed.
 In the considered theory, the action \eqref{eq:lat_action} depends on $a$ implicitly through the parameter $\beta = 1/(g^2a^2)$.
 
 In general, if the coupling constant $g$ needs to be renormalized,
 the renormalization group equations establish for $g$ a non-trivial dependence on the lattice spacing (\emph{running coupling constant}).
-If the theory exhibits asymptotic freedom (like QCD, for example), the continuum limit dependence of $g(a)$ can be studied perturbatively computing the $\beta_L$ function:
+If the theory exhibits asymptotic freedom (like QCD, for example), the continuum limit dependence of $g(a)$ can be studied perturbatively, computing the $\beta_L$ function:
 \[
     \beta_L(g) \equiv -a\frac{\partial g}{\partial a}
 \]
 
 However, for the two dimensional $U(1)$ gauge theory, the $\beta_L$ function is zero, and the coupling constant $g$ is then independent from the lattice spacing $a$.
-Thus, the action parameter $beta$ dependence on $a$ is simply:
-\marginpar{Serve una dimostrazione che $\beta_L=0$? Oppure basta una citazione?}
+Thus, the action parameter $\beta$ dependence on $a$ is simply:
+\marginpar{Serve una dimostrazione che $\beta_L=0$? Oppure basta una citazione? Quale?}
 \[
     \beta(a) \propto a^{-2}
 \]
 In order to keep the side of the box $L$ constant, the product of $a$ and $N$ should be constant,
-thus, the action parameter $\beta$ and the number of sites at each direction should follow the \emph{line of constant physics}:
+thus, the action parameter $\beta$ and the number of sites at each direction $N$ should follow the \emph{line of constant physics}:
 \begin{equation}\label{eq:const_phys}
     \frac{\beta}{N^2} = \text{constant}
 \end{equation}
 
 To extrapolate the contunuum limit of Equation \eqref{eq:cont_limit},
 one then needs to evaluate different expectation values of Equation \eqref{eq:lat_exp},
-one for each pair of parameters $(\beta,N)$ chosen on the line of constant physics of Equation \eqref{eq:const_phys}.
-The continuum limit corresponds to the limit $1/\beta\to0$ and it can be extrapolated with a curve fit.
-The more the pair of parameters can be close to the continuum limit, the more the curve fit will be realistic,
-since lattice artifacts would be more suppressed with those parameters. 
+one for each pair of parameters $(\beta,N)$, chosen on the line of constant physics of Equation \eqref{eq:const_phys}.
+The continuum limit corresponds to the limit $1/\beta\to0$, and it can be extrapolated with a curve fit.
 
-As it will be shown in Chapter \ref{ch:local}, the topological freezing sets a threshold to how far it is possible to proceed toward the continuum with a local algorithm.
+The more the pair of parameters are close to the continuum limit, the more the curve fit will be realistic,
+since lattice artifacts would be more suppressed. 
+
+As it will be shown in Chapter \ref{ch:local}, the topological freezing sets a threshold in how far it is possible to proceed toward the continuum with a local algorithm.
 However, with the implementation of the cluster algorithm of Chapter \ref{ch:cluster}, this threshold will be removed.
 
 The infinite volume limit will not be treated in this work,
