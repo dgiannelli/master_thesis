@@ -50,13 +50,13 @@ Even if the algorithm is ergodic in principle,
 it can effectively behave as it was not ergodic if the number of steps needed to reach all relevant sectors of the phase space is too high
 with respect to the number of iterations the computer can perform in the available amount of time.
 
-An example of this problem is the two dimensional Ising model near the critical temperature.
-This system comprises a lattice of spins which can be oriented in two directions.
+An example of this problem is the two dimensional Ising model near the \emph{critical temperature}.
+This system comprises a lattice of spins that can be oriented in two possible directions.
 Each pair of adjacent spins gives a contribute to the total energy: if they are aligned, the contribute is negative, otherwise it is positive.
 At thermodynamic equilibrium, if the temperature is above the critical temperature and in absence of external magnetic fields, the mean magnetization of the system is zero.
 Below the critical temperature, most of the spins are aligned in the same direction, producing a non-zero mean magnetization.
 Varying the temperature in a range of values that are still greater than the critical temperature, but very close to it,
-it is possible to observe a critical behaviour: distinct cluster of spins aligned internally all together start arising.
+it is possible to observe a critical behaviour: distinct clusters of spins aligned internally all together start arising.
 The size of these clusters keeps increasing as the temperature approaches the critical value.
 
 In terms of a Monte Carlo simulation, this cluster structure has important implications.
@@ -67,41 +67,41 @@ Because of this fact, the most straightforward way to sample all the configurati
 changing only one spin at each iteration of the program. This is what is called a local Monte Carlo.
 However, when the system is divided into clusters, local algorithms show their weakness.
 Updating the spins one per time makes very unlikely that a whole cluster can be reversed,
-and this problem gets worse when the cluster size increases.
-This is the \emph{critical slowing down}: the correlation length between the configurations increases exponentialy approaching the critical temperature.
+and this problem gets worse when the clusters size increases.
+This is the \emph{critical slowing down}: the correlation length between the configurations increases exponentialy approaching toward the critical temperature.
 
 A solution to the slowing down for the Ising model\footnote{It applies also to the more general Potts model} was found by Swendsen and Wang in 1987 \cite{swendsen-wang:1987}.
 They found a way to sample the Boltzman distribution inverting many contiguous and parallel spins all together.
-It is recorded as the first cluster algorithm.
+It is recorded as the first \emph{cluster algorithm}.
 In 1989, Wolff \cite{wolff:1989} improved this algorithm and extended it also to continuous spin models.
 
 Cluster algorithms have a chance to update big groups of elements, and, if they are well defined,
 the size of these groups is scalable together with the typical size of the clusters present in the system.
-\emph{Critical slowing down} can then be heavily dampened, making the simulations affordable even in critical conditions.
+Critical slowing down can then be heavily dampened, making simulations affordable even in critical conditions.
 
 However, the difficulty in creating cluster algorithms is to find a way to efficiently update big parts of the system without compromising the Boltzmann distribution.
-This has to be done exploiting properties of the considered system, and, consequently, the algorithm is specifically tailored for systems that share those properties.
+This has to be done exploiting properties of the considered system, and, consequently, the algorithm will be specifically tailored for systems that share these properties.
 For example, Wolff algorithm can be extended to the most generic continuous spin system on a lattice,
 but any good solution was not found to extend it to the hard sphere model,
 \ie a system in which solid spheres can move in space without overlapping.
 The first efficient cluster algorithm for this model was found 1995 by Dress and Krauth \cite{dress-krauth:1995}.
-It is called \emph{the pivot algorithm} and was formulated specifically for hard spheres and related systems\footnote{Like binary mixtures or dimers, for example},
+It is called \emph{the pivot algorithm} and was formulated specifically for hard spheres and related systems\footnote{Such as binary mixtures or dimers, for example},
 independently from the efforts that have been made to extend Wolff algorithm.
 
-Another important case of \emph{critical slowing down} is \emph{topological freezing}.
+Another important case of critical slowing down is \emph{topological freezing}.
 It affects Quantum Cromodynamics\footnote{As well as other quantum theories with a non-trivial topological structure}
-when is studied with the Monte Carlo method in its lattice formulation, \ie Lattice QCD.
+when it is studied with the Monte Carlo method in its lattice formulation, \ie Lattice QCD.
 
 \section*{Lattice QCD and topological freezing}
-Quantum Cromodynamics is the quantum field theory that describes the \emph{strong interation},
+\emph{Quantum Cromodynamics} is the quantum field theory that describes the \emph{strong interation},
 which concerns the coupling between \emph{quarks} (the constituents of nucleons and mesons) and \emph{gluons} (massless particles, mediators of the interaction).
-It is formulated as a non-abelian gauge theory, with gauge group SU(3),
+It is formulated as a non-abelian gauge theory, with gauge group $SU(3)$,
 in which quark fields lie in the foundamental representation of the group and gluon fields are the gauge fields.
 The conserved charge associated with the gauge group is called \emph{color charge} and is the analogous of the \emph{electric charge} in electrodynamics.
 
 This formulation for the theory of strong interation was introduced in 1973 by Fritzsch, Leutwyler and Gell-Mann \cite{fritzsch:1973},
 and it is based on the general field theory developed by Yang and Mills in 1954 \cite{yang-mills:1954}.
-It came after years of important theoretical contributions that followed the experimental discovery of a growing number of hadrons in 1950s.
+It came after years of important theoretical contributions that followed the experimental discovery of a growing number of hadrons in the 1950s.
 
 In 1973, Gross, Wilczek \cite{gross-wilczek:1973} and Politzer \cite{politzer:1973} discovered an important property of QCD: \emph{asymptotic freedom}.
 As the energy scale increases, the strenght of the interaction decreases,
@@ -130,31 +130,35 @@ though the effort is harder as continuum is approached.
 
 In the context of Markov chain Monte Carlo simulations, homotopy class partitioning results in a loss of ergodicity.
 The correlation time of topological charge increases exponentially as the lattice gets finer.
-This is an instance of \emph{critical slowing down}, and is called \emph{topological freezing}.
+This is an instance of critical slowing down, and it is called \emph{topological freezing}.
 
-The demand for an efficient topological charge sampling is very high, and it is a problem that is currently not resolved.
+The demand for an efficient topological charge sampling method is very high, since it is a problem that is currently not resolved.
 It is of a great physical interest, especially because there are particle masses directly related to topological charge:
-the $\eta'$ meson mass, whose high value has an explaination with the Witten-Veneziano mechanism \cite{witten:1979-1, witten:1979-2, veneziano:1979},
-and the mass of the axion, which is an hypothetical particle postulated by Weinberg \cite{weinberg:1978} and Wilczek \cite{wilczek:1978}
+the $\eta'$ meson mass, whose high value has an explaination within the Witten-Veneziano mechanism \cite{witten:1979-1, witten:1979-2, veneziano:1979},
+and the mass of the \emph{axion}, which is an hypothetical particle postulated by Weinberg \cite{weinberg:1978} and Wilczek \cite{wilczek:1978}
 in the context of Peccei-Quinn model \cite{peccei-quinn:1977-1, peccei-quinn:1977-2}.
-The weakness of the coupling between the axion and the Standard Model, makes it a good candidate to be \emph{dark matter}.
-The experimental dicovery of the axion could be a great step in understanding the nature of \emph{dark matter}, which is one of the main problems in modern Physics.
+The weakness of the coupling between the axion and the Standard Model makes it a good candidate to be \emph{dark matter}.
+The experimental dicovery of the axion could be a great step in understanding the nature of dark matter, which is one of the main goal of modern Physics.
 An accurate value of the axion mass from lattice QCD simulations would indicate the point of the energy spectrum in which the axion should be,
-and its existence could be verified experimentally.
+and its existence could then be verified experimentally.
 
 The topological charge is the integral of a local quantity, the topological charge density%
-\footnote{In QCD, topological charge density rose from studies about anomalous symmetries, as it is proportional to the anomaly of the axial U(1) symmetry},
+\footnote{In QCD, topological charge density rose from studies about anomalous symmetries, as it is proportional to the anomaly of the axial $U(1)$ symmetry},
 which is a functional of gauge fields configurations.
-Studying its spatial distribution in lattice QCD simulations close enough to continuum limit, in condition of \emph{topological freezing}, it exhibits an interesting structure.
+Studying its spatial distribution in lattice QCD simulations close enough to the continuum limit, in condition of topological freezing, it exhibits an interesting structure.
 Some regions of the space contribute with a certain topological charge, which can be positive or negative, and,
 fast forwarding the configurations of the Markov chain,
-those regions may deform and move around in the space, but their single contribute to the total charge doesn't change.
-They are the discretized version of instantons, which are exact solution of the classical equation of motion.
+those regions may deform and move around in the space, but their net contribute to the total charge does not change.
+They are the discretized version of instantons, which are exact solutions of the classical equation of motion.
 They have a definite integer topological charge, and their existence proves the non-triviality of QCD topology.
-
 The cluster stucture of topologically frozen configurations suggests that a cluster algorithm would be the perfect solution to the problem.
-However, it hasn't been found yet, and only partial solutions of the problem have been developed.%
-\marginpar{Chiedere ai prof. una breve descrizione dei principali metodi usati per aggirare il top. freezing}
+However, it hasn't been found yet, and many strategies to dampen the problem have been developed.
+
+For example, implementing the lattice with open boundary conditions instead of periodic \cite{luescher:2011}
+removes topological freezing with the cost of an increased finite volume bias, since translational symmetry is lost.
+Another possible choice for lattice topology is to implement the system on a non-orientable manifold \cite{mages:2017}.
+In this case, the finite volume bias is smaller than with open boundaries, since translational symmetry is preserved.
+However, the implementation of quarks on non-orientable manifolds is not trivial and it causes some limitations.
 
 \section*{A toy model for QCD}
 Lattice QCD simulations are, in general, difficult to implement and computationally very expensive.
