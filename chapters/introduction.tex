@@ -151,14 +151,24 @@ fast forwarding the configurations of the Markov chain,
 those regions may deform and move around in the space, but their net contribute to the total charge does not change.
 They are the discretized version of instantons, which are exact solutions of the classical equation of motion.
 They have a definite integer topological charge, and their existence proves the non-triviality of QCD topology.
-The cluster stucture of topologically frozen configurations suggests that a cluster algorithm would be the perfect solution to the problem.
-However, it hasn't been found yet, and many strategies to dampen the problem have been developed.
 
-For example, implementing the lattice with open boundary conditions instead of periodic \cite{luescher:2011}
-removes topological freezing with the cost of an increased finite volume bias, since translational symmetry is lost.
-Another possible choice for lattice topology is to implement the system on a non-orientable manifold \cite{mages:2017}.
-In this case, the finite volume bias is smaller than with open boundaries, since translational symmetry is preserved.
-However, the implementation of quarks on non-orientable manifolds is not trivial and it causes some limitations.
+Many strategies have been developed to dampen the problem of topological freezing.
+For example, it is possible to evaluate the finite volume bias that is introduced in condition of fixed topology,
+and reduce it with extrapolations \cite{brower:2003}.
+
+Otherwise, implementing the lattice with boundary conditions that are open instead of periodic \cite{luescher:2011},
+the topological freezing is removed because instantons can be created and destroyed on the border.
+However, open boundaries produce an increased finite volume bias, since translational symmetry is lost.
+
+Other strategies that have been proposed are:
+the \emph{simulated tempering} \cite{delia:1996},
+the \emph{slab} method \cite{slab-1, slab-2},
+the usage of anti-periodic boundaries \cite{mages:2017}
+and the \emph{multicanonical} method \cite{todaro:2018}.
+
+All these methods have their flaws and virtues, but none of them represent a solution to the problem.
+The cluster stucture of topologically frozen configurations suggests that a cluster algorithm would be the perfect solution.
+However, it hasn't been found yet.
 
 \section*{A toy model for QCD}
 Lattice QCD simulations are, in general, difficult to implement and computationally very expensive.
