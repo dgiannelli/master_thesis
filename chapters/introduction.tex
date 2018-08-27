@@ -154,7 +154,7 @@ They have a definite integer topological charge, and their existence proves the 
 
 Many strategies have been developed to dampen the problem of topological freezing.
 For example, it is possible to evaluate the finite volume bias that is introduced in condition of fixed topology,
-and reduce it with extrapolations \cite{brower:2003}.
+and reduce it with extrapolations \cite{brower:2003, aoki:2007}.
 
 Otherwise, implementing the lattice with boundary conditions that are open instead of periodic \cite{luescher:2011},
 the topological freezing is removed because instantons can be created and destroyed on the border.
@@ -166,18 +166,31 @@ the \emph{slab} method \cite{slab-1, slab-2},
 the usage of anti-periodic boundaries \cite{mages:2017}
 and the \emph{multicanonical} method \cite{todaro:2018}.
 
-All these methods have their flaws and virtues, but none of them represent a solution to the problem.
+All these methods have their flaws and virtues, but none of them represent a complete solution to the problem.
 The cluster stucture of topologically frozen configurations suggests that a cluster algorithm would be the perfect solution.
 However, it hasn't been found yet.
 
-\section*{A toy model for QCD}
+\section*{Toy models for QCD}
 Lattice QCD simulations are, in general, difficult to implement and computationally very expensive.
 For this reason, many new ideas and algorithms are firstly applied to simplified models that share the same properties.
 This can be useful both for testing and benchmarking purposes.
 
-In particular, in order to study the problem of \emph{topological freezing},
-it is needed a gauge field theory that has a good definition of local topological charge and exhibits topological freezing in the form of the cluster stucture described before.
-The simplest model that share these properties with QCD is the two dimensional pure gauge U(1) theory, which is the subject of this thesis.
+In particular, toy models are very useful if they have exact solutions to the problem, either it is analytical or numerical.
+This is of crucial importance for bias evaluation and reduction.
+In fact, the same strategies that have been proposed to dampen topological freezing in QCD can be implemented in toy models, and,
+if exact solution are available, it is possible to quantify the bias that they introduce and
+to verify if extrapolations or bias reduction techniques actually converge to correct values.
+
+A toy model suitable to study topological freezing should be a quantum system in which dynamical variables configurations belong to distinct topological sectors,
+and, approaching the continuum limit of path integrals, the different sectors should become disconnected with respect to local Monte Carlo algorithms.
+The simplest model that satisfies these requirements is a quantum mechanical particle that can move on a circumference.
+The topological charge here is equal to the winding number, \ie the number of times a path configuration wraps around the circle.
+In this simple model, it is possible to find exact numerical solutions and compare them with the techniques used in lattice QCD \cite{dromard-wagner:2014, bonati-delia:2018}.
+
+%There is, however, an important proper
+%In particular, in order to study the problem of \emph{topological freezing},
+%it is needed a gauge field theory that has a good definition of local topological charge and exhibits topological freezing in the form of the cluster stucture described before.
+%The simplest model that share these properties with QCD is the two dimensional pure gauge U(1) theory, which is the subject of this thesis.
 
 A new cluster algorithm for this model will be presented.
 It constructs closed paths lattice links and reverse the sign of all gauge fields configurations in the region surrounded by the path,
