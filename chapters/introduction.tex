@@ -187,36 +187,40 @@ The simplest model that satisfies these requirements is a quantum mechanical par
 The topological charge here is equal to the winding number, \ie the number of times a path configuration wraps around the circle.
 In this simple model, it is possible to find exact numerical solutions and compare them with the techniques used in lattice QCD \cite{dromard-wagner:2014, bonati-delia:2018}.
 
-%There is, however, an important proper
-%In particular, in order to study the problem of \emph{topological freezing},
-%it is needed a gauge field theory that has a good definition of local topological charge and exhibits topological freezing in the form of the cluster stucture described before.
-%The simplest model that share these properties with QCD is the two dimensional pure gauge U(1) theory, which is the subject of this thesis.
+There is, however, an important property of QCD topology that the quantum mechanical particle on a circumference does not reproduce.
+It is the presence of different instantons that can move and interact in the space.
+The simplest toy models that have this properties are two dimensional gauge theories,
+and the pure gauge $U(1)$ theory is, among them, the one that has the most straightforward implementation.
+It is also possible to include fermions into it, and such a theory is known as the \emph{Schwinger model}.
+It is a widely used model since it exhibits fermion confinement, with a potential similar to that of quarks in QCD.
 
-A new cluster algorithm for this model will be presented.
-It constructs closed paths lattice links and reverse the sign of all gauge fields configurations in the region surrounded by the path,
-accepting or rejecting the operation with the Metropolis-Hastings algorithm.
-A well targeted use of local gauge invariance can make the acceptance for the cluster inverting to be the same that would be due to a local update,
-which is reasonably high%
-\marginpar{Aggiungere l'andamento dell'accettanza con $\beta$}
-and independent of the cluster size.
+In Chapter \ref{ch:cluster}, a new cluster algorithm for the two dimensional $U(1)$ pure gauge theory will be presented.
+It constructs closed paths of lattice links and reverses the sign of all gauge fields configurations inside the region surrounded by the path,
+accepting or rejecting the operation with a well-tailored Metropolis-Hastings algorithm.
+A chain of local gauge transformations along the path can make the energy variation of the entire move to be the same as with a local update,
+making the acceptance of the algorithm be reasonably high and idependent from the cluster size.
 
 This algorithm is not extensible to more than two dimensions,
-because regions of space could not be completely surrounded with a one dimensional path.
-However, it solves the critical behaviour in two dimensions, and it is efficient, parallelizable, and simple to implement, especially with modern programming languages techniques.
-It yields exact results that can be used to test all the workarounds that are used to fight the \emph{topological freezing} in QCD. 
+because regions of space could not be completely surrounded with a one dimensional path,
+and it is not possible to create a chain of local gauge transformations that covers all links of a multidimensional surface.
+However, the algorithm solves the critical behaviour in two dimensions,
+and it is efficient, parallelizable, and simple to implement, especially with modern programming languages techniques.
+It yields numerical exact results that can be used to test all the workarounds that are used to fight topological freezing in QCD. 
 
 The only other cluster algorithm for this theory that is present in literature was published in 1992 by Robert Sinclair \cite{sinclair:1992}.
-His algorithm uses the local gauge invariance to map all the system to a one dimensional XY model, and updates it using the extension of the Wolff algorithm.
-Although it is a valid solution, the work of Dress and Krauth in 1995 proves that, in some cases, instead of extending Wolff algorithm,
-it may be simpler and more efficient to create a new algorithm that is well suited for the specific task, and, being closer to the underlying Physics,
-it may be easier to debug and understand.
-\ \\ \ \\
-The exposure of the thesis work will fit in the following scheme:
+His algorithm uses the local gauge invariance to map the system to a one dimensional XY model, and updates it using the extension of the Wolff algorithm.
+Although it is a valid solution, its implementation is more complicated, and it does not leave the choice of cluster size. 
+The algorithm of Chapter \ref{ch:cluster} is formulated specifically for this system, making it more adaptable to its properties and easier to implement and debug.
+In some ways, the approach is similar to that of Dress and Krauth,
+who chose to create a well suited algorithm for a specific task and closer to the underlying Physics, rather than extending Wolff algorithm.\bigskip\bigskip
+
+\noindent
+The exposure of this thesis work will fit in the following scheme:
 \begin{description}
-    \item{Chapter \ref{ch:toy_model}:} Definition of the two dimensional pure gauge U(1) theory and its topological charge density,
-    both in the continuum space and in their discretized version on a lattice.
-    \item{Chapter \ref{ch:lattice}:} Implementation of the lattice theory that has been used.
-    \item{Chapter \ref{ch:local}:} Formulation and implementation of a local Metropolis-Hastings algorithm.
+    \item{Chapter \ref{ch:toy_model}:} Definition of the two dimensional pure gauge $U(1)$ theory and its topological charge,
+    both in the continuum space and on a discrete lattice.
+    \item{Chapter \ref{ch:lattice}:} Implementation of the lattice theory in C++17.
+    \item{Chapter \ref{ch:local}:} Introduction to Markov chain Monte carlo and implementation of a local Metropolis-Hastings algorithm.
     \item{Chapter \ref{ch:cluster}:} Discussion of topological freezing, and introduction of a new cluster Metropolis-Hastings algorithm that solves the problem.
     \item{Chapter \ref{ch:results}:} Numerical results obtained with the cluster algorithm and conclusions.\\
     \item{Appendix \ref{ap:code}:} Complete implementation of the algorithms.
