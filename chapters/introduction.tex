@@ -14,17 +14,17 @@
 
 \section*{The renascence of statistical sampling}
 Nicholas Metropolis defined in this way \cite{metropolis:1987} the period that began in 1945, after the building of ENIAC, the first general purpose electronic computer.
-Its first usage was in relation to the problem of the nuclear chain reaction.
+Its first usage was related to the problem of nuclear chain reaction.
 The immediate success brought a renascence of a mathematical technique known as statistical sampling, and its usage spread with a new name: the Monte Carlo method.
 This name was used in scientific literature for the first time in 1949 by Metropolis and Ulam \cite{metropolis-ulam:1949}.
 
-The main idea of the Monte Carlo method is based on pseudorandom numbers, which are sequences of integer numbers whose properties approximate the properties of random numbers sequences.
+The main idea of the Monte Carlo method is based on pseudorandom numbers, which are sequences of integer numbers whose properties approximate the properties of random number sequences.
 From pseudorandom numbers, it is possible to sample sequences of real numbers that are distributed according to a given probability density function.
-The applications of this principle are very broad: from numerical approximations of integrals and differential equations, to simulation of events that have a probabilistic nature.
+The applications of this principle are very broad: from numerical approximation of integrals and differential equations, to simulation of events that have a probabilistic nature.
 
 The impact on Physics was enormous. Theoretical Physics not only has a powerful method to compute the predictions of a theory, but it is also possible to choose
 from a wide-ranging class of theories, through simulation, the one that is most compatible with experiments.
-The Monte Carlo method is also an essential tool for Experimental Physics: it is possible to simulate an experimental setup to estimate its performance, or to compare the results with the actual experiments to find out if there are problems with the apparatus, or maybe, to discover weakness in Physics theories, and start working to expand them.
+The Monte Carlo method is also an essential tool for Experimental Physics: it is possible to simulate an experimental setup to estimate its performance, or to compare the results with the actual experiments to find out if there are problems with the apparatus, or maybe, to discover weakness in physical theories, and start working to expand them.
 
 \section*{From local algorithms to cluster algorithms}
 A class of problems in which the Monte Carlo method shines is the integration in a very high number of dimensions.
@@ -44,7 +44,7 @@ and the expectation value of an observable can be approximated with its average 
 This procedure is in general far simpler and more efficient than generating all possible configurations and weighting them afterwards.
 
 An important challenge in defining Markov chains is making them \emph{ergodic},
-\ie give them the possibility to eventually reach every point in the phase space in a finite number of steps.
+\ie giving them the possibility to eventually reach every point in the phase space in a finite number of steps.
 Without ergodicity, the Markov chain is actually sampling only a subset of the domain, thus, the integral result will probably be incorrect.
 Even if the algorithm is ergodic in principle,
 it can effectively behave as it was not ergodic if the number of steps needed to reach all relevant sectors of the phase space is too high
@@ -68,9 +68,9 @@ changing only one spin at each iteration of the program. This is what is called 
 However, when the system is divided into clusters, local algorithms show their weakness.
 Updating the spins one per time makes very unlikely that a whole cluster can be reversed,
 and this problem gets worse when the clusters size increases.
-This is the \emph{critical slowing down}: the correlation length between the configurations increases exponentialy approaching toward the critical temperature.
+This is the \emph{critical slowing down}: the correlation length between configurations increases exponentialy approaching toward the critical temperature.
 
-A solution to the slowing down for the Ising model\footnote{It applies also to the more general Potts model} was found by Swendsen and Wang in 1987 \cite{swendsen-wang:1987}.
+A solution to the critical slowing down for the Ising model\footnote{It applies also to the more general Potts model} was found by Swendsen and Wang in 1987 \cite{swendsen-wang:1987}.
 They found a way to sample the Boltzman distribution inverting many contiguous and parallel spins all together.
 It is recorded as the first \emph{cluster algorithm}.
 In 1989, Wolff \cite{wolff:1989} improved this algorithm and extended it also to continuous spin models.
@@ -97,7 +97,7 @@ when it is studied with the Monte Carlo method in its lattice formulation, \ie L
 which concerns the coupling between \emph{quarks} (the constituents of nucleons and mesons) and \emph{gluons} (massless particles, mediators of the interaction).
 It is formulated as a non-abelian gauge theory, with gauge group $SU(3)$,
 in which quark fields lie in the foundamental representation of the group and gluon fields are the gauge fields.
-The conserved charge associated with the gauge group is called \emph{color charge} and is the analogous of the \emph{electric charge} in electrodynamics.
+The conserved charge associated with the gauge group is called \emph{color charge} and it is the analogous of the electric charge in electrodynamics.
 
 This formulation for the theory of strong interation was introduced in 1973 by Fritzsch, Leutwyler and Gell-Mann \cite{fritzsch:1973},
 and it is based on the general field theory developed by Yang and Mills in 1954 \cite{yang-mills:1954}.
@@ -178,8 +178,7 @@ This can be useful both for testing and benchmarking purposes.
 In particular, toy models are very useful if they have exact solutions to the problem, either it is analytical or numerical.
 This is of crucial importance for bias evaluation and reduction.
 In fact, the same strategies that have been proposed to dampen topological freezing in QCD can be implemented in toy models, and,
-if exact solution are available, it is possible to quantify the bias that they introduce and
-to verify if extrapolations or bias reduction techniques actually converge to correct values.
+if exact solution are available, it is possible to quantify the bias and verify if extrapolations actually converge to correct values.
 
 A toy model suitable to study topological freezing should be a quantum system in which dynamical variables configurations belong to distinct topological sectors,
 and, approaching the continuum limit of path integrals, the different sectors should become disconnected with respect to local Monte Carlo algorithms.
@@ -208,7 +207,7 @@ and it is efficient, parallelizable, and simple to implement, especially with mo
 It yields numerical exact results that can be used to test all the workarounds that are used to fight topological freezing in QCD. 
 
 The only other cluster algorithm for this theory that is present in literature was published in 1992 by Robert Sinclair \cite{sinclair:1992}.
-His algorithm uses the local gauge invariance to map the system to a one dimensional XY model, and updates it using the extension of the Wolff algorithm.
+His algorithm uses the local gauge invariance to map the system into a one dimensional XY model, and updates it using the extension of the Wolff algorithm.
 Although it is a valid solution, its implementation is more complicated, and it does not leave the choice of cluster size. 
 The algorithm of Chapter \ref{ch:cluster} is formulated specifically for this system, making it more adaptable to its properties and easier to implement and debug.
 In some ways, the approach is similar to that of Dress and Krauth,

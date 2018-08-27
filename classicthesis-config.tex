@@ -37,7 +37,7 @@
 % ****************************************************************************************************
 % 2. Personal data and user ad-hoc commands (insert your own data here)
 % ****************************************************************************************************
-\newcommand{\myTitle}{A new cluster algorithm for U(1) lattice pure gauge theory in two dimensions\xspace}
+\newcommand{\myTitle}{A topology inversion cluster algorithm for $U(1)$ pure gauge theory in two dimensions\xspace}
 \newcommand{\mySubtitle}{Tesi di Laurea Magistrale\xspace}
 %\newcommand{\myDegree}{Doktor-Ingenieur (Dr.-Ing.)\xspace}
 \newcommand{\myName}{Giovanni Iannelli\xspace}
@@ -111,6 +111,9 @@
   \def\aclabelfont#1{\acsfont{#1}}
   
 % ****************************************************************************************************
+\usepackage{tikz}
+\usetikzlibrary{decorations,decorations.markings}
+\usetikzlibrary{decorations.shapes}
 %\usepackage{pgfplots} % External TikZ/PGF support (thanks to Andreas Nautsch)
 %\usetikzlibrary{external}
 %\tikzexternalize[mode=list and make, prefix=ext-tikz/]
@@ -133,7 +136,7 @@
 % ****************************************************************************************************
 \usepackage{listings}
 %\lstset{emph={trueIndex,root},emphstyle=\color{BlueViolet}}%\underbar} % for special keywords
-\lstset{language=[LaTeX]Tex,%C++,
+\lstset{language=C++,%[LaTeX]Tex,%C++,
   morekeywords={PassOptionsToPackage,selectlanguage},
   keywordstyle=\color{RoyalBlue},%\bfseries,
   basicstyle=\small\ttfamily,
@@ -148,8 +151,9 @@
   breaklines=true,
   %frameround=ftff,
   %frame=single,
-  belowcaptionskip=.75\baselineskip
+  belowcaptionskip=.75\baselineskip,
   %frame=L
+  frame=tb
 }
 % ****************************************************************************************************
 

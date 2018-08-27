@@ -3,9 +3,34 @@
 %************************************************
 
 In this chapter will be defined the two dimensional $U(1)$ pure gauge theory.
-Starting from the lagrangian of classic electrodynamics in a $1+1$ Minkowski space-time and its quantum field path integral formulation,
+Starting from the lagrangian of classic electrodynamics in a $1+1$ Minkowski space-time and its path integral formulation,
 it will be discussed the analytic continuation to euclidean space, the definition of the topological charge and its physical interpretation.
 Then, the theory will be extended to a discrete lattice space, and it will be described the method used to compute physical quantities with Monte Carlo simulations.
+
+\tikzset{->-/.style={decoration={markings,mark=at position .6 with {\arrow{to}}},postaction={decorate}}} 
+%\begin{figure}[!htb]
+%    \centering
+%    \begin{tikzpicture}[x=0.05\textwidth,y=0.05\textwidth]
+%        \draw[step=1, help lines] (0,0) grid (5,5);
+%        \draw[->-,very thick,blue] (1,4) -- (1,3);
+%
+%        \draw[->,very thick,green] (2,2) -- (1,2);
+%        \draw[->,very thick,green] (1,2) -- (1,1);
+%        \draw[->,very thick,green] (1,1) -- (2,1);
+%
+%        \draw[->,very thick,red] (3,2) -- (4,2);
+%        \draw[->,very thick,red] (4,2) -- (4,3);
+%        \draw[->,very thick,red] (4,3) -- (3,3);
+%        \draw[->,very thick,red] (3,3) -- (3,2);
+%
+%        \draw[->,thick,blue] (-1.5,3.5) node[anchor=east] {Link} -- (0.5,3.5);
+%        \draw[->,thick,green] (-1.5,1.5) node[anchor=east] {Staple} -- (0.5,1.5);
+%        \draw[->,thick,red] (6.5,2.5) node[anchor=west] {Plaquette} -- (4.5,2.5);
+%    \end{tikzpicture}
+%    \caption{Useful objects in the discretized space-time}
+%    \label{figLattice}
+%\end{figure}
+
 
 \section{Theory in the continuum}
 
@@ -41,7 +66,7 @@ The action is: \[ S[A] = \int \mathrm d^2x\, \mathcal L[A(x)] \] and the expecta
     \left< \widehat{\mathcal O}[A] \right> = \frac{\int[\mathrm dA]\, \mathcal O[A] e^{iS[A]}}{\int[\mathrm dA]\,e^{iS[A]}}
 \]
 where the integrals are path integrals over field configurations.
-The integral ratio can be interpreted as a weighted mean of the value $\mathcal O[A]$ evaluated at all possible configurations, weighted with the function $e^{iS[A]}$.
+The integral ratio can be interpreted as a weighted mean of $\mathcal O[A]$ evaluated at all possible configurations, weighted with the function $e^{iS[A]}$.
 However, if the intent is to sample field configurations with the Monte Carlo method, the weight factor have to be a probability density funtion, \ie real and positive.
 Within this theory, the integrands can be made real and positive
 switching the theory to euclidean metric performing a Wick rotation of the time coordinate and an analytic continuation of expectation values.
@@ -78,7 +103,7 @@ the expectation value of an operator $\widehat{\mathcal O}[A]$ is:
 Here, the factor $e^{-S[A]}$ is real and positive, and can be enterpreted as a probability density function of field configurations.
 
 The Minkowski formulation will not be needed anymore in later discussions.
-For this reason, every object will be considered defined in euclidean two dimensional space.
+For this reason, every object will be considered defined in a euclidean two dimensional space.
 
 \subsection*{Topological charge}
 
@@ -112,7 +137,7 @@ just above the inferior border $-\pi$.
 On the contrary, when $\theta(x)$ decreases so that it would reach $-\pi$, it becomes $\pi$ instead.
 
 When integrating $\partial_\mu\theta(x)$ over these discontinuities,
-they contribute with $-2\pi$ if $\theta(x)$ pass across the superior border, and with $2\pi$ if across the other side.
+they contribute with $-2\pi$ if $\theta(x)$ pass across the superior border, and with $2\pi$ if across the inferior.
 Apart from these discontinuity points, the function $\partial_\mu\theta(x)$ is conservative, thus,
 there is not any other contribution to the circulation apart from the ones that are due to the discontinuities.
 
@@ -171,7 +196,7 @@ It will be shown that this latter property is crucial for the performance of the
 To easily implement gauge invariance, it is useful to encapsulate gauge fields inside \emph{Wilson lines}, which are defined over continuous paths in the space.
 Let $\mathcal C(x,y)$ be a path that goes from $x$ to $y$. The correspondent Wilson line is:
 \[
-    U[\mathcal C(x,y)] = e^{ig\int_{\mathcal C(x,y)}\mathrm dt_\mu\,A_\mu(t)} \in U(1)
+    U[\mathcal C(x,y)] \equiv e^{ig\int_{\mathcal C(x,y)}\mathrm dt_\mu\,A_\mu(t)} \in U(1)
 \]
 Under a gauge transformation $G(x) \equiv e^{i\theta(x)}$, the Wilson line transformation is:
 \begin{equation}\label{eq:path_gauge}
@@ -186,28 +211,36 @@ Thus, if the path is closed, the the correspondent Wilson line, \ie a \emph{Wils
     U[\mathcal C(x,x)] \rightarrow G(x)U[\mathcal C(x,x)]G^{-1}(x) = U[\mathcal C(x,x)]
 \]
 
-Wilson loops are then the required invariant objects since they can be constructed also on a discrete space,
+Wilson loops are then the required invariant objects, since they can be constructed also on a discrete space,
 and the lattice gauge invariant action will be expressed in terms of them.
 
 \subsection*{Lattice sites, links and plaquettes}
 Let the two dimensional space be discretized into a squared lattice, and let $a$ be the side of the squares.
 A grid point is usually called \emph{site} and its coordinates will be labelled with an index $s$.
-The site $s + \hat\mu$, with $\hat\mu = \hat1,\hat2$, corresponds to the point that has the $\mu$th coordinate increased by $a$.
+The unit of length of lattice coordinates is the lattice spacing $a$.
+The site $s + \hat\mu$, with $\hat\mu = \hat1,\hat2$, corresponds to the point that has the $\mu$th coordinate increased by one.
 
 The most elementary path that can be defined on the lattice is a \emph{link},
 \ie a straight line of length $a$ that connects two adjacent sites.
 The link that connects $s$ to $s+\hat\mu$ will be called $\mathcal L_{\hat\mu}(s)$ (Figure \ref{fig:links}).
 \begin{figure}[!htb]
     \centering
-    \rule{3in}{1.5in}
-    \caption{Wilson lines over links}
+    \begin{tikzpicture}[x=1cm,y=1cm]
+        \draw[step=1, help lines, dashed, color=black!30] (0,0) grid (5,3);
+        \draw[->,very thick,black] (0,0) -- (5.5,0) node [right] {$x_1$};
+        \draw[->,very thick,black] (0,0) -- (0,3.5) node [above] {$x_2$};
+
+        \draw[->-,thick,RoyalBlue] (1,1) -- node [black,yshift=0.4cm] {$\mathcal L_1(1,1)$} (2,1);
+        \draw[->-,thick,RoyalBlue] (3,2) node [black,above] {$\mathcal L_{-2}(3,2)$} --  (3,1);
+    \end{tikzpicture}
+    \caption{Lattice links}
     \label{fig:links}
 \end{figure}
 
 The Wilson line evaluated over $\mathcal L_{\hat\mu}(s)$ is:
 \begin{equation}\label{eq:link}
     \begin{aligned}
-        U[\mathcal L_{\hat\mu}(s)] &\equiv e^{ig\int_s^{s+\hat\mu}\mathrm dt_\mu\,A_\mu(t)} \\
+        U[\mathcal L_{\mu}(s)] &\equiv e^{ig\int_s^{s+\hat\mu}\mathrm dt_\mu\,A_\mu(t)} \\
                        &= e^{ig\int_s^{s+\hat\mu}\mathrm dt_\mu\,\left[A_\mu(s) + \mathcal O\left(t_\mu-s\right)\right]} \\
                        &= e^{iga\left[A_\mu(s) + \mathcal O\left(a\right)\right]}
     \end{aligned}
@@ -218,8 +251,8 @@ encapsulating the gauge fields inside link variables.
 
 If the link path is evaluated in the opposite direction, the value is its complex conjugate (or its inverse):
 \[
-    U[\mathcal L_{-\hat\mu}(n+\hat\mu)] = e^{ig\int^n_{n+\hat\mu}\mathrm dt_\mu\,A_\mu(t)}
-                                        = e^{-ig\int_n^{n+\hat\mu}\mathrm dt_\mu\,A_\mu(t)} = U^*[\mathcal L_{\hat\mu}(n)]
+    U[\mathcal L_{-\mu}(n+\hat\mu)] = e^{ig\int^n_{n+\hat\mu}\mathrm dt_\mu\,A_\mu(t)}
+                                        = e^{-ig\int_n^{n+\hat\mu}\mathrm dt_\mu\,A_\mu(t)} = U^*[\mathcal L_{\mu}(n)]
 \]
 For a finite lattice, the number of \emph{independent} link variables is then equal to the number of links that are present,
 \ie the number of sites multiplied by the number of dimensions.
@@ -246,15 +279,27 @@ will perform a sequence of them before being ready for cluster inversion.
 A generic lattice path consists in a polygonal chain of links (Figure \ref{fig:path}),
 \begin{figure}[!htb]
     \centering
-    \rule{3in}{1.5in}
-    \caption{Generic lattice Wilson line}
+    \begin{tikzpicture}[x=1cm,y=1cm]
+        \draw[step=1, help lines, dashed, color=black!30] (0,0) grid (6,3);
+        \draw[->,very thick,black] (0,0) -- (6.5,0) node [right] {$x_1$};
+        \draw[->,very thick,black] (0,0) -- (0,3.5) node [above] {$x_2$};
+
+        \draw[->-,thick,RoyalBlue] (1,2) -- node [black,left] {$\mathcal L_1$} (1,1);
+        \draw[->-,thick,RoyalBlue] (1,1) -- node [black,yshift=0.4cm] {$\mathcal L_2$} (2,1);
+        \draw[->-,thick,RoyalBlue] (2,1) -- node [black,yshift=0.4cm] {$\mathcal L_3$} (3,1);
+        \draw[->-,thick,RoyalBlue] (3,1) -- node [black,right] {$\mathcal L_4$} (3,2);
+        \draw[->-,thick,RoyalBlue] (3,2) -- node [black,yshift=0.4cm] {$\mathcal L_5$} (4,2);
+        \draw[->-,thick,RoyalBlue] (4,2) -- node [black,yshift=0.4cm] {$\mathcal L_6$} (5,2);
+        \draw[->-,thick,RoyalBlue] (5,2) -- node [black,right] {$\mathcal L_7$} (5,1);
+    \end{tikzpicture}
+    \caption{A generic lattice path $\mathcal C$}
     \label{fig:path}
 \end{figure}
 and the corresponding Wilson line can be expressed in terms of the link variables.
 In fact, calling $\mathcal C$ the generic path, and $\mathcal L_1, \mathcal L_2, \ldots$ the links that form it,
 the Wilson line evaluated over $\mathcal C$ is the product of the link variables:
 \begin{align*}
-    U[\ell] &= e^{ig\int_{\mathcal C}\mathrm dt_\mu\,A_\mu(t)} \\
+    U[\mathcal C] &= e^{ig\int_{\mathcal C}\mathrm dt_\mu\,A_\mu(t)} \\
             &= e^{ig\left[\int_{\mathcal L_1}\mathrm dt_\mu\,A_\mu(t) + \int_{\mathcal L_2}\mathrm dt_\mu\,A_\mu(t) + \cdots \right]} \\
             &= U[\mathcal L_1]U[\mathcal L_2] \cdots
 \end{align*}
@@ -266,16 +311,25 @@ it is necessary to express it in terms of the gauge fields.
 
 \begin{figure}[!htb]
     \centering
-    \rule{3in}{1.5in}
-    \caption{Plaquette Wilson loop}
+    \begin{tikzpicture}[x=1.5cm,y=1.5cm]
+        \draw[step=1, help lines, dashed, color=black!30] (0,0) grid (5,2);
+        \draw[->,very thick,black] (0,0) -- (5.5,0) node [right] {$x_1$};
+        \draw[->,very thick,black] (0,0) -- (0,2.5) node [above] {$x_2$};
+
+        \draw[->-,thick,RoyalBlue] (2,1) -- node [black,yshift=-0.5cm] {$\mathcal L_1(s)$} (3,1);
+        \draw[->-,thick,RoyalBlue] (3,1) -- node [black,right] {$\mathcal L_{2}(s+\hat1)$} (3,2);
+        \draw[->-,thick,RoyalBlue] (3,2) -- node [black,yshift=0.5cm] {$\mathcal L_{-1}(s+\hat1+\hat2)$} (2,2);
+        \draw[->-,thick,RoyalBlue] (2,2) -- node [black,left] {$\mathcal L_{-2}(s+\hat2)$} (2,1);
+    \end{tikzpicture}
+    \caption{Plaquette loop}
     \label{fig:plaq}
 \end{figure}
 Let $\mathcal P(s)$ be the path that starts from site $s$ and runs counter-clockwise around the plaquette (Figure \ref{fig:plaq}).
 Computing the corresponding Wilson loop using Equation \eqref{eq:link}:
 \begin{equation*}
     \begin{aligned}
-        U[\mathcal P(s)] &\equiv U[\mathcal L_{\hat 1}(s)] U[\mathcal L_{\hat 2}(s+\hat 1)] U[\mathcal L_{-\hat 1}(s+\hat 1+\hat 2)] U[\mathcal L_{-\hat 2}(s+\hat 2)] \\
-                              &= U[\mathcal L_{\hat 1}(s)] U[\mathcal L_{\hat 2}(s+\hat 1)] U^*[\mathcal L_{\hat 1}(s+\hat 2)] U^*[\mathcal L_{\hat 2}(s)] \\
+        U[\mathcal P(s)] &\equiv U[\mathcal L_{1}(s)] U[\mathcal L_{2}(s+\hat 1)] U[\mathcal L_{-1}(s+\hat 1+\hat 2)] U[\mathcal L_{-2}(s+\hat 2)] \\
+                              &= U[\mathcal L_{1}(s)] U[\mathcal L_{2}(s+\hat 1)] U^*[\mathcal L_{1}(s+\hat 2)] U^*[\mathcal L_{2}(s)] \\
                               &= e^{iga[A_1(s) + A_2(s+\hat 1) - A_1(s+\hat 2) - A_2(s) + \mathcal O\left(a\right)]} \\
                               &= e^{iga[a\partial_1A_2(s) - a\partial_2A_1(s) + \mathcal O\left(a\right)]} \\
                               &= e^{iga\left[\mathcal O\left(a\right)\right]}
@@ -284,7 +338,7 @@ Computing the corresponding Wilson loop using Equation \eqref{eq:link}:
 does not provide any useful result. However, expanding further Equation \eqref{eq:link}:
 \begin{equation*}%\label{eq:link}
     \begin{aligned}
-        U[\mathcal L_{\hat\mu}(s)] &\equiv e^{ig\int_s^{s+\hat\mu}\mathrm dt_\mu\,A_\mu(t)} \\
+        U[\mathcal L_{\mu}(s)] &\equiv e^{ig\int_s^{s+\hat\mu}\mathrm dt_\mu\,A_\mu(t)} \\
                        &= e^{ig\int_s^{s+\hat\mu}\mathrm dt_\mu\,\left[A_\mu(s) + (t_\mu-s)\partial_\mu A_\mu(s) + \mathcal O\left((t_\mu-s)^2\right)\right]} \\
                        &= e^{iga\left[A_\mu(s) + \frac{a}{2}\partial_\mu A_\mu(s) + \mathcal O\left(a^2\right)\right]} \\
     \end{aligned}
@@ -361,7 +415,7 @@ The sum of all local topological charges returns the total topological charge, a
 \subsection*{Monte Carlo simulations and continuum limit}
 
 Equation \eqref{eq:cont_exp} gives the expectation value of an operator $\hat{\mathcal O}[A]$.
-If it is possible to define a function $\mathcal O^L$ of the link variables such that $\mathcal O^L[U] \xrightarrow{a\to0} \mathcal O[A]$,
+If it is possible to define a function $\mathcal O^L$ of Wilson lines such that $\mathcal O^L[U] \xrightarrow{a\to0} \mathcal O[A]$,
 the lattice variant of the expectation value will be:
 \begin{equation}\label{eq:lat_exp}
     \left<\hat{\mathcal O}^L[U]\right>_L \equiv \frac{\int[\mathrm dU]\, \mathcal O^L[U] e^{-S^L[U]}}{\int[\mathrm dU]\,e^{-S^L[U]}}
@@ -381,7 +435,7 @@ The procedure is organized in these steps:
     \item A sequence of link configurations is generated in agreement with the weight function $e^{-S^L}$ with the Monte Carlo method, and, at each step,
         $\mathcal O^L$ is evaluated at the current configuration, and stored in computer memory. The details will be explained in Chapter \ref{ch:local}.
     \item The average of the stored values is computed, and, for the law of large numbers,
-        it converges to the value of Equation \ref{eq:lat_exp} if the sequence is long enough.
+        it converges to the value of Equation \ref{eq:lat_exp}.
 \end{itemize}
 
 However, the lattice expectation value \eqref{eq:lat_exp} converges to the value in the continuum \eqref{eq:cont_exp} only in the limit of infinitesimal lattice:
@@ -391,10 +445,10 @@ However, the lattice expectation value \eqref{eq:lat_exp} converges to the value
 and this limit is not achievable on a computer, because it would imply to operate on an infinite number of links.
 Two \emph{cutoffs} are then necessary: a finite lattice spacing $a$ (ultraviolet cutoff),
 and a finite volume, \ie a finite number $N$ of lattice sites along every direction (infrared cutoff).
-Usually, the finite volume is implemented with periodic boundary conditions, because ... 
-\marginpar{Chiedere chiarimenti sull'utilità delle condizioni periodiche. Riducono il bias dovuto al volume finito?}
+Usually, the finite volume is implemented with periodic boundary conditions,
+because they preserve translational invariance, and hence they reduce the finite volume bias.
 
-To recover the continuum limit and the infinite volume e limit,
+To recover the continuum limit and the infinite volume limit,
 it is necessary to evaluate the expectation value with different parameters in order to extrapolate the limits.
 In quantum field theories, this is in general a complicated problem,
 since theory parameters have to be renormalized, and their value depends on the energy cutoff.
@@ -435,7 +489,8 @@ However, with the implementation of the cluster algorithm of Chapter \ref{ch:clu
 
 The infinite volume limit will not be treated in this work,
 because it would not be useful to evaluate the cluster algorithm,
-since the topological freezing affects only the extrapolation of the continuum limit.
+since infinite volume extrapolations are performed at fixed lattice spacing and variable volume,
+while the presence of topological freezing depends only on lattice spacing and not on volume.
 
 %*****************************************
 %*****************************************
