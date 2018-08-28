@@ -24,6 +24,23 @@ it is possible to write algorithms in terms of abstract concepts hiding implemen
 Since Monte Carlo simulations of lattice gauge theories are, in general, very computationally expensive,
 they need an efficient use of computer resources, and, therefore, they are implemented with programming languages that allow low level optimizations.
 
+The most common used languages in this field are then FORTRAN, C and C++.
+However, among them, the one that has the most comprehensive and flexible support of modern language features is C++,
+especially C++11 and later standards.
+It also has the largest standard library,
+which allows to express algorithms in terms of well known and optimized objects, 
+reducing also the dependency on external libraries.
+
+In this work, the C++17 standard was adopted,
+and everything has been implemented in terms of standard library constructs.
+
+In this and later chapters, the exposure and description of data structures and algorithms will be accompained with an implementation in C++17.
+Lower level implementation details will be kept hidden with the encapsulation methods the language provides,
+and they will be shown in Appendix \ref{ap:code}.
+
+\section{Lattice objects}
+
+
 
 \begin{lstlisting}[caption={}]
 #include <stdio.h>
