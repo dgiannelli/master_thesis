@@ -2,15 +2,38 @@
 \chapter{Lattice Class Implementation}\label{ch:lattice}
 %*****************************************
 
-\begin{lstlisting}[caption={An example},label=lst:useless]
-    #include<stdio.h>
-    #include<iostream>
-        // A comment
-        int main(void)
-            {
-                printf("Hello World\n");
-                return 0;
-            }
+Nowadays, the availability of data and processing power is boosting more and more scientific research,
+and it is driving a shift to computational and data-driven modes of discovery \cite{nielsen:2011}.
+
+Computational scientific literature is, however, still suffering the lack of reproducibility \cite{reproducible:2009}.
+It is difficult to verify most of the results presented at conferences and papers.
+
+The sharing of data and code for verification purposes \cite{reproducible:2012}
+is widely recognized as the most urgent practice that has to be adopted.
+
+The implementation code in computational sciences has an importance that is comparable to the proof in deductive sciences \cite{topten}
+and the technical descriptions of experiments in empirical sciences.
+
+It is reported that the main obstacle that prevents code publication is the time it takes to clean up and document the work to prepare it for release and reuse \cite{obstacles}.
+The best way to reduce the amount of this work is to use modern programming language techniques to make the code self-explanatory
+and the closest possible to the problem that has to be solved \cite{best_pratices}.
+
+Procedural programming, data abstraction, object-oriented and generic programming provide methods to express ideas directly in code:
+it is possible to write algorithms in terms of abstract concepts hiding implementation details \cite{stroustrup:2013}.
+
+Since Monte Carlo simulations of lattice gauge theories are, in general, very computationally expensive,
+they need an efficient use of computer resources, and, therefore, they are implemented with programming languages that allow low level optimizations.
+
+
+\begin{lstlisting}[caption={}]
+#include <stdio.h>
+#include <iostream>
+// A comment
+int main(void)
+    {
+        printf("Hello World\n");
+        return 0;
+    }
 \end{lstlisting}
 
 %*****************************************
