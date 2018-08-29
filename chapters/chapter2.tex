@@ -38,20 +38,57 @@ In this and later chapters, the exposure and description of data structures and 
 Lower level implementation details will be kept hidden with the encapsulation methods the language provides,
 and they will be shown in Appendix \ref{ap:code}.
 
+The aim of this chapter is to implement the skeleton of the lattice theory.
+It will be done in the form of a lattice class, which will have methods to access its basic objects,
+compute and modify its Wilson lines and evaluate operators in terms of them.
+
+The interface the lattice class provides will then be used in Chapters \ref{ch:local} and \ref{ch:cluster} to define the Markov chain algorithms.
+
 \section{Lattice objects}
 
-
-
-\begin{lstlisting}[caption={}]
-#include <stdio.h>
-#include <iostream>
-// A comment
-int main(void)
-    {
-        printf("Hello World\n");
-        return 0;
-    }
+The first things to define are the most basic data structures, \ie lattice objects,
+and the first of them has to be a lattice site and its coordinates:
+\begin{lstlisting}[caption={Lattice site}]
+struct Site
+{
+    int x1;
+    int x2;
+};
 \end{lstlisting}
+A lattice link can be identified with a site and a direction $\mathtt{dir} \in \{1,2,-1,-2\}$:
+\begin{lstlisting}[caption={Lattice link}]
+struct Link
+{
+    Site site;
+    int dir;
+};
+\end{lstlisting}
+The link $\mathcal L_2(0,1)$ will then be {\ttfamily Link\{0,1,2\}}.
+
+A generic lattice path is a sequence of links.
+The standard library {\ttfamily vector} is an indefinite sized container of object of the same type,
+and it already has methods to iterate over them.
+The implementation of a generic lattice path will then be just an alias for a vector of links:
+\begin{lstlisting}[caption={Lattice path}]
+using Path = vector<Link>;
+\end{lstlisting}
+
+To define the analogous version of the plaquette $\mathcal D(s)$ of Figure \ref{fig:plaq},
+it is useful to inherit from the standard library {\ttfamily array},
+which is similar to {\ttfamily vector} but has a fixed length at compile time,
+enabling then further compiler optimizations.
+\begin{lstlisting}[caption={Lattice plaquette}]
+struct Plaq : array<Link,4>
+{
+    Plaq(Site s) :
+        array{Link{s.x1, s.x2, 1},
+              Link{s.x1+1, s.x2, 2},
+              Link{s.x1+1, s.x2+1, -1},
+              Link{s.x1, s.x2+1, -2}}
+    {}
+};
+\end{lstlisting}
+
 
 %*****************************************
 %*****************************************
