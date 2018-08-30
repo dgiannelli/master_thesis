@@ -1,8 +1,67 @@
 %************************************************
-\chapter{The Local Algorithm}\label{ch:local}
+\chapter{Local Algorithm}\label{ch:local}
 %************************************************
 
-The Local Alogrithm
+The infrastructure is set up, and the Monte Carlo updating of link variables has to be defined.
+
+In this chapter will be firstly introduced the Metropolis-Hastings algorithm,
+and explained how it can be used to compute expectation values.
+
+Then, a specific local algorithm will be defined to compute the integral of Equation \eqref{eq:lat_exp}.
+The first simulation will be run,
+and the result of the plaquette mean value will be compared with the value reported by D\"urr and Hoelbling in 2005 \cite{durr-hoelbling:2005}.
+
+However, since the algorithm is local, at small lattice spacing, the topological freezing will be encountered.
+
+\section{Metropolis-Hastings algorithm}
+
+\subsection*{Markov chains and equilibrium distributions}
+Let $x_1, x_2, x_3, \ldots \in \Omega$ be a sequence of random variables.
+This sequence is a \emph{Markov chain} if the probability density function of the $(i+1)^\mathrm{th}$ variable depends only on the value of the $i^\mathrm{th}$ variable:
+\[
+	p(x_{i+1}|x_1, \ldots, x_i) = p(x_{i+1}|x_i), \quad \forall i
+\]
+
+The Markov chain is said to be \emph{stationary} if:
+\[
+	p(x_{i+1}|x_i) = p(x_{k+i+1}|x_{k+i}), \quad \forall i,k
+\]
+and $w(x \to y) \equiv p(x_{i+1}=y|x_i=x)$ is the \emph{transition probability} from $x$ to $y$.
+
+A stationary Markov chain is at \emph{equilibrium} if there exist a probability density function $p(x \in \Omega)$ such that:
+\begin{equation}\label{eq:equilibrium}
+	p(x) = \int\mathrm dy\,w(y \to x)p(y)
+\end{equation}
+and $p(x)$ is the \emph{equilibrium distibution} of the Markov chain.
+
+It is proven \cite{mc-mt} that if a Markov chain is irreducible and aperiodic,
+the probability density function after a number $n$ of steps converges to the equilibrium distribution:
+\begin{equation}\label{eq:convergence}
+	p(x_{i+n}=x|x_i) \xrightarrow{n\to\infty} p(x)
+\end{equation}
+and the convergence rate is exponential:
+\begin{equation}\label{eq:convergence_rate}
+	\max_{x\in\Omega} |p(x_{i+n}=x|x_i) - p(x)| \xrightarrow{n\to\infty} 
+\end{equation}
+
+\subsection*{Balance equations}
+The equilibrium condititon of Equation \eqref{eq:equilibrium}
+can be interpreted as a requirement of stability of the Markov chain.
+In fact, using the normalization condition $\int\mathrm dy\,w(x \to y) = 1$,
+it is equivalent to:
+\[
+	\int\mathrm dy\,w(x \to y)p(x) = \int\mathrm dy\,w(y \to x)p(y)
+\]
+which is the \emph{global balance} equation.
+It states that the probability flux coming from point $x$
+is equal to the probability flux going toward point $x$ from all other points $y$.
+
+
+
+
+
+
+
 
 
 %*****************************************

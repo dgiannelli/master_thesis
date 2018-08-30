@@ -48,15 +48,15 @@ The interface the lattice class provides will then be used in Chapters \ref{ch:l
 
 The first things to define are the most basic data structures, \ie lattice objects,
 and the first of them has to be a lattice site and its coordinates:
-\begin{lstlisting}[caption={Lattice site}]
+\begin{lstlisting}[caption={Site type}]
 struct Site
 {
     int x1;
     int x2;
 };
 \end{lstlisting}
-A lattice link can be identified with a site and a direction $\mathtt{dir} \in \{1,2,-1,-2\}$:
-\begin{lstlisting}[caption={Lattice link}]
+A lattice link can be identified with a site and a direction $\texttt{dir} \in \{1,2,-1,-2\}$:
+\begin{lstlisting}[caption={Link type}]
 struct Link
 {
     Site site;
@@ -69,7 +69,7 @@ A generic lattice path is a sequence of links.
 The standard library {\ttfamily vector} is an indefinite sized container of object of the same type,
 and it already has methods to iterate over them.
 The implementation of a generic lattice path will then be just an alias for a vector of links:
-\begin{lstlisting}[caption={Lattice path}]
+\begin{lstlisting}[caption={Path type}]
 using Path = vector<Link>;
 \end{lstlisting}
 
@@ -77,7 +77,7 @@ To define the analogous version of the plaquette $\mathcal D(s)$ of Figure \ref{
 it is useful to inherit from the standard library {\ttfamily array},
 which is similar to {\ttfamily vector} but has a fixed length at compile time,
 enabling then further compiler optimizations.
-\begin{lstlisting}[caption={Lattice plaquette}]
+\begin{lstlisting}[caption={Plaquette type}]
 struct Plaq : array<Link,4>
 {
     Plaq(Site s) :
@@ -89,6 +89,57 @@ struct Plaq : array<Link,4>
 };
 \end{lstlisting}
 
+\section{Lattice class declaration}
+
+The declaration of the {\ttfamily Lattice} class is now reported.
+The implementation will be shown in Appendice \ref{ap:code}.
+
+\begin{lstlisting}[caption={Lattice class}]
+class Lattice
+{
+    public:
+        /* Lattice is initialized with its shape,
+           i.e. the number of sites in each direction,
+           and the value of the action parameter beta */
+        Lattice(pair<int,int> shape, double beta);
+        double beta() const; 
+
+        /* Vector of all lattice sites.
+           Useful for iterating over them: */
+        vector<Site> sites() const;
+
+        // Observables:
+        double action() const;
+        double charge() const;
+        double local_charge(Site) const; 
+
+        /* All the following methods are aware of
+           boundary conditions and treat appropriately
+           values out of bounds */
+
+        using cmplx = complex<double>;
+        // Wilson lines:
+        cmplx w_line(Link) const;
+        cmplx w_line(Plaq) const;
+        cmplx w_line(Path) const;
+
+        // Set link variable l to value u:
+        void set_link(Link l, cmplx u); 
+
+        // Local gauge transformation G(s):
+        void local_gauge(Site s, cmplx G);
+        
+    private:
+        pair<int,int> shape_;
+        double beta_;
+        vector<Site> sites_;
+        vector<double> link_vars; // Link variables data
+
+        /* link_vars indexing:
+           (boundaries are implemented here) */
+        int idx(Link) const;
+};
+\end{lstlisting}
 
 %*****************************************
 %*****************************************
