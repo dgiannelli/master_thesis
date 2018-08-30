@@ -13,36 +13,79 @@ and the result of the plaquette mean value will be compared with the value repor
 
 However, since the algorithm is local, at small lattice spacing, the topological freezing will be encountered.
 
-\section{Metropolis-Hastings algorithm}
+\section{Markov chain Monte Carlo}
 
-\subsection*{Markov chains and equilibrium distributions}
+\subsection*{Markov chains and stationary distributions}
 Let $x_1, x_2, x_3, \ldots \in \Omega$ be a sequence of random variables.
-This sequence is a \emph{Markov chain} if the probability density function of the $(i+1)^\mathrm{th}$ variable depends only on the value of the $i^\mathrm{th}$ variable:
+This sequence is a \emph{Markov chain} if the probability density function of the $(i+1)^\mathrm{th}$
+variable depends only on the value of the $i^\mathrm{th}$ variable:
 \[
-	p(x_{i+1}|x_1, \ldots, x_i) = p(x_{i+1}|x_i), \quad \forall i
+	p(x_{i+1}|x_1, \ldots, x_i) = p(x_{i+1}|x_i) \quad \forall i
 \]
 
-The Markov chain is said to be \emph{stationary} if:
-\[
-	p(x_{i+1}|x_i) = p(x_{k+i+1}|x_{k+i}), \quad \forall i,k
-\]
-and $w(x \to y) \equiv p(x_{i+1}=y|x_i=x)$ is the \emph{transition probability} from $x$ to $y$.
+In the following discussion will be only considered Markov chains that are:
+\begin{itemize}
+    \item \emph{stationary}:
+        \[
+            p(x_{i+1}|x_i) = p(x_{k+i+1}|x_{k+i}) \quad \forall k
+        \]
+    \item \emph{ergodic}:
+        \[
+            prova
+        \]
+    \item \emph{aperiodic}
+        \[
+            prova
+        \]
+\end{itemize}
 
-A stationary Markov chain is at \emph{equilibrium} if there exist a probability density function $p(x \in \Omega)$ such that:
+Then, the \emph{transition probability} from $x$ to $y$ will be defined as follows:
+\[
+    w(x \to y) \equiv p(x_{i+1}=y|x_i=x)
+\]
+
+It is proven \cite{mc-mt} that there exist a unique probability density function $p(x\in\Omega)$
+such that:
 \begin{equation}\label{eq:equilibrium}
 	p(x) = \int\mathrm dy\,w(y \to x)p(y)
 \end{equation}
-and $p(x)$ is the \emph{equilibrium distibution} of the Markov chain.
+and $p(x)$ is called the \emph{equilibrium distibution} (or \emph{stationary distribution}) of the Markov chain.
 
-It is proven \cite{mc-mt} that if a Markov chain is irreducible and aperiodic,
-the probability density function after a number $n$ of steps converges to the equilibrium distribution:
+\subsection*{Convergence of Markov chains}
+The usefulness of Markov chains for statistical sampling is guaranteed by two important theorems:
+the convergence theorem and the ergodic theorem. The formal proof of them can be found in \cite{mc-mt}.
+
+The convergence theorem states that the probability density function of a variable that is $n$ steps forward in the Markov chain
+converges to the equilibrium distribution $p(x)$, independently from the initial value:
 \begin{equation}\label{eq:convergence}
-	p(x_{i+n}=x|x_i) \xrightarrow{n\to\infty} p(x)
+    p(x_{i+n}=x|x_i) \xrightarrow{n\to\infty} p(x) \quad \forall i
 \end{equation}
 and the convergence rate is exponential:
 \begin{equation}\label{eq:convergence_rate}
-	\max_{x\in\Omega} |p(x_{i+n}=x|x_i) - p(x)| \xrightarrow{n\to\infty} 
+	\sup_{x\in\Omega} |p(x_{i+n}=x|x_i) - p(x)| \stackrel{n\to\infty}{\scalebox{2}[1.25]{$\sim$}} e^{-\frac{n}{\tau_\mathrm{mix}}}
 \end{equation}
+where $\tau_\mathrm{mix}$ is the \emph{mixing time}.
+
+The convergence theorem establishes a first connection between variables that are directly sampled from $p(x)$
+and those which come from a Markov chain at equilibrium in $p(x)$.
+
+This parallelism is completed with the ergodic theorem.
+Let $f$ be a function of the random variable $x\in\Omega$ distributed according to $p(x)$.
+The arithmetic mean of $f$ evaluated over a Markov chain in equilibrim at $p(x)$ converges to the mean value of $f(x)$:
+\begin{equation*}
+    \frac{1}{n}\sum_{i=1}^n f(x_i) \xrightarrow{n\to\infty} \left<f(x)\right>_{p(x)}
+\end{equation*}
+
+The ergodic theorem justifies the introduction of all the Markov chain machinery,
+since they provide an alternative method to sample variables from a distribution and computing mean values over them.
+Directly sampling is, in general, more efficient than Markov chain sampling,
+but it is possible to directly sample only a very reduced class of distributions.
+With Markov chain sampling, on the other hand, there are no significant restriction apart from efficiency.
+
+However, estimating errors and computing mean values o functions that are not only dependent on 
+
+
+The expectation value of Equation
 
 \subsection*{Balance equations}
 The equilibrium condititon of Equation \eqref{eq:equilibrium}
