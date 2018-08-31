@@ -15,27 +15,31 @@ However, since the algorithm is local, at small lattice spacing, the topological
 
 \section{Markov chain Monte Carlo}
 
-\subsection*{Markov chains and stationary distributions}
+\subsection*{Markov chains and equilibrium distributions}
 Let $x_1, x_2, x_3, \ldots \in \Omega$ be a sequence of random variables.
 This sequence is a \emph{Markov chain} if the probability density function of the $(i+1)^\mathrm{th}$
 variable depends only on the value of the $i^\mathrm{th}$ variable:
 \[
-	p(x_{i+1}|x_1, \ldots, x_i) = p(x_{i+1}|x_i) \quad \forall i
+    p(x_{i+1}|x_1, \ldots, x_i) = p(x_{i+1}|x_i) \quad \forall i\in\mathbb N^*
 \]
 
 In the following discussion will be only considered Markov chains that are:
 \begin{itemize}
     \item \emph{stationary}:
         \[
-            p(x_{i+1}|x_i) = p(x_{k+i+1}|x_{k+i}) \quad \forall k
+            p(x_{i+1}|x_i) = p(x_{k+i+1}|x_{k+i}) \quad \forall k\in\mathbb N^*
         \]
     \item \emph{ergodic}:
         \[
-            prova
+            \forall x,y \in \Omega,\ \exists n\in\mathbb N^* : p(x_n=y|x_1=x) \neq 0
         \]
-    \item \emph{aperiodic}
+    \item \emph{aperiodic}:
         \[
-            prova
+            \forall x,y \in \Omega,\ \nexists t\in\mathbb N^* :
+            \begin{dcases}
+                p(x_n=y|x_1=x)=0 \quad \forall n\neq t,2t,\ldots \\
+                p(x_n=y|x_1=x)\neq0 \quad \forall n=t,2t,\ldots
+            \end{dcases}
         \]
 \end{itemize}
 
@@ -44,7 +48,7 @@ Then, the \emph{transition probability} from $x$ to $y$ will be defined as follo
     w(x \to y) \equiv p(x_{i+1}=y|x_i=x)
 \]
 
-It is proven \cite{mc-mt} that there exist a unique probability density function $p(x\in\Omega)$
+It is proven \cite{mc-mt} that there exists a unique probability density function $p(x\in\Omega)$
 such that:
 \begin{equation}\label{eq:equilibrium}
 	p(x) = \int\mathrm dy\,w(y \to x)p(y)
@@ -53,18 +57,20 @@ and $p(x)$ is called the \emph{equilibrium distibution} (or \emph{stationary dis
 
 \subsection*{Convergence of Markov chains}
 The usefulness of Markov chains for statistical sampling is guaranteed by two important theorems:
-the convergence theorem and the ergodic theorem. The formal proof of them can be found in \cite{mc-mt}.
+the convergence theorem and the ergodic theorem. The proof of them can be found in \cite{mc-mt}.
 
 The convergence theorem states that the probability density function of a variable that is $n$ steps forward in the Markov chain
-converges to the equilibrium distribution $p(x)$, independently from the initial value:
-\begin{equation}\label{eq:convergence}
-    p(x_{i+n}=x|x_i) \xrightarrow{n\to\infty} p(x) \quad \forall i
-\end{equation}
-and the convergence rate is exponential:
-\begin{equation}\label{eq:convergence_rate}
-	\sup_{x\in\Omega} |p(x_{i+n}=x|x_i) - p(x)| \stackrel{n\to\infty}{\scalebox{2}[1.25]{$\sim$}} e^{-\frac{n}{\tau_\mathrm{mix}}}
-\end{equation}
-where $\tau_\mathrm{mix}$ is the \emph{mixing time}.
+converges to the equilibrium distribution $p(x)$, independently from the initial value $x_1$:
+\begin{theorem}[Convergence Theorem]\label{th:convergence}
+    \[
+        \forall x_1 \in \Omega,\ p(x_{n}=x|x_1) \xrightarrow{n\to\infty} p(x)
+    \]
+    and the convergence rate is exponential:
+    \[
+        \sup_{x\in\Omega} |p(x_n=x|x_1) - p(x)| \stackrel{n\to\infty}{\scalebox{2}[1.25]{$\sim$}} e^{-\frac{n}{\tau_\mathrm{mix}}}
+    \]
+    where $\tau_\mathrm{mix}$ is the \emph{mixing time}.
+\end{theorem}
 
 The convergence theorem establishes a first connection between variables that are directly sampled from $p(x)$
 and those which come from a Markov chain at equilibrium in $p(x)$.
@@ -72,21 +78,62 @@ and those which come from a Markov chain at equilibrium in $p(x)$.
 This parallelism is completed with the ergodic theorem.
 Let $f$ be a function of the random variable $x\in\Omega$ distributed according to $p(x)$.
 The arithmetic mean of $f$ evaluated over a Markov chain in equilibrim at $p(x)$ converges to the mean value of $f(x)$:
-\begin{equation*}
-    \frac{1}{n}\sum_{i=1}^n f(x_i) \xrightarrow{n\to\infty} \left<f(x)\right>_{p(x)}
-\end{equation*}
+\begin{theorem}[Ergodic theorem]\label{th:ergodic}
+    \[
+        \frac{1}{n}\sum_{i=1}^n f(x_i) \xrightarrow{n\to\infty} \left<f\right>
+    \]
+\end{theorem}
 
 The ergodic theorem justifies the introduction of all the Markov chain machinery,
-since they provide an alternative method to sample variables from a distribution and computing mean values over them.
+since it provides an alternative method to sample variables from a distribution and computing mean values over them.
 Directly sampling is, in general, more efficient than Markov chain sampling,
 but it is possible to directly sample only a very reduced class of distributions.
-With Markov chain sampling, on the other hand, there are no significant restriction apart from efficiency.
+With Markov chain sampling, on the other hand, there are no significant restrictions, apart from efficiency.
 
-However, estimating errors and computing mean values o functions that are not only dependent on 
+In practical applications, the arithmetic mean of Theorem \ref{th:ergodic} is not performed over all values of the Markov chain,
+and the first values are discarded.
+This is justified by the fact that the first value of Markov chain is usually taken arbitrarily,
+and it is therefore often very distant from the mean value and the region of typical fluctuations of the distribution.
+The sequence takes then few iterations to get closer to the mean value, and, if these values are evaluated,
+the precision of the mean value obtained will be heavily reduced.
+The number of iterations necessary for the Markov chain to reach typical values of the distribution is called \emph{thermalization time}.
+It is, in general, difficult to quantify, and the number of values to discard is usually chosen a posteriori, during the data analysis phase \cite{numerical_recipes}.
+
+
+\subsection*{Autocorrelation}
+However, Markov chain values are correlated,
+and, even though this fact does not affect the unbiasedness of the average (Theorem \ref{th:ergodic}),
+it has to be taken into account when choosing correct estimators for other quantities.%, such as the variance of the average $\overline f_n$, for example.
+
+The autocorrelation function of $f(x\in\Omega)$ is:
+\begin{align*}
+    C_f(h) &\equiv \frac{(f(x_k)-\left<f\right>)(f(x_{k+h})-\left<f\right>)}{\sigma_f^2} \\
+           &= \frac{\left<f(x_k)f(x_{k+h})\right>-\left<f\right>^2}{\sigma_f^2}
+\end{align*}
+and, using Theorem \ref{th:convergence}, it is possible to evaluate its asymptotycal behaviour.
+In fact:
+\begin{align*}
+    \left<f(x_k)f(x_{k+h})\right> &= \int\mathrm dx_k\int\mathrm dx_{k+h}f(x_k)f(x_{k+h})p(x_k)p(x_{k+h}|x_k) \\
+                                  &= \left<f\right> + \mathcal O\left(e^{-\sfrac{h}{\tau_\mathrm{mix}}}\right)
+\end{align*}
+
+
+the variance of $\overline f_n$ is:
+\begin{align*}
+    \sigma_{\overline f_n}^2 &= \left<\left(\frac{1}{n}\sum_if(x_i) - \left<f\right>\right)^2\right> \\
+                             &= \frac{1}{n^2}\sum_{ij}\left<(f(x_i)-\left<f\right>)(f(x_j)-\left<f\right>)\right> \\
+                             &= \frac{1}{n^2}\sum_{ij}\left(\left<f(x_i)f(x_j)\right>-\left<f\right>^2\right) \\
+                             &= \frac{1}{n^2}\sum_k\left(\sigma_f+\sum_{h \neq k}\left<f(x_k)f(x_h)\right>\right)
+\end{align*}
+using the stationarity condition:
+\begin{align*}
+    \sum_k\sum_{h\neq k}\left<f(x_k)f(x_h)\right> = \sum_k\left(2\sum_{h=1}^{k-1}\left<f(x_k)f(x_{k+h})\right>+\sum_{h=k}^{n-k}\left<f(x_k)f(x_{k+h})\right>\right)
+\end{align*}
 
 
 The expectation value of Equation
 
+\section{Metropolis-Hastings algorithm}
 \subsection*{Balance equations}
 The equilibrium condititon of Equation \eqref{eq:equilibrium}
 can be interpreted as a requirement of stability of the Markov chain.
