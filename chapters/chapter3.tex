@@ -43,10 +43,10 @@ In the following discussion will be only considered Markov chains that are:
         \]
 \end{itemize}
 
-Then, the \emph{transition probability} from $x$ to $y$ will be defined as follows:
-\[
+A Markov chain is univocally determided by its \emph{transition probability} from point $x$ to $y$, which is defined as:
+\begin{equation}\label{eq:transition}
     w(x \to y) \equiv p(x_{i+1}=y|x_i=x)
-\]
+\end{equation}
 
 It is proven \cite{mc-mt} that there exists a unique probability density function $p(x\in\Omega)$
 such that:
@@ -156,6 +156,13 @@ All the results present in this work are obtained with the \emph{binning} or the
 and the details of the implementation are showed in Appendix \ref{ap:data}.
 
 \section{Metropolis-Hastings algorithm}
+In the last section, it was showed how Theorems \ref{th:convergence} and \ref{th:ergodic} allow to sample a generic probability density function $p(x)$
+with Markov chains that have $p(x)$ as their equilibrium distribution.
+What is still missing in the discussion is how to define a Markov chain whose equilibrium distribution is exactly $p(x)$.
+
+To define a Markov chain, it is sufficient to specify the transition probability of Equation \ref{eq:transition},
+and the Metropolis-Hastings algorithm provides a way to do it.
+
 \subsection*{Balance equations}
 The equilibrium condititon of Equation \eqref{eq:equilibrium}
 can be interpreted as a requirement of stability of the Markov chain.
@@ -167,12 +174,6 @@ it is equivalent to:
 which is the \emph{global balance} equation.
 It states that the probability flux coming from point $x$
 is equal to the probability flux going toward point $x$ from all other points $y$.
-
-
-
-
-
-
 
 
 
