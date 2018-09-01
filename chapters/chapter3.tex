@@ -25,15 +25,15 @@ variable depends only on the value of the $i^\mathrm{th}$ variable:
 
 In the following discussion will be only considered Markov chains that are:
 \begin{itemize}
-    \item \emph{stationary}:
+    \item \emph{Stationary}:
         \[
             p(x_{i+1}|x_i) = p(x_{k+i+1}|x_{k+i}) \quad \forall k\in\mathbb N^*
         \]
-    \item \emph{ergodic}:
+    \item \emph{Ergodic}:
         \[
             \forall x,y \in \Omega,\ \exists n\in\mathbb N^* : p(x_n=y|x_1=x) \neq 0
         \]
-    \item \emph{aperiodic}:
+    \item \emph{Aperiodic}:
         \[
             \forall x,y \in \Omega,\ \nexists t\in\mathbb N^* :
             \begin{dcases}
@@ -67,7 +67,7 @@ converges to the equilibrium distribution $p(x)$, independently from the initial
     \]
     and the convergence rate is exponential:
     \[
-        \sup_{x\in\Omega} |p(x_n=x|x_1) - p(x)| \stackrel{n\to\infty}{\scalebox{2}[1.25]{$\sim$}} e^{-\frac{n}{\tau_\mathrm{mix}}}
+        \sup_{x\in\Omega} |p(x_n=x|x_1) - p(x)| \stackrel{n\to\infty}{\scalebox{2}[1.25]{$\sim$}} e^{-\sfrac{n}{\tau_\mathrm{mix}}}
     \]
     where $\tau_\mathrm{mix}$ is the \emph{mixing time}.
 \end{theorem}
@@ -80,7 +80,7 @@ Let $f$ be a function of the random variable $x\in\Omega$ distributed according 
 The arithmetic mean of $f$ evaluated over a Markov chain in equilibrim at $p(x)$ converges to the mean value of $f(x)$:
 \begin{theorem}[Ergodic theorem]\label{th:ergodic}
     \[
-        \frac{1}{n}\sum_{i=1}^n f(x_i) \xrightarrow{n\to\infty} \left<f\right>
+        \overline f_n \equiv \frac{1}{n}\sum_{i=1}^n f(x_i) \xrightarrow{n\to\infty} \left<f\right>
     \]
 \end{theorem}
 
@@ -103,7 +103,7 @@ It is, in general, difficult to quantify, and the number of values to discard is
 \subsection*{Autocorrelation}
 However, Markov chain values are correlated,
 and, even though this fact does not affect the unbiasedness of the average (Theorem \ref{th:ergodic}),
-it has to be taken into account when choosing correct estimators for other quantities.%, such as the variance of the average $\overline f_n$, for example.
+it has to be taken into account when choosing correct estimators of other quantities.%, such as the variance of the average $\overline f_n$, for example.
 
 The autocorrelation function of $f(x\in\Omega)$ is:
 \begin{align*}
@@ -114,24 +114,46 @@ and, using Theorem \ref{th:convergence}, it is possible to evaluate its asymptot
 In fact:
 \begin{align*}
     \left<f(x_k)f(x_{k+h})\right> &= \int\mathrm dx_k\int\mathrm dx_{k+h}f(x_k)f(x_{k+h})p(x_k)p(x_{k+h}|x_k) \\
-                                  &= \left<f\right> + \mathcal O\left(e^{-\sfrac{h}{\tau_\mathrm{mix}}}\right)
+                                  &= \left<f\right>^2 + \mathcal O\left(e^{-\sfrac{h}{\tau_\mathrm{mix}}}\right)
 \end{align*}
+$C_f$ then decays exponentially with the number of forward Markov steps:
+\begin{equation}\label{eq:autocorr_decay}
+    C_f(h) \stackrel{h\to\infty}{\scalebox{2}[1.25]{$\sim$}} e^{-\sfrac{h}{\tau_\mathrm{mix}}}
+\end{equation}
 
-
-the variance of $\overline f_n$ is:
+The first encounter with the autocorrelation function occurs when evaluating the variance of the average $\overline f_n$ of Theorem \ref{th:ergodic}:
 \begin{align*}
     \sigma_{\overline f_n}^2 &= \left<\left(\frac{1}{n}\sum_if(x_i) - \left<f\right>\right)^2\right> \\
                              &= \frac{1}{n^2}\sum_{ij}\left<(f(x_i)-\left<f\right>)(f(x_j)-\left<f\right>)\right> \\
                              &= \frac{1}{n^2}\sum_{ij}\left(\left<f(x_i)f(x_j)\right>-\left<f\right>^2\right) \\
-                             &= \frac{1}{n^2}\sum_k\left(\sigma_f+\sum_{h \neq k}\left<f(x_k)f(x_h)\right>\right)
+                             &= \frac{1}{n^2}\sum_i\left(\sigma_f^2+\sum_{j \neq i}\left<f(x_i)f(x_j)\right>\right)
 \end{align*}
-using the stationarity condition:
+Using the symmetry $i \leftrightarrow j$ and the stationarity condition:
 \begin{align*}
-    \sum_k\sum_{h\neq k}\left<f(x_k)f(x_h)\right> = \sum_k\left(2\sum_{h=1}^{k-1}\left<f(x_k)f(x_{k+h})\right>+\sum_{h=k}^{n-k}\left<f(x_k)f(x_{k+h})\right>\right)
+    \sum_i\sum_{j\neq i}\left<f(x_i)f(x_j)\right> &= 2\sum_i\sum_{j>i}\left<f(x_i)f(x_j)\right> \\
+                                                  &= 2\sum_k\sum_{h=1}^{n-k}\left<f(x_k)f(x_{k+h})\right> \\
+                                                  &= 2\sigma_f^2\sum_k\sum_{h=1}^{n-k}C_f(h)
+                                                  %&\xrightarrow{n\gg\tau_\mathrm{mix}} 2\sigma_{\overline f_n}^2\sum_k\sum_{h=1}^\infty C_f(h)
 \end{align*}
+and using Equation \ref{eq:autocorr_decay}:
+\[
+    \sum_k\sum_{h=1}^{n-k}C_f(h) \xrightarrow{n\gg\tau_\mathrm{mix}} \sum_k\sum_{h=1}^\infty C_f(h) = n\tau_f^\mathrm{int}
+\]
+where $\tau_f^\mathrm{int} \equiv \sum_{h=1}^\infty C_f(h)$ is the \emph{integrated autocorrelation time} and
+it is a good measure for the amount of autocorrelation of the Markov chain $f(x_1), f(x_2), \ldots$.
+The result for the variance in the limit of a large sample size is then:
+\begin{equation}\label{eq:variance}
+    \sigma_{\overline f_n}^2 \xrightarrow{n\gg\tau_\mathrm{mix}} \sigma_f^2\frac{1+2\tau_f^\mathrm{int}}{n}
+                             = \frac{\sigma_f^2}{n_f^\mathrm{eff}}
+\end{equation}
+where $n_f^\mathrm{eff} \equiv n/(1+2\tau_f^\mathrm{int})$ is the \emph{effective number} of uncorrelated values,
+since the variance of the average for uncorrelated data would have been $\sigma_f^2/n$.
 
-
-The expectation value of Equation
+A good measure for the effectiveness of a Markov chain algorithm can then be the number of effective uncorrelated values produced in a certain amount of computer time,
+and it can be used to choose simulation parameters, as it will be done in Chapter \ref{ch:results}.
+The most efficient and simple way to evaluate $\sigma_{\overline f_n}^2$, $n_f^\mathrm{eff}$, and $\tau_f^\mathrm{int}$ is with the use of \emph{resampling methods}.
+All the results present in this work are obtained with the \emph{binning} or the \emph{jackknife} resampling methods,
+and the details of the implementation are showed in Appendix \ref{ap:data}.
 
 \section{Metropolis-Hastings algorithm}
 \subsection*{Balance equations}
