@@ -1,8 +1,17 @@
 %************************************************
-\chapter{The Cluster Algorithm}\label{ch:cluster}
+\chapter{Local algorithm}\label{ch:local}
 %************************************************
 
-The Local Alogrithm
+The infrastructure is set up, and the Monte Carlo updating of link variables has to be defined.
+
+In this chapter will be firstly introduced the Metropolis-Hastings algorithm,
+and explained how it can be used to compute expectation values.
+
+Then, a specific local algorithm will be defined to compute the integral of Equation \eqref{eq:lat_exp}.
+The first simulation will be run,
+and the result of the plaquette mean value will be compared with the value reported by D\"urr and Hoelbling in 2005 \cite{durr-hoelbling:2005}.
+
+However, since the algorithm is local, at small lattice spacing, the topological freezing will be encountered.
 
 
 %*****************************************

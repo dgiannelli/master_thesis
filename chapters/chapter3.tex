@@ -1,5 +1,5 @@
 %************************************************
-\chapter{Local Algorithm}\label{ch:local}
+\chapter{Markov chain Monte Carlo}\label{ch:mcmc}
 %************************************************
 
 The infrastructure is set up, and the Monte Carlo updating of link variables has to be defined.
@@ -13,7 +13,7 @@ and the result of the plaquette mean value will be compared with the value repor
 
 However, since the algorithm is local, at small lattice spacing, the topological freezing will be encountered.
 
-\section{Markov chain Monte Carlo}
+\section{Regular Markov chains}
 
 \subsection*{Markov chains and equilibrium distributions}
 Let $x_1, x_2, x_3, \ldots \in \Omega$ be a sequence of random variables.
@@ -133,7 +133,6 @@ Using the symmetry $i \leftrightarrow j$ and the stationarity condition:
     \sum_i\sum_{j\neq i}\left<f(x_i)f(x_j)\right> &= 2\sum_i\sum_{j>i}\left<f(x_i)f(x_j)\right> \\
                                                   &= 2\sum_k\sum_{h=1}^{n-k}\left<f(x_k)f(x_{k+h})\right> \\
                                                   &= 2\sigma_f^2\sum_k\sum_{h=1}^{n-k}C_f(h)
-                                                  %&\xrightarrow{n\gg\tau_\mathrm{mix}} 2\sigma_{\overline f_n}^2\sum_k\sum_{h=1}^\infty C_f(h)
 \end{align*}
 and using Equation \ref{eq:autocorr_decay}:
 \[
@@ -155,27 +154,85 @@ The most efficient and simple way to evaluate $\sigma_{\overline f_n}^2$, $n_f^\
 All the results present in this work are obtained with the \emph{binning} or the \emph{jackknife} resampling methods,
 and the details of the implementation are showed in Appendix \ref{ap:data}.
 
-\section{Metropolis-Hastings algorithm}
+\section{Markov chain sampling}
 In the last section, it was showed how Theorems \ref{th:convergence} and \ref{th:ergodic} allow to sample a generic probability density function $p(x)$
 with Markov chains that have $p(x)$ as their equilibrium distribution.
 What is still missing in the discussion is how to define a Markov chain whose equilibrium distribution is exactly $p(x)$.
 
-To define a Markov chain, it is sufficient to specify the transition probability of Equation \ref{eq:transition},
+To define a Markov chain, it is sufficient to specify the transition probability of Equation \eqref{eq:transition},
 and the Metropolis-Hastings algorithm provides a way to do it.
 
 \subsection*{Balance equations}
 The equilibrium condititon of Equation \eqref{eq:equilibrium}
-can be interpreted as a requirement of stability of the Markov chain.
+can be interpreted as a requirement for stability of the probability flux.
 In fact, using the normalization condition $\int\mathrm dy\,w(x \to y) = 1$,
 it is equivalent to:
-\[
+\begin{equation}\label{eq:global_balance}
 	\int\mathrm dy\,w(x \to y)p(x) = \int\mathrm dy\,w(y \to x)p(y)
-\]
+\end{equation}
 which is the \emph{global balance} equation.
 It states that the probability flux coming from point $x$
-is equal to the probability flux going toward point $x$ from all other points $y$.
+is equal to the probability flux going toward point $x$ from all other points.
 
+A sufficient condition for Equation \eqref{eq:global_balance} is:
+\begin{equation}\label{eq:detailed_balance}
+	p(x)w(x \to y) = p(y)w(y \to x) \quad \forall x,y\in\Omega
+\end{equation}
+which is the \emph{detailed balance} equation.
+Here, the probability flux is in balance for every pair of points.
 
+If any of these two equations for $w(x \to y)$ is satisfied with a given $p(x)$,
+then, $p(x)$ will be the equilibrium distribution for the Markov chain.
+
+The easiest to solve of the balance equations is the detailed balance \eqref{eq:detailed_balance},
+and, usually, to sample a distribution $p(x)$, it is chosen a regular Markov chain that satisfies it.
+Metropolis-Hastings and heat-bath algorithms are two common prescriptions for building such a Markov chain.
+
+\subsection*{Metropolis-Hastings algorithm}
+Let $\mathcal P(x\to y)$ be a probability density function called \emph{proposal} probability,
+and $\mathcal A(x\to y)$ be a probability called \emph{acceptance} probability.
+
+The idea of Metropolis-Hastings algorithm is the following:
+\begin{itemize}
+    \item At each step $x$ of the Markov chain, a new value $y$, sampled from $\mathcal P(x\to y)$,
+        is proposed to be the next value of the succession, and accepted with a probability $\mathcal A(x\to y)$.
+    \item If the proposal is accepted, the Markov chain will indeed move to $y$
+    \item If rejected, the next value will be $x$, \ie the same value as the preceding step.
+\end{itemize}
+
+With such a prescription, the transition probability is:
+\[
+    w(x\to y) = 
+    \begin{dcases}
+        \mathcal P(x\to y)\mathcal A(x\to y) \quad \mathrm{for}\ y \neq x \\
+        \int\mathrm dy'\,\left[1 - \mathcal P(x\to y')\mathcal A(x\to y')\right] \quad \mathrm{for}\ y=x
+    \end{dcases}
+\]
+
+The acceptance probability $\mathcal A(x\to y)$ can than be chosen so that the detailed balance condition is satisfied.
+For $y=x$, the condition is trivially satisfied. 
+For $y\neq x$, the two members of Equation \eqref{eq:detailed_balance} are:
+\[
+    \begin{dcases}
+        p(x)w(x\to y) = \mathcal A(x\to y)p(x)\mathcal P(x\to y) \\
+        p(y)w(y\to x) = \mathcal A(y\to x)p(y)\mathcal P(y\to x)
+    \end{dcases}
+\]
+and, a solution for $\mathcal A(x\to y)$ is:
+\[
+    \mathcal A(x\to y) = \min\left\{\frac{p(y)\mathcal P(y\to x)}{p(x)\mathcal P(x\to y)},1\right\}
+\]
+
+What determines the algorithm is then the choice of $\mathcal P(x\to y)$,
+and it should be chosen carefully to make the Markov chain satisfy the regularity conditions.
+
+With this requirement satisfied, the remaining arbitrariness of $\mathcal P(x\to y)$ leaves space to algorithm optimization:
+\begin{itemize}
+    \item The Markov chain should travel across all the space $\Omega$ quickly, and the proposals should then not 
+    \item
+\end{itemize}
+
+\subsection*{Heat-bath algorithms}
 
 %*****************************************
 %*****************************************
