@@ -1,5 +1,5 @@
 %************************************************
-\chapter{Markov chain Monte Carlo}\label{ch:mcmc}
+\chapter{Monte Carlo method}\label{ch:mc}
 %************************************************
 
 The infrastructure is set up, and the Monte Carlo updating of link variables has to be defined.
@@ -134,7 +134,7 @@ Using the symmetry $i \leftrightarrow j$ and the stationarity condition:
                                                   &= 2\sum_k\sum_{h=1}^{n-k}\left<f(x_k)f(x_{k+h})\right> \\
                                                   &= 2\sigma_f^2\sum_k\sum_{h=1}^{n-k}C_f(h)
 \end{align*}
-and using Equation \ref{eq:autocorr_decay}:
+and using Equation \eqref{eq:autocorr_decay}:
 \[
     \sum_k\sum_{h=1}^{n-k}C_f(h) \xrightarrow{n\gg\tau_\mathrm{mix}} \sum_k\sum_{h=1}^\infty C_f(h) = n\tau_f^\mathrm{int}
 \]
@@ -201,13 +201,13 @@ The idea of Metropolis-Hastings algorithm is the following:
 \end{itemize}
 
 With such a prescription, the transition probability is:
-\[
+\begin{equation}\label{eq:metropolis_transition}
     w(x\to y) = 
     \begin{dcases}
         \mathcal P(x\to y)\mathcal A(x\to y) \quad \mathrm{for}\ y \neq x \\
         \int\mathrm dy'\,\left[1 - \mathcal P(x\to y')\mathcal A(x\to y')\right] \quad \mathrm{for}\ y=x
     \end{dcases}
-\]
+\end{equation}
 
 The acceptance probability $\mathcal A(x\to y)$ can than be chosen so that the detailed balance condition is satisfied.
 For $y=x$, the condition is trivially satisfied. 
@@ -219,20 +219,66 @@ For $y\neq x$, the two members of Equation \eqref{eq:detailed_balance} are:
     \end{dcases}
 \]
 and, a solution for $\mathcal A(x\to y)$ is:
-\[
+\begin{equation}\label{eq:acceptance}
     \mathcal A(x\to y) = \min\left\{\frac{p(y)\mathcal P(y\to x)}{p(x)\mathcal P(x\to y)},1\right\}
-\]
+\end{equation}
+
+If the proposal distribution is symmetric, that is, if $\mathcal P(x\to y) = \mathcal P(y\to x)$,
+then, the acceptance of Equation \eqref{eq:acceptance} reduces to:
+\begin{equation}\label{eq:acceptance_sym}
+    \mathcal A^\mathrm{sym}(x\to y) = \min\left\{\frac{p(y)}{p(x)},1\right\}
+\end{equation}
+which means that the proposal $x\to y$ will be always accepted if $p(y) > p(x)$.
+In statistical mechanics, the distribution to sample is usually the Boltzmann distribution $p(x) = e^{-\beta E(x)}$,
+which means that the proposal is always accepted when it causes a decrease of the energy.
+In lattice gauge theories the same statement still holds, with the action that takes the role of the energy.
 
 What determines the algorithm is then the choice of $\mathcal P(x\to y)$,
-and it should be chosen carefully to make the Markov chain satisfy the regularity conditions.
-
-With this requirement satisfied, the remaining arbitrariness of $\mathcal P(x\to y)$ leaves space to algorithm optimization:
+and it has to satisfy the following requirements:
 \begin{itemize}
-    \item The Markov chain should travel across all the space $\Omega$ quickly, and the proposals should then not 
-    \item
+    \item The resulting Markov chain must satisfy the regularity conditions.
+    \item It must be possible to directly sample $\mathcal P(x\to y)$ to propose values accordingly.
 \end{itemize}
 
+With them satisfied, the remaining arbitrariness of $\mathcal P(x\to y)$ leaves space to algorithm optimization.
+The sampling of $p(x)$ will be as efficient as how much fast the Markov chain will be to travel across all the space $\Omega$,
+and there are two possible ways to boost it:
+\begin{itemize}
+    \item The proposals should not be too close to the starting position, favoring then broader jumps over narrower ones.
+    \item The acceptance $\mathcal A(x\to y)$ should be as high as possible, since, at each proposal rejection,
+        the Markov chain will be stuck in the same position.
+\end{itemize}
+Usually, both of these strategy cannot be pursued all together, then, in this case, a well-balanced compromise should be found.
+
+There is, however, a way to improve the acceptance without reducing the speed of the Markov chain.
+In fact, choosing a $\mathcal P(x\to y)$ that is similar to $p(y)$ would let the ratio of Equation \eqref{eq:acceptance} to be closer to one.
+Pushing this similarity to the limit case would make the algorithm to actually be a direct sampling, when $\mathcal P(x\to y)$ is equal to $p(y)$.
+This strategy will be implemented in Chapters \ref{ch:local} and \ref{ch:cluster} to build an improved version of the local and the cluster algorithm.
+
 \subsection*{Heat-bath algorithms}
+If the domain $\Omega$ is multidimensional, and that is always the case in lattice gauge theories, then,
+the probability density function $p(x)$ can be very complicated to be sampled efficiently.
+
+However, if $p(x)$ is expressed in terms of a subset of components $x_\mathrm{sub}$, and all the others $x_\mathrm{fix}$ are kept fixed (the heath-bath),
+it may be possible that the resulting distribution can be directly sampled, or, at least,
+can be sampled efficiently with the Metropolis-Hastings algorithm.
+
+The strategy of the heat-bath algorithms is then to consider only one subset $x_\mathrm{sub}$ at a time, and update them independently.
+
+The marginalization of the subsets causes an increase of the autocorrelation time,
+but the ergodicity is satisfied anyway if the union of all subsets considered constitutes the entire set,
+even though, in some conditions, this marginalization may cause a critical slowing down.
+
+The algorithm that chooses which subset has to be updated can also be periodic,
+since aperiodicity will be guaranteed by the probabilistic nature of the local update.
+
+Finally, the detailed balance \eqref{eq:detailed_balance} is satisfied, in fact, once the subset is chosen:
+\[
+    \begin{dcases}
+        w(x_\mathrm{sub}\to y_\mathrm{sub})p(x_\mathrm{sub},x_\mathrm{fix}) = \int\mathrm dx_\mathrm{fix}\,p(y_\mathrm{sub},x_\mathrm{fix})p(x_\mathrm{sub},x_\mathrm{fix}) \\
+        w(y_\mathrm{sub}\to x_\mathrm{sub})p(y_\mathrm{sub},x_\mathrm{fix}) = \int\mathrm dx_\mathrm{fix}\,p(x_\mathrm{sub},x_\mathrm{fix})p(y_\mathrm{sub},x_\mathrm{fix})
+    \end{dcases}
+\]
 
 %*****************************************
 %*****************************************
