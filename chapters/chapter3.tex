@@ -1,21 +1,42 @@
 %************************************************
-\chapter{Monte Carlo method}\label{ch:mc}
+\chapter{The Monte Carlo method}\label{ch:mc}
 %************************************************
 
 The infrastructure is set up, and the Monte Carlo updating of link variables has to be defined.
 
-In this chapter will be firstly introduced the Metropolis-Hastings algorithm,
-and explained how it can be used to compute expectation values.
+In this Chapter will be described how to generate sequences of random variables $x_1, x_2, \ldots$ that are distributed according to a given probability density function $p(x)$.
+This methods will then be used in Chapters \ref{ch:local} and \ref{ch:cluster} to sample link variables configurations ${U}$ that follow the weight function $e^{-S^L[U]}$,
+and the expectation values of quantum operators of Equation \eqref{eq:lat_exp} can finally be evaluated.
 
-Then, a specific local algorithm will be defined to compute the integral of Equation \eqref{eq:lat_exp}.
-The first simulation will be run,
-and the result of the plaquette mean value will be compared with the value reported by D\"urr and Hoelbling in 2005 \cite{durr-hoelbling:2005}.
+%In this chapter will be firstly introduced the Metropolis-Hastings algorithm,
+%and explained how it can be used to compute expectation values.
+%
+%Then, a specific local algorithm will be defined to compute the integral of Equation \eqref{eq:lat_exp}.
+%The first simulation will be run,
+%and the result of the plaquette mean value will be compared with the value reported by D\"urr and Hoelbling in 2005 \cite{durr-hoelbling:2005}.
+%
+%However, since the algorithm is local, at small lattice spacing, the topological freezing will be encountered.
 
-However, since the algorithm is local, at small lattice spacing, the topological freezing will be encountered.
+\section{Direct sampling}
+\subsection*{Pseudo-random number generators}
+A Uniform Pseudo-Random Number Generators (URNG) is a deterministic algorithm that generates erratic and periodic
+sequences of all integers in an interval $[n_\mathrm{min},n_\mathrm{max}]$, in which $n_\mathrm{min}$ can be $0$ or $1$ and $n_\mathrm{max}$ is a very high number.
 
-\section{Regular Markov chains}
+URNGs store in memory a \emph{state}, and the next element of the sequence will be univocally determined by the current state.
+A state can be set with an integer number, called \emph{seed}, and a URNG will generate very different sequences for each seed value. 
 
-\subsection*{Markov chains and equilibrium distributions}
+If the modulus-$n$ operation is taken over the generated numbers, and if $n\ll n_\mathrm{max}$,
+the sequence will approximate a uniform random number sequence in the interval $[n_\mathrm{min},n]$.
+The quality of a URNG will depend on the the performance of such a sequence over statistical tests.
+Anyway, a good URNG should have a very long period $n_\mathrm{max}$ to perform well,
+and the length of the period can then be used as a rough measure for its quality.
+
+The most used 
+
+
+\section{Markov chain sampling}
+
+\subsection*{Regular Markov chains}
 Let $x_1, x_2, x_3, \ldots \in \Omega$ be a sequence of random variables.
 This sequence is a \emph{Markov chain} if the probability density function of the $(i+1)^\mathrm{th}$
 variable depends only on the value of the $i^\mathrm{th}$ variable:
@@ -154,15 +175,14 @@ The most efficient and simple way to evaluate $\sigma_{\overline f_n}^2$, $n_f^\
 All the results present in this work are obtained with the \emph{binning} or the \emph{jackknife} resampling methods,
 and the details of the implementation are showed in Appendix \ref{ap:data}.
 
-\section{Markov chain sampling}
-In the last section, it was showed how Theorems \ref{th:convergence} and \ref{th:ergodic} allow to sample a generic probability density function $p(x)$
-with Markov chains that have $p(x)$ as their equilibrium distribution.
+\subsection*{Balance equations}
+%In the last section, it was showed how Theorems \ref{th:convergence} and \ref{th:ergodic} allow to sample a generic probability density function $p(x)$
+%with Markov chains that have $p(x)$ as their equilibrium distribution.
 What is still missing in the discussion is how to define a Markov chain whose equilibrium distribution is exactly $p(x)$.
 
 To define a Markov chain, it is sufficient to specify the transition probability of Equation \eqref{eq:transition},
 and the Metropolis-Hastings algorithm provides a way to do it.
 
-\subsection*{Balance equations}
 The equilibrium condititon of Equation \eqref{eq:equilibrium}
 can be interpreted as a requirement for stability of the probability flux.
 In fact, using the normalization condition $\int\mathrm dy\,w(x \to y) = 1$,
@@ -255,7 +275,7 @@ In fact, choosing a $\mathcal P(x\to y)$ that is similar to $p(y)$ would let the
 Pushing this similarity to the limit case would make the algorithm to actually be a direct sampling, when $\mathcal P(x\to y)$ is equal to $p(y)$.
 This strategy will be implemented in Chapters \ref{ch:local} and \ref{ch:cluster} to build an improved version of the local and the cluster algorithm.
 
-\subsection*{Heat-bath algorithms}
+\subsection*{Heat-bath algorithm}
 If the domain $\Omega$ is multidimensional, and that is always the case in lattice gauge theories, then,
 the probability density function $p(x)$ can be very complicated to be sampled efficiently.
 
@@ -265,20 +285,31 @@ can be sampled efficiently with the Metropolis-Hastings algorithm.
 
 The strategy of the heat-bath algorithms is then to consider only one subset $x_\mathrm{sub}$ at a time, and update them independently.
 
-The marginalization of the subsets causes an increase of the autocorrelation time,
-but the ergodicity is satisfied anyway if the union of all subsets considered constitutes the entire set,
-even though, in some conditions, this marginalization may cause a critical slowing down.
+\begin{description}
+    \item{\emph{Ergodicity:}} The marginalization of the subsets causes an increase of the autocorrelation time,
+        but the ergodicity is satisfied anyway if the union of all subsets considered constitutes the entire set,
+        even though, in some conditions, this marginalization may cause a critical slowing down.
+    \item{\emph{Aperiodicity:}} The algorithm that chooses which subset has to be updated can also be periodic,
+        since aperiodicity will be guaranteed by the probabilistic nature of the local update.
+    \item{\emph{Detailed balance:}} The transition probability for a Markov step $(x_\mathrm{sub},x_\mathrm{fix})\to (y_\mathrm{sub},x_\mathrm{fix})$ is:
+        \[
+            w(x_\mathrm{sub}\to y_\mathrm{sub}) = p(y_\mathrm{sub};x_\mathrm{fix}) = \int\mathrm dx_\mathrm{fix}\,p(y_\mathrm{sub},x_\mathrm{fix})
+        \]
+        and the two members of Equation \eqref{eq:detailed_balance} are then equal:
+        \[
+            \begin{dcases}
+                w(x_\mathrm{sub}\to y_\mathrm{sub})p(x_\mathrm{sub},x_\mathrm{fix}) = \int\mathrm dx_\mathrm{fix}\,p(y_\mathrm{sub},x_\mathrm{fix})p(x_\mathrm{sub},x_\mathrm{fix}) \\
+                w(y_\mathrm{sub}\to x_\mathrm{sub})p(y_\mathrm{sub},x_\mathrm{fix}) = \int\mathrm dx_\mathrm{fix}\,p(x_\mathrm{sub},x_\mathrm{fix})p(y_\mathrm{sub},x_\mathrm{fix})
+            \end{dcases}
+        \]
+\end{description}
 
-The algorithm that chooses which subset has to be updated can also be periodic,
-since aperiodicity will be guaranteed by the probabilistic nature of the local update.
+The heat-bath and Metropolis-Hastings algorithms can be combined together,
+since the marginal distribution $p(y_\mathrm{sub};x_\mathrm{fix})$ can be sampled with a Metropolis-Hastings step.
+This kind of procedure is usually referred to as a \emph{local Metropolis-Hastings},
+and the local and cluster algorithms of Chapters \ref{ch:local} and \ref{ch:cluster} will be two instances of it.
 
-Finally, the detailed balance \eqref{eq:detailed_balance} is satisfied, in fact, once the subset is chosen:
-\[
-    \begin{dcases}
-        w(x_\mathrm{sub}\to y_\mathrm{sub})p(x_\mathrm{sub},x_\mathrm{fix}) = \int\mathrm dx_\mathrm{fix}\,p(y_\mathrm{sub},x_\mathrm{fix})p(x_\mathrm{sub},x_\mathrm{fix}) \\
-        w(y_\mathrm{sub}\to x_\mathrm{sub})p(y_\mathrm{sub},x_\mathrm{fix}) = \int\mathrm dx_\mathrm{fix}\,p(x_\mathrm{sub},x_\mathrm{fix})p(y_\mathrm{sub},x_\mathrm{fix})
-    \end{dcases}
-\]
+The name of heat-bath algorithm is, instead, usually used when the marginal distribution $p(y_\mathrm{sub};x_\mathrm{fix})$ is directly sampled.
 
 %*****************************************
 %*****************************************
