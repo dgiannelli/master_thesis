@@ -2,17 +2,128 @@
 \chapter{Local algorithm}\label{ch:local}
 %************************************************
 
-The infrastructure is set up, and the Monte Carlo updating of link variables has to be defined.
-
-In this chapter will be firstly introduced the Metropolis-Hastings algorithm,
-and explained how it can be used to compute expectation values.
-
+In this Chapter will be defined a local Metropolis-Hastings algorithm that samples the link variables.
 Then, a specific local algorithm will be defined to compute the integral of Equation \eqref{eq:lat_exp}.
 The first simulation will be run,
 and the result of the plaquette mean value will be compared with the value reported by D\"urr and Hoelbling in 2005 \cite{durr-hoelbling:2005}.
 
 However, since the algorithm is local, at small lattice spacing, the topological freezing will be encountered.
 
+\section{Link variables updating}
+\subsection*{Heat bath}
+%\begin{align*}
+%    S &= \beta\sum_s\left(1-\Re\,U[\mathcal P(s)]\right) \\
+%    \Delta S &= -\beta\Re\,\left(U[\mathcal S_0]U[\mathcal L] + U[\mathcal S_1]U[\mathcal L]\right) \\
+%             &= -\beta\Re\,(Wu) \\
+%             &= -\beta|W|\cos(\phi + \arg W) \\
+%             &= e^{-k\cos(x)}
+%\end{align*}
+The action is 
+\[
+    S = \beta\sum_s\left(1-\Re\,U[\mathcal P(s)]\right)
+\]
+The probability density function is:
+\[
+    p(U) \propto e^{-S}
+\]
+complicated.
+
+\begin{figure}[!htb]
+    \centering
+    \begin{tikzpicture}[x=4em,y=4em]
+        \draw[step=1, help lines, dashed, color=black!30] (0,0) grid (4,3);
+        \draw[->,very thick,black] (0,0) -- (4.5,0) node [right] {$x_1$};
+        \draw[->,very thick,black] (0,0) -- (0,3.5) node [above] {$x_2$};
+
+        \draw[->-,thick,Maroon] (2,1) -- node [black,right] {$\mathcal L$} (2,2);
+
+        %left staple
+        \draw[->-,thick,RoyalBlue] (2,2) -- (1,2);
+        \draw[->-,thick,RoyalBlue] (1,2) -- node [black,right] {$\mathcal S_1$} (1,1);
+        \draw[->-,thick,RoyalBlue] (1,1) -- (2,1);
+
+        %right staple
+        \draw[->-,thick,RoyalBlue] (2,2) -- (3,2);
+        \draw[->-,thick,RoyalBlue] (3,2) -- node [black,right] {$\mathcal S_2$} (3,1);
+        \draw[->-,thick,RoyalBlue] (3,1) -- (2,1);
+
+        %\node[anchor={north east}] at (1,1) {$\mathcal P_1$};
+        %\node[anchor={north east}] at (2,1) {$\mathcal P_2$};
+
+    \end{tikzpicture}
+    \caption{Staples connected to a vertical link}
+    \label{fig:staples}
+\end{figure}
+
+One link $\mathcal L$ and $u \equiv U[\mathcal L]$ $u_\mathrm{fix}$
+\[\begin{aligned}
+    p(u;u_\mathrm{fix}) &\propto e^{-\beta(1-\Re(Wu))} \\
+                        &\propto e^{\beta\Re(Wu)} \\
+                        &= e^{\beta|W|\Re\left(\frac{W}{|W|}u\right)}
+\end{aligned}\]
+$\phi \equiv \arg u$, $\phi_0 \equiv \arg W$.
+\[
+	p(\phi;u_\mathrm{fix}) \propto e^{\beta|W|\cos(\phi + \phi_0)}
+\]
+ %   \Delta S = \beta \Re Wu = \beta|W| \Re \left(\frac{W}{|W|} u\right)
+$x \equiv \phi + \phi_0$ $k \equiv \beta|W|$
+\[
+    p(x;u_\mathrm{fix}) \propto e^{-k\cos(x)}
+\]
+
+\[
+	p(x) = e^{-k\cos(x)}
+\]
+
+\[
+    e^{k\cos(x)} \stackrel{k\to\infty}{\scalebox{2}[1.25]{$\sim$}} e^{-kx^2/2}
+\]
+
+Laplace's method:
+\[
+	\int_a^b\mathrm dx\,e^{kf(x)} \xrightarrow{k\to\infty} e^{kf(x_0)}\int_a^b\mathrm dx\,e^{kf"(x_0)(x-x_0)^2/2}
+\]
+
+\[
+    \int_{-\pi}^x\mathrm dx'\,e^{k\cos(x')} \stackrel{k\to\infty}{\scalebox{2}[1.25]{$\sim$}} \int_{-\pi}^x\mathrm dx'\,e^{-k{x'}^2/2}
+\]
+\[
+    e^{k\cos(x)} \stackrel{k\to\infty}{\scalebox{2}[1.25]{$\sim$}} e^{-kx^2/2}
+\]
+
+
+\subsection*{Gaussian sampling}
+\[
+    p(x) \propto e^{-\frac{k}{2}x^2}
+\]
+
+\[
+    p(x_1,x_2) \propto e^{-\frac{k}{2}(x_1^2+x_2^2)}
+\]
+
+\[\begin{dcases}
+    x_1 = r \cos\theta \\
+    x_2 = r \sin\theta \\
+\end{dcases}\]
+
+\[\begin{aligned}
+    p(r,\theta) &= p(r)p(\theta) \\
+                &= \left(\mathcal Nre^{-\frac{k}{2}r^2}\right)\left(\frac{1}{2\pi}\right)
+\end{aligned}\]
+\[
+    F(r) = \int_0^r\mathrm dr'\,p(r') = \frac{\mathcal N}{k}\left.e^{-\frac{k}{2}{r'}^2}\right|_r^0 = \frac{\mathcal N}{k}\left(1-e^{-\frac{k}{2}r^2}\right) \equiv y_1
+\]
+\[
+    F^{-1}(y_1) = 
+\]
+
+\subsection{Local Metropolis-Hastings}
+
+\section{First results}
+
+\subsection{Plaquette mean value}
+
+\subsection{Topological freezing}
 
 %*****************************************
 %*****************************************
