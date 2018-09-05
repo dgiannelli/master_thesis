@@ -91,6 +91,12 @@ Laplace's method:
     e^{k\cos(x)} \stackrel{k\to\infty}{\scalebox{2}[1.25]{$\sim$}} e^{-kx^2/2}
 \]
 
+\begin{figure}[!htb]
+    \centering
+    \input{plots/gauss.pgf}
+    \caption{$ProvaProvaProva$}
+    \label{fig:gauss}
+\end{figure}
 
 \subsection*{Gaussian sampling}
 \[
@@ -114,8 +120,17 @@ Laplace's method:
     F(r) = \int_0^r\mathrm dr'\,p(r') = \frac{\mathcal N}{k}\left.e^{-\frac{k}{2}{r'}^2}\right|_r^0 = \frac{\mathcal N}{k}\left(1-e^{-\frac{k}{2}r^2}\right) \equiv y_1
 \]
 \[
-    F^{-1}(y_1) = 
+    r = F^{-1}(y_1) = \sqrt{-\frac{2}{k}\log\left(1-\frac{k}{\mathcal N}y_1\right)}
 \]
+\[
+    \mathcal N^{-1} = \int_0^\pi\mathrm dr\,re^{-\frac{k}{2}r^2} = \frac{1}{k}\left(1-e^{-\frac{k}{2}\pi^2}\right)
+\]
+\begin{equation*}
+    \begin{dcases}
+        x_1 = -\frac{k}{2}\log\left[1-y_1\left(1-e^{-\frac{k}{2}\pi^2}\right)\right]\cos(2\pi y_2) \\
+        x_2 = -\frac{k}{2}\log\left[1-y_1\left(1-e^{-\frac{k}{2}\pi^2}\right)\right]\sin(2\pi y_2)
+    \end{dcases}
+\end{equation*}
 
 \subsection{Local Metropolis-Hastings}
 
