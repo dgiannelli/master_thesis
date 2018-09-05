@@ -48,17 +48,17 @@ for (k, ax) in zip(ks,axs):
     pdf = ax.plot(x,p(x))
     gaus = ax.plot(x,g(x))
 
-    ax.set_xlabel('xlabel')
+    ax.set_xlabel('$x$')
     ax.set_xticks([-np.pi, -np.pi/2, 0, np.pi/2, np.pi])
     ax.set_xticklabels([r'$-\pi$', r'$-\pi/2$', r'$0$', r'$\pi/2$', r'$\pi$'])
     ax.set_title('$k={}$'.format(k), size='medium')
 
 
-axs[0].set_ylabel('ylabel')
-fig.suptitle("Laplace's method")
+axs[0].set_ylabel('$p(x)$')
+fig.suptitle("Laplace's method")#, y=1.)
 fig.legend((pdf[0],gaus[0]), (r'$\sim e^{k\cos x}$',r'$\sim e^{-kx^2/2}$'),
-        ncol=2, loc='upper center', bbox_to_anchor=(0.5,0.11))
-fig.subplots_adjust(bottom=0.28)
+        ncol=2, loc='upper center', bbox_to_anchor=(0.5,0.14))
+fig.subplots_adjust(bottom=0.27, top=0.85)
 #fig.tight_layout()
 #fig.subplots_adjust(wspace=0)
 fig.savefig('gauss.pgf')

@@ -10,7 +10,7 @@ and the result of the plaquette mean value will be compared with the value repor
 However, since the algorithm is local, at small lattice spacing, the topological freezing will be encountered.
 
 \section{Link variables updating}
-\subsection*{Heat bath}
+\subsection*{Heat-bath}
 %\begin{align*}
 %    S &= \beta\sum_s\left(1-\Re\,U[\mathcal P(s)]\right) \\
 %    \Delta S &= -\beta\Re\,\left(U[\mathcal S_0]U[\mathcal L] + U[\mathcal S_1]U[\mathcal L]\right) \\
@@ -18,34 +18,63 @@ However, since the algorithm is local, at small lattice spacing, the topological
 %             &= -\beta|W|\cos(\phi + \arg W) \\
 %             &= e^{-k\cos(x)}
 %\end{align*}
-The action is 
-\[
-    S = \beta\sum_s\left(1-\Re\,U[\mathcal P(s)]\right)
-\]
-The probability density function is:
+The probability density function of links configurations $\{U\}$ is:
 \[
     p(U) \propto e^{-S}
 \]
-complicated.
+in which the action $S$ is:
+\[
+    S = \beta\sum_s\left(1-\Re\,U[\mathcal P(s)]\right)
+\]
+Every plaquette value $\Re\,U[\mathcal P(s)]$ depends on four links variables,
+and every link variable contributes to two different plaquettes.
+
+Links variables are then simultaneously coupled in their probability density function,
+which is then impossible to sample directly.
+
+However, the action has a local nature,
+since every link variable contributes only to the two plaquettes that include it.
+Thus, using the heat-bath approach and considering only the marginal distribution of one link variable,
+the contribution of all plaquettes that do not include the link can be integrated out of the distribution.
+
+Let $\mathcal L$ be the link considered, and $\mathcal P_1, \mathcal P_2$ the two plaquettes that include it.
+The two paths $\mathcal S_1, \mathcal S_2$ sketched in Figure \ref{fig:staples}
+are called \emph{staples}.
+They are all the staples connected to $\mathcal L$,
+in the sense that they are the staples that form a plaquette if $\mathcal L$ is included to them.
 
 \begin{figure}[!htb]
     \centering
-    \begin{tikzpicture}[x=4em,y=4em]
-        \draw[step=1, help lines, dashed, color=black!30] (0,0) grid (4,3);
-        \draw[->,very thick,black] (0,0) -- (4.5,0) node [right] {$x_1$};
-        \draw[->,very thick,black] (0,0) -- (0,3.5) node [above] {$x_2$};
+    \begin{tikzpicture}[x=5em,y=5em]
+        \draw[step=1, help lines, dashed, color=black!30] (0,0) grid (3.5,2.5);
+        \draw[->,thick,black] (0,0) -- (3.5,0) node [right] {$x_1$};
+        \draw[->,thick,black] (0,0) -- (0,2.5) node [above] {$x_2$};
 
-        \draw[->-,thick,Maroon] (2,1) -- node [black,right] {$\mathcal L$} (2,2);
+        \draw[->-,very thick,orange] (2,1) node [black,below] {$\mathcal L$} --  (2,2);
 
         %left staple
-        \draw[->-,thick,RoyalBlue] (2,2) -- (1,2);
-        \draw[->-,thick,RoyalBlue] (1,2) -- node [black,right] {$\mathcal S_1$} (1,1);
-        \draw[->-,thick,RoyalBlue] (1,1) -- (2,1);
+        \draw[->-,very thick,RoyalBlue] (2,2) -- (1,2);
+        \draw[->-,very thick,RoyalBlue] (1,2) -- node [black,left] {$\mathcal S_1$} (1,1);
+        \draw[->-,very thick,RoyalBlue] (1,1) -- (2,1);
 
         %right staple
-        \draw[->-,thick,RoyalBlue] (2,2) -- (3,2);
-        \draw[->-,thick,RoyalBlue] (3,2) -- node [black,right] {$\mathcal S_2$} (3,1);
-        \draw[->-,thick,RoyalBlue] (3,1) -- (2,1);
+        \draw[->-,very thick,RoyalBlue] (2,2) -- (3,2);
+        \draw[->-,very thick,RoyalBlue] (3,2) -- node [black,right] {$\mathcal S_2$} (3,1);
+        \draw[->-,very thick,RoyalBlue] (3,1) -- (2,1);
+
+        %left plaq
+        \draw[->-,thick,dashed,black] (1.2,1.2) -- (1.8,1.2);
+        \draw[->-,thick,dashed,black] (1.8,1.2) -- (1.8,1.8);
+        \draw[->-,thick,dashed,black] (1.8,1.8) -- (1.2,1.8);
+        \draw[->-,thick,dashed,black] (1.2,1.8) -- (1.2,1.2);
+        \node at (1.5,1.5) {$\mathcal P_1$};
+
+        %right plaq
+        \draw[->-,thick,dashed,black] (2.2,1.2) -- (2.8,1.2);
+        \draw[->-,thick,dashed,black] (2.8,1.2) -- (2.8,1.8);
+        \draw[->-,thick,dashed,black] (2.8,1.8) -- (2.2,1.8);
+        \draw[->-,thick,dashed,black] (2.2,1.8) -- (2.2,1.2);
+        \node at (2.5,1.5) {$\mathcal P_2$};
 
         %\node[anchor={north east}] at (1,1) {$\mathcal P_1$};
         %\node[anchor={north east}] at (2,1) {$\mathcal P_2$};
@@ -55,6 +84,13 @@ complicated.
     \label{fig:staples}
 \end{figure}
 
+The contribution of $\mathcal P_1, \mathcal P_2$ to the action can be written in terms of
+the link variable $u \equiv U[\mathcal L]$ in the following way:
+\[\begin{aligned}
+    \Re\,U[\mathcal P_1] + \Re\,U[\mathcal P_2] &= \Re\,(uU[\mathcal S_1]) + \Re\,(u^*U^*[\mathcal S_2]) \\
+                                                &= \Re\,(Wu)
+\end{aligned}\]
+where $W \equiv U[\mathcal P_1] + U[\mathcal P_2] \notin U(1)$ has a modulus $|W|\neq1$.
 One link $\mathcal L$ and $u \equiv U[\mathcal L]$ $u_\mathrm{fix}$
 \[\begin{aligned}
     p(u;u_\mathrm{fix}) &\propto e^{-\beta(1-\Re(Wu))} \\
@@ -94,7 +130,7 @@ Laplace's method:
 \begin{figure}[!htb]
     \centering
     \input{plots/gauss.pgf}
-    \caption{$ProvaProvaProva$}
+    \caption{$p(x;u_\mathrm{fix})$ converges to a Gaussian as $k$ increases}
     \label{fig:gauss}
 \end{figure}
 
