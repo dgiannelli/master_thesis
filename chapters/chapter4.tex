@@ -91,41 +91,43 @@ the link variable $u \equiv U[\mathcal L]$ in the following way:
                                                 &= \Re\,(Wu)
 \end{aligned}\]
 where $W \equiv U[\mathcal P_1] + U[\mathcal P_2] \notin U(1)$ has a modulus $|W|\neq1$.
-One link $\mathcal L$ and $u \equiv U[\mathcal L]$ $u_\mathrm{fix}$
+Thus, the marginal distribution of $u$ with all the other link variables kept fixed at $u_\mathrm{fix}$ is:
 \[\begin{aligned}
     p(u;u_\mathrm{fix}) &\propto e^{-\beta(1-\Re(Wu))} \\
                         &\propto e^{\beta\Re(Wu)} \\
-                        &= e^{\beta|W|\Re\left(\frac{W}{|W|}u\right)}
+                        &= e^{\beta|W|\Re\left(u_0\right)}
 \end{aligned}\]
-$\phi \equiv \arg u$, $\phi_0 \equiv \arg W$.
+Here, $u_0 \equiv \frac{W}{|W|}u \in U(1)$, and $\mathrm du_0=\mathrm du$ are then the same Haar measure of the compact group $U(1)$.
+Which means:
 \[
-	p(\phi;u_\mathrm{fix}) \propto e^{\beta|W|\cos(\phi + \phi_0)}
+    p(u;u_\mathrm{fix}) = p(u_0;u_\mathrm{fix}) \propto e^{\beta|W|\Re\left(u_0\right)}
 \]
- %   \Delta S = \beta \Re Wu = \beta|W| \Re \left(\frac{W}{|W|} u\right)
-$x \equiv \phi + \phi_0$ $k \equiv \beta|W|$
-\[
-    p(x;u_\mathrm{fix}) \propto e^{-k\cos(x)}
-\]
+Indeed, $u$ can be parameterized as $u\equiv e^{i\phi}$ in which $\phi$ is defined in $(-\pi + \phi_0, \pi + \phi_0]$ with a generic $\phi_0$.
+After a transformation $u \rightarrow \frac{W}{|W|}u$, $\phi$ undergoes the translation $\phi \rightarrow \phi + \arg W$.
+If the parameterization is redefined as $\phi_0 \rightarrow \phi_0 - \arg W$, the shift of the definition interval of $\phi$ is then reabsorbed.
 
-\[
-	p(x) = e^{-k\cos(x)}
-\]
+Choosing to parameterize $u_0 \equiv e^{ix}$ with $x \in (-\pi, \pi]$,
+the marginal distribution of $x$ finally is:
+\begin{equation}\label{eq:local_pdf}
+    p(x;u_\mathrm{fix}) \propto e^{k\cos(x)} \quad x \in (-\pi, \pi]
+\end{equation}
+with $k \equiv \beta|W|$.
+Equation \eqref{eq:local_pdf} cannot be integrated analytically,
+therefore it is not possible to directly sample it.
 
-\[
+It was chosen to sample it using a Metropolis-Hastings algorithm,
+which means that a proposal distribution $\mathcal P(x\to y)$ has to be defined.
+
+For what has been said at the end of Chapter \ref{ch:mc},
+the acceptance of the algorithm increases as much similar $\mathcal P(x\to y)$ gets to $p(x;u_\mathrm{fix})$.
+
+On this matter, Laplaces's method identifies such a distribution.
+Indeed it is its corollary that any unimodal distribution of the form $\propto e^{kf(x)}$ approaches to a Gaussian as $k$ increases.
+
+In particular, it proves that (Figure \ref{fig:gauss}):
+\begin{equation}\label{eq:gauss_approx}
     e^{k\cos(x)} \stackrel{k\to\infty}{\scalebox{2}[1.25]{$\sim$}} e^{-kx^2/2}
-\]
-
-Laplace's method:
-\[
-	\int_a^b\mathrm dx\,e^{kf(x)} \xrightarrow{k\to\infty} e^{kf(x_0)}\int_a^b\mathrm dx\,e^{kf"(x_0)(x-x_0)^2/2}
-\]
-
-\[
-    \int_{-\pi}^x\mathrm dx'\,e^{k\cos(x')} \stackrel{k\to\infty}{\scalebox{2}[1.25]{$\sim$}} \int_{-\pi}^x\mathrm dx'\,e^{-k{x'}^2/2}
-\]
-\[
-    e^{k\cos(x)} \stackrel{k\to\infty}{\scalebox{2}[1.25]{$\sim$}} e^{-kx^2/2}
-\]
+\end{equation}
 
 \begin{figure}[!htb]
     \centering
@@ -134,7 +136,34 @@ Laplace's method:
     \label{fig:gauss}
 \end{figure}
 
+Laplace's method states that, if $f(x)$ is a twice-differentiable function that has only one maximum point $x_0 \in [a,b]$ with $x_0 \neq a,b$,
+then:
+\begin{equation}\label{eq:laplace}
+	\int_a^b\mathrm dx\,e^{kf(x)} \xrightarrow{k\to\infty} e^{kf(x_0)}\int_a^b\mathrm dx\,e^{kf"(x_0)(x-x_0)^2/2}
+\end{equation}
+Indeed, as $k$ increases, the points that are further from the maximum point $x_0$ are exponentially suppressed,
+and only the points in the range of $x_0$ becomes relevant to the integral.
+The order zero of the Taylor expansion of $f(x)$ around $x_0$ is a multiplicative constant and the order one does not contribute since it is symmetric.
+The meaningful part is then the second order, which is negative since $x_0$ is a maximum,
+and hence the integrand of the second term of Equation \eqref{eq:laplace} is a Gaussian.
+
+Applying Laplace's method for the case of Equatiton \eqref{eq:local_pdf},
+the global maximum is $x_0=0$, and $f"(x_0) = -1$.
+Thus:
+\[
+    \int_{-\pi}^x\mathrm dx'\,e^{k\cos(x')} \stackrel{k\to\infty}{\scalebox{2}[1.25]{$\sim$}} \int_{-\pi}^x\mathrm dx'\,e^{-k{x'}^2/2} \quad \mathrm{for}\ x>0
+\]
+and equation \eqref{eq:gauss_approx} is recovered taking the derivative of both members, and extending the results for symmetry around $0$.
+
 \subsection*{Gaussian sampling}
+The proposal distribution has then been chosen to be:
+\[
+    \mathcal P(x\to y) \propto e^{-kx^2/2}
+\]
+
+
+
+
 \[
     p(x) \propto e^{-\frac{k}{2}x^2}
 \]

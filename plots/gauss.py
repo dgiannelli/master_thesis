@@ -56,7 +56,7 @@ for (k, ax) in zip(ks,axs):
 
 axs[0].set_ylabel('$p(x)$')
 fig.suptitle("Laplace's method")#, y=1.)
-fig.legend((pdf[0],gaus[0]), (r'$\sim e^{k\cos x}$',r'$\sim e^{-kx^2/2}$'),
+fig.legend((pdf[0],gaus[0]), (r'$\propto e^{k\cos x}$',r'$\propto e^{-kx^2/2}$'),
         ncol=2, loc='upper center', bbox_to_anchor=(0.5,0.14))
 fig.subplots_adjust(bottom=0.27, top=0.85)
 #fig.tight_layout()
