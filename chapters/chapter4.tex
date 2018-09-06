@@ -116,10 +116,10 @@ Equation \eqref{eq:local_pdf} cannot be integrated analytically,
 therefore it is not possible to directly sample it.
 
 It was chosen to sample it using a Metropolis-Hastings algorithm,
-which means that a proposal distribution $\mathcal P(x\to y)$ has to be defined.
+which means that a proposal distribution $\mathcal P(y\to x)$ has to be defined.
 
 For what has been said at the end of Chapter \ref{ch:mc},
-the acceptance of the algorithm increases as much similar $\mathcal P(x\to y)$ gets to $p(x;u_\mathrm{fix})$.
+the acceptance of the algorithm increases as much similar $\mathcal P(y\to x)$ gets to $p(x;u_\mathrm{fix})$.
 
 On this matter, Laplaces's method identifies such a distribution.
 Indeed it is its corollary that any unimodal distribution of the form $\propto e^{kf(x)}$ approaches to a Gaussian as $k$ increases.
@@ -157,45 +157,94 @@ and equation \eqref{eq:gauss_approx} is recovered taking the derivative of both 
 
 \subsection*{Gaussian sampling}
 The proposal distribution has then been chosen to be:
-\[
-    \mathcal P(x\to y) \propto e^{-kx^2/2}
-\]
+\begin{equation}\label{eq:gauss_proposal}
+    \mathcal P(y\to x) \propto e^{-kx^2/2} \quad x \in (-\pi,\pi]
+\end{equation}
 
+A Gaussian in $(-\infty,\infty)$ can be directly sampled using the Box-Muller method,
+and an adaptation of it is needed to restrict the variable into $(-\pi,\pi)$.
 
-
-
-\[
-    p(x) \propto e^{-\frac{k}{2}x^2}
-\]
-
-\[
+The probability density function of two independent random variables $x_1,x_2$ distributed according to $\mathcal P(y\to x)$ is:
+\begin{equation}\label{eq:gauss2d}
     p(x_1,x_2) \propto e^{-\frac{k}{2}(x_1^2+x_2^2)}
+\end{equation}
+
+Switching to polar coordinates\footnote{The correct extreme values of the interval of definition will be recovered afterwards, adapting the final solution.}:
+\[\begin{aligned}
+    &\begin{dcases}
+        x_1 = r \cos\theta \\
+        x_2 = r \sin\theta
+    \end{dcases}
+    &
+    \begin{dcases}
+        r \in (0,\pi] \\
+        \theta \in [0,2\pi)
+    \end{dcases}&
+\end{aligned}\]
+the distribution in terms of $r$ and $\theta$ becomes:
+\[
+    p(r,\theta) \propto re^{-\frac{k}{2}r^2}
 \]
-
-\[\begin{dcases}
-    x_1 = r \cos\theta \\
-    x_2 = r \sin\theta \\
-\end{dcases}\]
-
+which is separable into two independent distributions:
 \[\begin{aligned}
     p(r,\theta) &= p(r)p(\theta) \\
                 &= \left(\mathcal Nre^{-\frac{k}{2}r^2}\right)\left(\frac{1}{2\pi}\right)
 \end{aligned}\]
+where $\mathcal N$ is a normalization constant.
+
+$p(\theta)$ is a uniform distribution and is then trivial to sample.
+To directly sample $p(r)$, instead, can be used the procedure defined in Chapter \ref{ch:mc}.
+Indeed, integrating it:
 \[
-    F(r) = \int_0^r\mathrm dr'\,p(r') = \frac{\mathcal N}{k}\left.e^{-\frac{k}{2}{r'}^2}\right|_r^0 = \frac{\mathcal N}{k}\left(1-e^{-\frac{k}{2}r^2}\right) \equiv y_1
+    F(r) = \int_0^r\mathrm dr'\,p(r') = \frac{\mathcal N}{k}\left.e^{-\frac{k}{2}{r'}^2}\right|_r^0 = \frac{\mathcal N}{k}\left(1-e^{-\frac{k}{2}r^2}\right)
 \]
-\[
-    r = F^{-1}(y_1) = \sqrt{-\frac{2}{k}\log\left(1-\frac{k}{\mathcal N}y_1\right)}
-\]
+and evaluating its inverse $F^{-1}(y_1)$:
+\[\begin{aligned}
+    y_1 &= F(r) = \frac{\mathcal N}{k}\left(1-e^{-\frac{k}{2}r^2}\right) \\
+        &\Rightarrow e^{-\frac{k}{2}r^2} = 1 - y_1\frac{k}{\mathcal N} \\
+        &\Rightarrow F^{-1}(y_1) = r = \sqrt{-\frac{2}{k}\log\left(1-\frac{k}{\mathcal N}y_1\right)}
+\end{aligned}\]
+
+It remains to evaluate the normalization constant:
 \[
     \mathcal N^{-1} = \int_0^\pi\mathrm dr\,re^{-\frac{k}{2}r^2} = \frac{1}{k}\left(1-e^{-\frac{k}{2}\pi^2}\right)
 \]
+to get:
+\[
+    F^{-1}(y_1) = \sqrt{-\frac{2}{k}\log\left[1-y_1\left(1-e^{-\frac{k}{2}\pi^2}\right)\right]}
+\]
+which means that if $y_1, y_2$ are equally distributed in $(0,1)$, then:
 \begin{equation*}
     \begin{dcases}
-        x_1 = -\frac{k}{2}\log\left[1-y_1\left(1-e^{-\frac{k}{2}\pi^2}\right)\right]\cos(2\pi y_2) \\
-        x_2 = -\frac{k}{2}\log\left[1-y_1\left(1-e^{-\frac{k}{2}\pi^2}\right)\right]\sin(2\pi y_2)
+        x_1 = F^{-1}(y_1)\cos(2\pi y_2) \\
+        x_2 = F^{-1}(y_1)\sin(2\pi y_2)
     \end{dcases}
 \end{equation*}
+are two independent variables distributed according to \eqref{eq:gauss2d}.
+
+However they do not span homogeneously all the interval $(-\pi,\pi]$ if the probability of being exactly at points $0$ and $\pi$ is taken into account,
+which is non-zero in numerical applications because the representation of numbers in computer memory is finite.
+
+To obtain a random variable $x = r\cos \theta \in (-\pi,\pi]$,
+it is necessary that $r \in [0,\pi]$ and $\theta \in (-\pi,\pi)$.
+
+Since $F^{-1}(0)=0$ and $F^{-1}(1)=\pi$,
+a completely uniform variable $x$ distributed according to Equation \eqref{eq:gauss_proposal} is given by:
+\begin{equation}\label{eq:gauss_angle}\begin{gathered}
+    x = \sqrt{-\frac{2}{k}\log\left[1-y_1\left(1-e^{-\frac{k}{2}\pi^2}\right)\right]}\cos\left[2\pi\left(y_2-\frac{1}{2}\right)\right] \\
+    \mathrm{with}\ \begin{dcases}
+                         y_1 \in [0,1] \\
+                         y_2 \in (0,1)
+                   \end{dcases}
+\end{gathered}\end{equation}
+
+\begin{equation}
+    prova
+\end{equation}
+
+
+
+
 
 \subsection{Local Metropolis-Hastings}
 
