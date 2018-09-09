@@ -61,5 +61,5 @@ fig.legend((pdf[0],gaus[0]), (r'$\propto e^{k\cos x}$',r'$\propto e^{-kx^2/2}$')
 fig.subplots_adjust(bottom=0.27, top=0.85)
 #fig.tight_layout()
 #fig.subplots_adjust(wspace=0)
-fig.savefig('gauss.pgf')
+fig.savefig('gfx/gauss.pgf')
 

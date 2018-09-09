@@ -116,10 +116,8 @@ Equation \eqref{eq:local_pdf} cannot be integrated analytically,
 therefore it is not possible to directly sample it.
 
 It was chosen to sample it using a Metropolis-Hastings algorithm,
-which means that a proposal distribution $\mathcal P(y\to x)$ has to be defined.
-
-For what has been said at the end of Chapter \ref{ch:mc},
-the acceptance of the algorithm increases as much similar $\mathcal P(y\to x)$ gets to $p(x;u_\mathrm{fix})$.
+and, what has been said at the end of Chapter \ref{ch:mc},
+the acceptance of the algorithm increases as much similar $\mathcal P(x_\mathrm{old}\to x_\mathrm{new})$ gets to $p(x_\mathrm{new};u_\mathrm{fix})$.
 
 On this matter, Laplaces's method identifies such a distribution.
 Indeed it is its corollary that any unimodal distribution of the form $\propto e^{kf(x)}$ approaches to a Gaussian as $k$ increases.
@@ -131,7 +129,7 @@ In particular, it proves that (Figure \ref{fig:gauss}):
 
 \begin{figure}[!htb]
     \centering
-    \input{plots/gauss.pgf}
+    \input{gfx/gauss.pgf}
     \caption{$p(x;u_\mathrm{fix})$ converges to a Gaussian as $k$ increases}
     \label{fig:gauss}
 \end{figure}
@@ -238,19 +236,121 @@ a completely uniform variable $x$ distributed according to Equation \eqref{eq:ga
                    \end{dcases}
 \end{gathered}\end{equation}
 
+\subsection*{Local Metropolis-Hastings}
+Now that the proposal distribution $\mathcal P(x_\mathrm{old}\to x_\mathrm{new})$ has been chosen,
+the local algorithm can be defined as follows:
+\begin{itemize}
+    \item Select one link $\mathcal L$.
+    \item Identify $\mathcal S_1$ and $\mathcal S_2$, the staples connected to $\mathcal L$ (Figure \ref{fig:staples}).
+    \item Compute $W$, and then $k$ and $x_\mathrm{old}$:
+        \[\begin{aligned}
+            &W = U[\mathcal S_1] + U[\mathcal S_2],
+            &
+            &\begin{dcases}
+                k = \beta |W| \\
+                x_\mathrm{old} = \arg\left(WU[\mathcal L]\right)
+            \end{dcases}
+        \end{aligned}\]
+    \item Extract $x_\mathrm{new}$ from $\mathcal P(x_\mathrm{old}\to x_\mathrm{new})$ using Equation \eqref{eq:gauss_angle}.
+    \item Accept the proposal with probability (Equations (\ref{eq:acceptance}, \ref{eq:local_pdf}, \ref{eq:gauss_proposal})):
+        \[\begin{aligned}
+            \mathcal A(x_\mathrm{old}\to x_\mathrm{new})
+                 &=  \min\left\{\frac{p(x_\mathrm{new};u_\mathrm{fix})\mathcal P(x_\mathrm{new}\to x_\mathrm{old})}
+                                     {p(x_\mathrm{old};u_\mathrm{fix})\mathcal P(x_\mathrm{old}\to x_\mathrm{new})},1\right\} \\[.5em]
+                 &= \min\left\{e^{k\left(\cos(x_\mathrm{new})-\frac{1}{2}x_\mathrm{old}^2-\cos(x_\mathrm{old})+\frac{1}{2}x_\mathrm{new}^2\right)},1\right\}
+        \end{aligned}\]
+        That is, generate a random variable $p$ from the uniform distribution in $[0,1)$,
+        and accept the proposal if:
+        \[
+            p < e^{k\left(\cos(x_\mathrm{new})-\frac{1}{2}x_\mathrm{old}^2-\cos(x_\mathrm{old})+\frac{1}{2}x_\mathrm{new}^2\right)}
+        \]
+    \item If the proposal is accepted, set the corresponding new value for the link variable $U[\mathcal L]$
+        \[
+            U[\mathcal L] \mapsfrom e^{i(x_\mathrm{new}-\arg W)}
+        \]
+\end{itemize}
+
+The local algorithm should then iterate over all links in the lattice to be ergodic, as discussed in Chapter \ref{ch:mc}.
+Every sweep over all lattice links will be considered a step of the Markov chain,
+and the expectation values will be evaluated on this sequence.
+
+\subsection*{Local algorithm implementation}
+Here will be provided a C++17 implementation of the local algorithm using the {\ttfamily Lattice class} introduced in Chapter \ref{ch:lattice}.
+
+However, it is necessary to define the interface to sample the proposal distribution of Equation \eqref{eq:gauss_proposal} and the uniform distribution.
+
+In the C++ Standard Library, probability distributions are defined in terms of a generic templated type {\ttfamily URNG},
+and the same convention will be used here.
+
+The uniform distribution is alredy present in the Standard implemented as the {\ttfamily uniform\_real\_distribution} class.
+So it is just needed to instatiate it with the defaulf interval parameters, which correspond to the interval $[0,1)$:
+\begin{lstlisting}[caption={Uniform distribution sampling function}]
+// Usage: uniform(URNG) -> x unif. in [0,1)
+uniform_real_distribution<> uniform;
+\end{lstlisting}
+
+The algorithm of Equation \eqref{eq:gauss_angle} can be implemented using the interface of Standard's URNGs:
+\begin{lstlisting}[caption={Gaussian angle distribution sampling function}]
+template <class URNG>
+double gauss_angle(double k, URNG &rng)
+{
+	// y1 unif in [0,1], y2 unif in (0,1)
+    double y1 = (double)(rng()-rng.min())/(rng.max()-rng.min());
+    double y2 = (double)(rng()-rng.min()+1lu)
+                         / (rng.max()-rng.min()+2lu);
+
+    double r = sqrt(-2./k*log(1.-y1*(1.-exp(-0.5*k*pi*pi))));
+    double theta = 2.*pi*(y2-0.5);
+
+    return r*cos(theta);
+}
+\end{lstlisting}
+
+
+\begin{lstlisting}[caption={Staple type}]
+struct Staple : array<Link,3>
+{
+    Staple(Link link, int nextdir)
+    {
+        array<int,3> dirs = {nextdir,-link.dir,-nextdir};
+
+        auto [x1, x2] = link.site;
+        for (int i : {0,1,2}) {
+            // Shift x1,x2 along link dirs
+            switch (dirs[i]): {
+                case 1: x1++; break;
+                case -1: x1--; break;
+                case 2: x2++; break;
+                case -2: x2--; break;
+            }
+            (*this)[i] = Link{x1,x2,dirs[i]};
+        }
+    }
+};
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Connected staples function}]
+pair<Staple> connected_staples(Link link)
+{
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Local update function}]
+template <class URNG>
+void local_update(Lattice lat, Link link, URNG &rng)
+{
+
+}
+\end{lstlisting}
+
+
 \begin{equation}
     prova
 \end{equation}
 
-
-
-
-
-\subsection{Local Metropolis-Hastings}
-
 \section{First results}
 
-\subsection{Plaquette mean value}
+\subsection{Action}
 
 \subsection{Topological freezing}
 
