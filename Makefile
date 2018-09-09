@@ -6,8 +6,8 @@ plots := $(patsubst plots/%.py,gfx/%.pgf,$(wildcard plots/*.py))
 gfx/%.pgf: plots/%.py
 	python $<
 
-pdf: plots
-	latexmk -pdf
+pdf: $(plots)
+	latexmk thesis -pdf
 
 clean:
 	latexmk -c
