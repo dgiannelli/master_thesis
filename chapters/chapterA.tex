@@ -1,10 +1,55 @@
 %********************************************************************
 % Appendix
-\chapter{Implementation Code}\label{ap:code}
+\chapter{Data analysis}\label{ap:data}
 %*******************************************************
 
-Implementation Code
+\[
+    s_{\overline f}^2 \equiv \frac{1}{N(N-1)}\sum_i\left(f(x_i)-\overline f\right)^2
+\]
 
+\section{Binning resampling}
+
+\[
+    f_b \equiv \frac{B}{N}\sum_i f_{b_i}
+\]
+
+\[
+    \overline f_b \equiv \frac{1}{B} \sum_b f_b = \overline f
+\]
+\[
+    s_{\overline f_b}^2 \equiv \frac{1}{B(B-1)}\sum_b \left(f_b - \overline f_b\right)^2
+\]
+
+\[\begin{aligned}
+    \left<f_{b_n}f_{b_m}\right> &= \frac{B^2}{N^2}\left<\left(\sum_{i\in b_n} f_i\right)\left(\sum_{j\in b_m}f_j\right)\right> 
+                                = \frac{B^2}{N^2}\sum_{i\in b_n} \sum_{j\in b_m} \left<f_i f_j\right> \\
+                                &\xrightarrow{\sfrac{N}{B}\to\infty} \frac{B^2}{N^2}\sum_{i\in b_n} \sum_{j\in b_m} \left<f_i\right> \left<f_j\right> 
+                                = \left<f_{b_n}\right>\left<f_{b_m}\right>
+\end{aligned}\]
+
+\[
+    \left<s_{\overline f_b}^2\right> \xrightarrow{\sfrac{N}{B}\to\infty} \sigma_{\overline f_b}^2 = \sigma_{\overline f}^2 = \frac{\sigma_f^2}{N}(1+2\tau_\mathrm{int})
+\]
+
+
+\section{Jackknife resampling} 
+\[
+    \Theta(f)
+\]
+\[
+    f_{J_b} \equiv \{f_i | i\notin b\}
+\]
+\[\begin{gathered}
+    \overline \Theta_J \equiv \frac{1}{B} \sum_b \Theta(f_{J_b}) \\
+    s_{\overline \Theta_J}^2 \equiv \frac{B-1}{B}\sum_b \left(\Theta(f_{J_b})-\overline\Theta_J\right)^2
+\end{gathered}\]
+
+\subsection*{Integrated autocorrelation time}
+\[\begin{dcases}
+    \left<s_f^2\right> = \sigma_f^2 \\
+    \left<s_{\overline f}^2\right> \xrightarrow{N\to\infty} \frac{\sigma_f^2}{N}(1+2\tau_\mathrm{int}) \\
+    \left<s_{\overline f_b}^2\right> \xrightarrow{\sfrac{N}{B}\to\infty} \sigma 
+\end{dcases}\]
 
 %********************************************************************
 %********************************************************************

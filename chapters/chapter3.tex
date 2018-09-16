@@ -196,7 +196,7 @@ it has to be taken into account when choosing correct estimators of other quanti
 
 The autocorrelation function of $f(x\in\Omega)$ is:
 \begin{align*}
-    C_f(h) &\equiv \frac{(f(x_k)-\left<f\right>)(f(x_{k+h})-\left<f\right>)}{\sigma_f^2} \\
+    C_f(h) &\equiv \frac{\left<f(x_k)-\left<f\right>\right>\left<f(x_{k+h})-\left<f\right>\right>}{\sigma_f^2} \\
            &= \frac{\left<f(x_k)f(x_{k+h})\right>-\left<f\right>^2}{\sigma_f^2}
 \end{align*}
 and, using Theorem \ref{th:convergence}, it is possible to evaluate its asymptotycal behaviour.
@@ -212,30 +212,32 @@ $C_f$ then decays exponentially with the number of forward Markov steps:
 
 The first encounter with the autocorrelation function occurs when evaluating the variance of the average $\overline f_n$ of Theorem \ref{th:ergodic}:
 \begin{align*}
-    \sigma_{\overline f_n}^2 &= \left<\left(\frac{1}{n}\sum_if(x_i) - \left<f\right>\right)^2\right> \\
-                             &= \frac{1}{n^2}\sum_{ij}\left<(f(x_i)-\left<f\right>)(f(x_j)-\left<f\right>)\right> \\
-                             &= \frac{1}{n^2}\sum_{ij}\left(\left<f(x_i)f(x_j)\right>-\left<f\right>^2\right) \\
-                             &= \frac{1}{n^2}\sum_i\left(\sigma_f^2+\sum_{j \neq i}\left<f(x_i)f(x_j)\right>\right)
+    \sigma_{\overline f_n}^2 &= \left<\left(\frac{1}{N}\sum_if(x_i) - \left<f\right>\right)^2\right> \\
+                             &= \left<\frac{1}{N^2}\left(\sum_if(x_i)\right)^2 +\left<f\right>^2 -\frac{2}{N}\left<f\right>\sum_if(x_i)\right> \\
+                             %&= \frac{1}{n^2}\sum_{ij}\left<(f(x_i)-\left<f\right>)(f(x_j)-\left<f\right>)\right> \\
+                             &= -\left<f\right>^2 + \frac{1}{N^2}\sum_{ij}\left<f(x_i)f(x_j)\right> \\
+                             &= -\left<f\right>^2 + \frac{1}{N}\left<f^2\right> + \frac{1}{N^2}\sum_i\sum_{j \neq i}\left<f(x_i)f(x_j)\right>
 \end{align*}
 Using the symmetry $i \leftrightarrow j$ and the stationarity condition:
 \begin{align*}
     \sum_i\sum_{j\neq i}\left<f(x_i)f(x_j)\right> &= 2\sum_i\sum_{j>i}\left<f(x_i)f(x_j)\right> \\
                                                   &= 2\sum_k\sum_{h=1}^{n-k}\left<f(x_k)f(x_{k+h})\right> \\
-                                                  &= 2\sigma_f^2\sum_k\sum_{h=1}^{n-k}C_f(h)
+                                                  &= 2\sum_k\sum_{h=1}^{n-k}\left(\sigma_f^2C_f(h)+\left<f\right>^2\right) \\
+                                                  &= N(N-1)\left<f\right>^2 + 2\sigma_f^2\sum_k\sum_{h=1}^{n-k}C_f(h)
 \end{align*}
 and using Equation \eqref{eq:autocorr_decay}:
 \[
-    \sum_k\sum_{h=1}^{n-k}C_f(h) \xrightarrow{n\gg\tau_\mathrm{mix}} \sum_k\sum_{h=1}^\infty C_f(h) = n\tau_f^\mathrm{int}
+    \sum_k\sum_{h=1}^{N-k}C_f(h) \xrightarrow{N\gg\tau_\mathrm{mix}} \sum_k\sum_{h=1}^\infty C_f(h) = N\tau_f^\mathrm{int}
 \]
 where $\tau_f^\mathrm{int} \equiv \sum_{h=1}^\infty C_f(h)$ is the \emph{integrated autocorrelation time} and
 it is a good measure for the amount of autocorrelation of the Markov chain $f(x_1), f(x_2), \ldots$.
 The result for the variance in the limit of a large sample size is then:
-\begin{equation}\label{eq:variance}
-    \sigma_{\overline f_n}^2 \xrightarrow{n\gg\tau_\mathrm{mix}} \sigma_f^2\frac{1+2\tau_f^\mathrm{int}}{n}
-                             = \frac{\sigma_f^2}{n_f^\mathrm{eff}}
-\end{equation}
-where $n_f^\mathrm{eff} \equiv n/(1+2\tau_f^\mathrm{int})$ is the \emph{effective number} of uncorrelated values,
-since the variance of the average for uncorrelated data would have been $\sigma_f^2/n$.
+\begin{equation}\label{eq:variance}\begin{aligned}
+    \sigma_{\overline f_n}^2 &\xrightarrow{n\gg\tau_\mathrm{mix}}-\left<f\right>^2+\frac{1}{N}\left<f^2\right>+\frac{N-1}{N}\left<f\right>^2+\frac{2}{N}\sigma_f^2\tau_\mathrm{int} \\
+                             &= \sigma_f^2\frac{1+2\tau_f^\mathrm{int}}{N} = \frac{\sigma_f^2}{N_f^\mathrm{eff}}
+\end{aligned}\end{equation}
+where $N_f^\mathrm{eff} \equiv N/(1+2\tau_f^\mathrm{int})$ is the \emph{effective number} of uncorrelated values,
+since the variance of the average for uncorrelated data would have been $\sigma_f^2/N$.
 
 A good measure for the effectiveness of a Markov chain algorithm can then be the number of effective uncorrelated values produced in a certain amount of computer time,
 and it can be used to choose simulation parameters, as it will be done in Chapter \ref{ch:results}.
