@@ -4,16 +4,200 @@
 
 \section{Charge clusters}
 
-\subsection{Smoothing}
+\subsection*{Smoothing}
+
+\begin{figure}[!htb]
+\import{gfx/}{freezing.pgf}
+\caption{Freezing}
+\label{fig:freezing}
+\end{figure}
+
+\begin{figure}[!htb]
+\import{gfx/}{local_inv.pgf}
+\caption{Charge tunneling}
+\label{fig:local_inv}
+\end{figure}
 
 \section{Cluster inversion}
 
-\subsection{Reversing links}
+\subsection*{Inverting links}
 
-\subsection{Gauge transforms}
+\subsection*{Gauge transforms}
 
-\subsection{Gaussian proposal}
+\subsection*{Cluster building}
 
+\begin{lstlisting}[caption={Cluster class declaration}]
+class Cluster
+{
+    public:
+        template <class URNG>
+        Cluster(int N, int side, URNG&);
+
+        Link gate() const {return gate_;};
+        const vector<Link> &path() const {return path_;};
+        const Staple &estaple() const {return estaple_;};
+        const Staple &istaple() const {return istaple_;};
+        vector<Link> links() const;
+    private:
+        int side;
+        Site corner;
+
+        Link gate_;
+        vector<Link> path_;
+        Staple estaple_, istaple_;
+};
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Cluster class implementation}]
+template <class URNG>
+Cluster::Cluster(int N, int side, URNG &rng) :
+    side{side}
+{
+    int ran_pos = UniformInt(0,N*N-1)(rng);
+    int x1 = ran_pos/N; // unif in [0,N-1]
+    int x2 = ran_pos%N; // unif in [0,N-1]
+    corner = Site{x1,x2}; // lower left corner
+
+    int ran_muoff = UniformInt(0,2*4*side-1)(rng);
+    int mu = ran_muoff%2 + 1; // unif in [1,2]
+    int offset = ran_muoff/2; // unif in [0,4*side-1]
+
+    // Build path
+    int nu;
+    switch (mu) {
+        case 1: nu = 2; break;
+        case 2: nu = 1; break;
+        default: throw runtime_error("Invalid mu");
+    }
+
+    Site s = corner;
+    for (int rho : {mu,nu,-mu,-nu}) {
+        for (int i=0; i<side; i++) {
+            path_.push_back(Link{s,rho});
+            s = s + hat(rho);
+        }
+    }
+
+    // Rotate path and extract gate
+    rotate(path_.begin(), path_.begin()+offset, path_.end());
+    gate_ = path_[0]; path_.erase(path_.begin());
+    
+    // Identify staples
+    int mu_e; // External direction
+    switch (offset/side) {
+        case 0: mu_e = -nu; break;
+        case 1: mu_e = mu; break;
+        case 2: mu_e = nu; break;
+        case 3: mu_e = -mu; break;
+        default: throw runtime_error("invalid mu");
+    }
+    estaple_ = conn_staple(gate_,mu_e);
+    istaple_ = conn_staple(gate_,-mu_e);
+}
+
+vector<Link> Cluster::links() const
+{
+    vector<Link> vec;
+
+    int x1, x2;
+    x2 = corner.x2+1;
+    for (; x2<corner.x2+side; x2++) {
+        x1 = corner.x1;
+        for (; x1<corner.x1+side; x1++) {
+            vec.push_back(Link{Site{x1,x2},1});
+        }
+    }
+    x2 = corner.x2;
+    for (; x2<corner.x2+side; x2++) {
+        x1 = corner.x1+1;
+        for (; x1<corner.x1+side; x1++) {
+            vec.push_back(Link{Site{x1,x2},2});
+        }
+    }
+    return vec;
+}
+\end{lstlisting}
+
+\subsection*{Metropolis inversion}
+
+\begin{lstlisting}[caption={Metropolis cluster update}]
+template <class URNG>
+double naive_cluster_update(Lattice &lat, int side, URNG &rng)
+{
+    Cluster cluster(lat.N(),side,rng);
+
+    auto path = cluster.path();
+    auto link_it = path.rbegin();
+    for (; link_it<path.rend(); link_it++) {
+        Link link = *link_it;
+        cmplx u = lat.s_line(link);
+        lat.local_gauge(link.s, conj(u));
+    }
+
+    cmplx US_e = lat.s_line(cluster.estaple());
+    cmplx u_old = lat.s_line(cluster.gate());
+    cmplx u_new = conj(u_old);
+
+    double p = exp(lat.beta()*real(US_e*(u_new-u_old)));
+
+    if (UniformDouble()(rng)<p) {
+        lat.set_link(cluster.gate(),u_new);
+        for (Link link : cluster.links()) {
+            cmplx u = lat.s_line(link);
+            lat.set_link(link,conj(u));
+        }
+        return 1.;
+    }
+    else return 0.;
+}
+\end{lstlisting}
+
+\subsection*{Metropolis-Hastings proposal}
+\begin{lstlisting}[caption={Metropolis-Hastings cluster update}]
+template <class URNG>
+double cluster_update(Lattice &lat, int side, URNG &rng)
+{
+    Cluster cluster(lat.N(),side,rng);
+
+    auto path = cluster.path();
+    auto link_it = path.rbegin();
+    for (; link_it<path.rend(); link_it++) {
+        Link link = *link_it;
+        cmplx u = lat.s_line(link);
+        lat.local_gauge(link.s, conj(u));
+    }
+    
+    cmplx US_e = lat.s_line(cluster.estaple());
+    cmplx US_i = lat.s_line(cluster.istaple());
+    cmplx W_new = US_e + conj(US_i);
+    cmplx W_old = US_e + US_i;
+    
+    double k_old = lat.beta()*abs(W_old);
+    double k_new = lat.beta()*abs(W_new);
+
+    cmplx u_old = lat.s_line(cluster.gate());
+    double x_old = arg(W_old*u_old);
+    
+    double x_new = gauss_angle(k_new,rng);
+    
+
+    double p = exp(k_new*(cos(x_new)+pow(x_new,2.)/2.)
+                  -k_old*(cos(x_old)+pow(x_old,2.)/2.))
+              *erf(pi*sqrt(k_new/2.))/erf(pi*sqrt(k_old/2.))
+              *sqrt(k_old/k_new);
+    
+    if (UniformDouble()(rng)<p) {
+        cmplx u_new = exp(1i*(x_new-arg(W_new)));
+        lat.set_link(cluster.gate(),u_new);
+        for (Link link : cluster.links()) {
+            cmplx u = lat.s_line(link);
+            lat.set_link(link,conj(u));
+        }
+        return 1.;
+    }
+    else return 0.;
+}
+\end{lstlisting}
 
 
 %*****************************************

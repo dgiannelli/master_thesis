@@ -3,11 +3,26 @@
 \chapter{Data analysis}\label{ap:data}
 %*******************************************************
 
+\subsection*{Na\"ive variance estimation}
 \[
-    s_{\overline f}^2 \equiv \frac{1}{N(N-1)}\sum_i\left(f(x_i)-\overline f\right)^2
+    s_{\overline f}^2 \equiv \frac{1}{N(N-1)}\sum_i\left(f_i-\overline f\right)^2
 \]
 
-\section{Binning resampling}
+\[\begin{aligned}
+    \left<s_{\overline f}^2\right> &= \frac{1}{N(N-1)}\left<\sum_if_i^2-\frac{2}{N}\sum_{ij}f_if_j+\frac{1}{N^2}\sum_{ijk}f_jf_k\right> \\
+                                   &= \frac{1}{N-1}\left(\left<f^2\right>-\frac{1}{N^2}\sum_{ij}\left<f_if_j\right>\right)
+\end{aligned}\]
+\[
+    \frac{1}{N^2}\sum_{ij}\left<f_if_j\right> \xrightarrow{N\to\infty}\frac{1}{N}\left<f^2\right> + \frac{N-1}{N}\left<f\right>^2+\frac{2}{N}\sigma_f^2\tau_\mathrm{int}
+\]
+
+\[\begin{aligned}
+    \left<s_{\overline f}^2\right> &\xrightarrow{N\gg\tau_\mathrm{mix}}
+                                     \frac{1}{N-1}\left(\frac{N-1}{N}\left<f^2\right>-\frac{N-1}{N}\left<f\right>^2-\frac{2}{N}\sigma_f^2\tau_\mathrm{int}\right) \\
+                                   &= \frac{\sigma_f^2}{N}\left(1-\frac{2}{N-1}\tau_\mathrm{int}\right) \xrightarrow{N\gg\tau_\mathrm{int}} \frac{\sigma_f^2}{N}
+\end{aligned}\]
+
+\subsection*{Binning resampling}
 
 \[
     f_b \equiv \frac{B}{N}\sum_i f_{b_i}
@@ -32,7 +47,7 @@
 \]
 
 
-\section{Jackknife resampling} 
+\subsection*{Jackknife resampling} 
 \[
     \Theta(f)
 \]
@@ -46,10 +61,20 @@
 
 \subsection*{Integrated autocorrelation time}
 \[\begin{dcases}
-    \left<s_f^2\right> = \sigma_f^2 \\
-    \left<s_{\overline f}^2\right> \xrightarrow{N\to\infty} \frac{\sigma_f^2}{N}(1+2\tau_\mathrm{int}) \\
-    \left<s_{\overline f_b}^2\right> \xrightarrow{\sfrac{N}{B}\to\infty} \sigma 
+    \left<s_{\overline f}^2\right> \xrightarrow{N\gg\tau_\mathrm{int}} \frac{\sigma_f^2}{N} \\
+    \left<s_{\overline f_b}^2\right> \xrightarrow{\sfrac{N}{B}\gg\tau_\mathrm{int}} \frac{\sigma_f^2}{N}\left(1+2\tau_\mathrm{int}\right)
 \end{dcases}\]
+
+\[
+    \hat\tau_\mathrm{int}(f) \equiv \frac{1}{2}\left(\frac{s_{\overline f_b}^2}{s_{\overline f}^2}-1\right) 
+\]
+\[
+    \left<\hat\tau_\mathrm{int}\right> \xrightarrow{\sfrac{N}{B}\gg\tau_\mathrm{int}} \tau_\mathrm{int}
+\]
+
+\[
+    \Theta(f) = \hat\tau_\mathrm{int}(f)
+\]
 
 %********************************************************************
 %********************************************************************

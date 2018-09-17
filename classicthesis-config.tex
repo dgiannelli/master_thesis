@@ -120,6 +120,9 @@
 \usepackage{tikz}
 \usetikzlibrary{decorations,decorations.markings}
 \usetikzlibrary{decorations.shapes}
+\usepackage{import} % inputs with relative path
+\let\pgfimageWithoutPath\pgfimage 
+\renewcommand{\pgfimage}[2][]{\pgfimageWithoutPath[#1]{gfx/#2}}
 %\usepackage{pgfplotstable}
 %\usepackage{pgfplots} % External TikZ/PGF support (thanks to Andreas Nautsch)
 %\usetikzlibrary{external}

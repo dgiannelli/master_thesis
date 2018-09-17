@@ -285,77 +285,105 @@ and the same convention will be used here.
 The uniform distribution is alredy present in the Standard implemented as the {\ttfamily uniform\_real\_distribution} class.
 So it is just needed to instatiate it with the defaulf interval parameters, which correspond to the interval $[0,1)$:
 \begin{lstlisting}[caption={Uniform distribution sampling function}]
-// Usage: uniform(URNG) -> x unif. in [0,1)
-uniform_real_distribution<> uniform;
+using UniformDouble = uniform_real_distribution<double>;
 \end{lstlisting}
 
 The algorithm of Equation \eqref{eq:gauss_angle} can be implemented using the interface of Standard's URNGs:
 \begin{lstlisting}[caption={Gaussian angle distribution sampling function}]
 template <class URNG>
 double gauss_angle(double k, URNG &rng)
-{
-	// y1 unif in [0,1], y2 unif in (0,1)
+{   
+    // y1 unif in [0,1], y2 unif in (0,1)
     double y1 = (double)(rng()-rng.min())/(rng.max()-rng.min());
     double y2 = (double)(rng()-rng.min()+1lu)
                          / (rng.max()-rng.min()+2lu);
-
+    
     double r = sqrt(-2./k*log(1.-y1*(1.-exp(-0.5*k*pi*pi))));
     double theta = 2.*pi*(y2-0.5);
-
+    
     return r*cos(theta);
 }
 \end{lstlisting}
 
 
 \begin{lstlisting}[caption={Staple type}]
-struct Staple : array<Link,3>
-{
-    Staple(Link link, int nextdir)
-    {
-        array<int,3> dirs = {nextdir,-link.dir,-nextdir};
+using Staple = array<Link,3>;
 
-        auto [x1, x2] = link.site;
-        for (int i : {0,1,2}) {
-            // Shift x1,x2 along link dirs
-            switch (dirs[i]): {
-                case 1: x1++; break;
-                case -1: x1--; break;
-                case 2: x2++; break;
-                case -2: x2--; break;
-            }
-            (*this)[i] = Link{x1,x2,dirs[i]};
+Staple conn_staple(Link link, int nu)
+{
+    auto [s,mu] = link;
+    return Staple{Link{s+hat(mu),nu},
+                  Link{s+hat(mu)+hat(nu),-mu},
+                  Link{s+hat(nu),-nu}};
+}
+
+// The order of returned staples is not considered
+array<Staple,2> conn_staples(Link link)
+{
+    int nu;
+    switch (link.mu) {
+        case 1:; case -1: nu = 2; break;
+        case 2:; case -2: nu = 1; break;
+        default: throw runtime_error("Invalid mu");
+    }
+    return array<Staple,2>{conn_staple(link,nu),
+                           conn_staple(link,-nu)};
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Hot configuration}]
+template <class URNG>
+void set_hot(Lattice &lat, URNG &rng)
+{
+    for (int mu : {1,2}) {
+        for (Site s : lat.sites()) {
+            double theta = UniformDouble(0.,2.*pi)(rng);
+            lat.set_link(Link{s,mu},exp(1i*theta));
         }
     }
-};
-\end{lstlisting}
-
-\begin{lstlisting}[caption={Connected staples function}]
-pair<Staple> connected_staples(Link link)
-{
 }
 \end{lstlisting}
 
-\begin{lstlisting}[caption={Local update function}]
+\begin{lstlisting}[caption={Local algorithm}]
+// Returns 1. if move is accepted, 0. if not
 template <class URNG>
-void local_update(Lattice lat, Link link, URNG &rng)
+double local_update(Lattice &lat, Link link, URNG &rng)
 {
+    auto [S_1,S_2] = conn_staples(link);
+    
+    cmplx W = lat.s_line(S_1) + lat.s_line(S_2);
+    double k = lat.beta()*abs(W);
+    double x_old = arg(W*lat.s_line(link));
+    
+    double x_new = gauss_angle(k,rng);
+    
+    double p = exp(k*(cos(x_new)+pow(x_new,2)/2.
+                     -cos(x_old)-pow(x_old,2)/2.));
+    
+    if (UniformDouble()(rng)<p) {
+        cmplx u_new = exp(1i*(x_new-arg(W)));
+        lat.set_link(link,u_new);
+        return 1.;
+    }
+    else return 0.;
+}
 
+template <class URNG>
+double local_sweep(Lattice &lat, URNG &rng)
+{
+    double accept = 0.;
+    for (int mu : {1,2}) {
+        for (Site s : lat.sites()) {
+            accept += local_update(lat,Link{s,mu},rng);
+        }
+    }
+    return accept/pow(lat.N(),2)/2.;
 }
 \end{lstlisting}
-
-
-\begin{equation}
-    prova
-\end{equation}
 
 \section{First results}
 
-\[
-    \input{tables/prova.tex}
-\]
-\the\textwidth
-
-\subsection{Action}
+\subsection{Plaquette energy}
 
 \subsection{Topological freezing}
 

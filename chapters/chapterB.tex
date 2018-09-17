@@ -1,9 +1,97 @@
 %********************************************************************
 % Appendix
-\chapter{Data Analysis}\label{ap:data}
+\chapter{Implementation code}\label{ap:code}
 %*******************************************************
+\begin{lstlisting}[caption={Lattice methods}]
+Lattice::Lattice(int N, double beta) :
+    N_{N}, beta_{beta}, link_vars(2*N*N,1.)
+{
+    for (int x2=0; x2<N; x2++) {
+        for (int x1=0; x1<N; x1++) {
+            sites_.push_back(Site{x1,x2});
+        }
+    }
+}
 
-Data Analysis
+double Lattice::energy() const
+{
+    double sum = 0.;
+    for (Site s : sites())
+    {
+        sum += 1.-real(s_line(plaq_12(s)));
+    }
+    return beta()*sum/pow(N(),2);
+}
+
+double Lattice::charge(Site s) const
+{
+    return arg(s_line(plaq_12(s)))/2./pi;
+}
+
+double Lattice::total_charge() const
+{
+    double sum = 0.;
+    for (Site s : sites())
+    {
+        sum += charge(s);
+    }
+    return sum;
+}
+
+template <>
+cmplx Lattice::s_line(Link link) const
+{
+    cmplx u = exp(1i*link_vars[idx(link)]);
+    if (link.mu>0) return u;
+    else return conj(u);
+}
+
+template <class Path>
+cmplx Lattice::s_line(Path path) const
+{
+    cmplx prod = 1.;
+    for (auto link : path)
+    {
+        prod *= s_line(link);
+    }
+    return prod;
+}
+
+void Lattice::set_link(Link link, cmplx u)
+{
+    if (link.mu < 0) u = conj(u);
+    link_vars[idx(link)] = arg(u);
+}
+
+void Lattice::local_gauge(Site s, cmplx G)
+{
+    for (int mu : {1,2,-1,-2}) {
+        Link link = Link{s,mu};
+        set_link(link, G*s_line(link));
+    }
+}
+
+int Lattice::idx(Link link) const
+{
+    auto [x1,x2] = link.s;
+    
+    int axis = 0;
+    switch (link.mu) {
+        case 1: break;
+        case -1: x1--; break;
+        case 2: axis = 1; break;
+        case -2: x2--; axis = 1; break;
+        default: throw runtime_error("Invalid mu");
+    }
+    // Apply periodic boundary to coord x:
+    auto wrap = [&](int x) {return (x%N()+N()) % N();};
+    
+    x1 = wrap(x1);
+    x2 = wrap(x2);
+    
+    return x1 + x2*N() + axis*pow(N(),2);
+}
+\end{lstlisting}
 
 
 %********************************************************************

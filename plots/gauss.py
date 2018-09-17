@@ -1,24 +1,27 @@
 import matplotlib as mpl
 mpl.use('pgf')
-rc_params = {
-    'font.family': 'serif',  # use serif/main font for text elements
-    'text.usetex': True,    # use inline math for ticks
-    #'text.latex.unicode' : False,
-    'pgf.rcfonts': False,   # don't setup fonts from rc parameters
-    'font.size' : 10,
-    'figure.figsize' : (4, 3),
-    #'figure.subplot.top' : 0.75,
-    #'figure.autolayout' : True,
-    'figure.subplot.left'    : 0.125,
-    'figure.subplot.right'   : 0.9,
-    'figure.subplot.bottom'  : 0.14,#0.11,
-    'figure.subplot.top'     : 0.88,
-    'figure.subplot.wspace' : 0.2,
-    'figure.subplot.hspace'  : 0.2,
-}
-mpl.rcParams.update(rc_params)
+mpl.rcParams['text.latex.preamble']=[r"\usepackage{amssymb}",
+                                             r"\usepackage{amsmath}"]
+#rc_params = {
+#    'font.family': 'serif',  # use serif/main font for text elements
+#    'text.usetex': True,    # use inline math for ticks
+#    #'text.latex.unicode' : False,
+#    'pgf.rcfonts': False,   # don't setup fonts from rc parameters
+#    'font.size' : 10,
+#    'figure.figsize' : (4, 3),
+#    #'figure.subplot.top' : 0.75,
+#    #'figure.autolayout' : True,
+#    'figure.subplot.left'    : 0.125,
+#    'figure.subplot.right'   : 0.9,
+#    'figure.subplot.bottom'  : 0.14,#0.11,
+#    'figure.subplot.top'     : 0.88,
+#    'figure.subplot.wspace' : 0.2,
+#    'figure.subplot.hspace'  : 0.2,
+#}
+#mpl.rcParams.update(rc_params)
 
 import matplotlib.pyplot as plt
+plt.style.use('./plots/a4.mplstyle')
 import numpy as np
 from scipy.integrate import quad
 
