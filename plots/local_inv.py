@@ -6,6 +6,7 @@ import numpy as np
 import pickle
 from scipy.ndimage import gaussian_filter
 import matplotlib.colors as mcols
+from matplotlib.patches import Rectangle
 
 with open('data/local_inv.pickle','br') as file:
     dic = pickle.load(file)
@@ -27,7 +28,7 @@ xshift=9
 yshift=17
 
 fig, axs = plt.subplots(2,2, figsize=(5,6.25))
-for ax, charge_matrix, charge in zip(axs.flatten(),charge_matrices,charges):
+for ax, charge_matrix, charge, i in zip(axs.flatten(),charge_matrices,charges,range(4)):
     filtered = gaussian_filter(charge_matrix, sigma, mode='wrap')
     rolled = np.roll(filtered,(yshift,xshift),axis=(0,1))
     mesh = ax.pcolormesh(rolled, cmap='RdBu', norm=norm)
@@ -36,6 +37,8 @@ for ax, charge_matrix, charge in zip(axs.flatten(),charge_matrices,charges):
     ticks = [n*N/4 for n in range(5)]
     ax.set_xticks(ticks)
     ax.set_yticks(ticks)
+    if i>1:
+        ax.add_patch(Rectangle((7,8),7,7,facecolor='none',edgecolor='black'))
 
 fig.subplots_adjust(top=0.91)
 fig.subplots_adjust(bottom=0.19)
