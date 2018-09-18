@@ -156,7 +156,7 @@
 % ********************************************************************
 % Font Stuff
 % ********************************************************************
-\ifthenelse{\boolean{xetex}\OR\boolean{luatex}}
+\ifthenelse{\boolean{xetex}}%\OR\boolean{luatex}}
    { % use fontspec and OpenType fonts with utf8 engines
      \RequirePackage{fontspec}
      \ifthenelse{\boolean{ct@palatino}}% default

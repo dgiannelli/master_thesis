@@ -9,5 +9,5 @@ figure.subplot.left : 0.125
 figure.subplot.right : 0.9
 figure.subplot.bottom : 0.14 #0.11,
 figure.subplot.top : 0.88
-figure.subplot.wspace : 0.2
-figure.subplot.hspace : 0.2
+figure.subplot.wspace : 0.25
+figure.subplot.hspace : 0.25

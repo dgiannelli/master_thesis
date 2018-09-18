@@ -383,6 +383,13 @@ double local_sweep(Lattice &lat, URNG &rng)
 
 \section{First results}
 
+\begin{figure}[!htb]
+    \centering
+    \import{gfx/}{local_acc.pgf}
+    \caption{Local algorithm acceptance}
+    \label{fig:local_acc}
+\end{figure}
+
 \subsection{Plaquette energy}
 
 \begin{figure}[!htb]
@@ -396,10 +403,25 @@ double local_sweep(Lattice &lat, URNG &rng)
 
 \begin{figure}[!htb]
     \centering
+    \import{gfx/}{local_cont_energy.pgf}
+    \caption{Plaquette energy continuum limit}
+    \label{fig:local_cont_energy}
+\end{figure}
+
+\begin{figure}[!htb]
+    \centering
     \import{gfx/}{local_charge_history.pgf}
     \caption{Topological charge history obtained with the local algorithm}
-    \label{fig:local_energy_history}
+    \label{fig:local_charge_history}
 \end{figure}
+
+
+%\begin{figure}[!htb]
+%    \centering
+%    \import{gfx/}{local_cont_susc.pgf}
+%    \captioni{Plaquette energy continuum limit}
+%    \label{fig:local_cont_susc}
+%\end{figure}
 
 %*****************************************
 %*****************************************

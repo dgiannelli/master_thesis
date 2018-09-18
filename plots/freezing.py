@@ -26,7 +26,7 @@ sigma=2.
 xshift=17
 yshift=23
 
-fig, axs = plt.subplots(2,2, figsize=(5,6.15))
+fig, axs = plt.subplots(2,2, figsize=(4.7,6))
 for ax, charge_matrix, charge in zip(axs.flatten(),charge_matrices,charges):
     filtered = gaussian_filter(charge_matrix, sigma, mode='wrap')
     rolled = np.roll(filtered,(yshift,xshift),axis=(0,1))

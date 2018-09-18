@@ -10,7 +10,7 @@ with open('data/local_data.pickle','br') as file:
 
 keys = list(local_data)
 
-fig, axs = plt.subplots(int(len(keys)/2.+0.5),2, figsize=(5,5),sharex=True,sharey=True)
+fig, axs = plt.subplots(int(len(keys)/2.+0.5),2, figsize=(4.7,5),sharex=True,sharey=True)
 for (ax,key) in zip(axs.flatten(),keys):
     therm = local_data[key]['therm']
     ax.plot(local_data[key]['charges'][therm:])

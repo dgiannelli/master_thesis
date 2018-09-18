@@ -43,7 +43,7 @@ class G:
 
 ks = [1, 3]
 
-fig, axs = plt.subplots(1,2,figsize=(5,3), sharex=True, sharey=True)
+fig, axs = plt.subplots(1,2,figsize=(4.7,3), sharex=True, sharey=True)
 x = np.linspace(-np.pi,np.pi,1000)
 for (k, ax) in zip(ks,axs):
     p=P(k)
