@@ -30,7 +30,7 @@ The Monte Carlo method is also an essential tool for Experimental Physics: it is
 A class of problems in which the Monte Carlo method shines is the integration in a very high number of dimensions.
 Other methods, like quadrature rules, suffer the so called \emph{curse of dimensionality}:
 the error of the approximation in terms of the number of function evaluations scales exponentially with the number of dimensions.
-For Monte Carlo integration, on the other hand, the scaling is independent from the number of dimensions.
+For Monte Carlo integration, on the other hand, the scaling is independent of the number of dimensions.
 
 A branch of Physics in which such integrals are very frequent is Statistical Mechanics.
 In order to compute the mean value of an observable at thermodynamic equilibrium,
@@ -68,7 +68,7 @@ changing only one spin at each iteration of the program. This is what is called 
 However, when the system is divided into clusters, local algorithms show their weakness.
 Updating the spins one per time makes very unlikely that a whole cluster can be reversed,
 and this problem gets worse when the clusters size increases.
-This is the \emph{critical slowing down}: the correlation length between configurations increases exponentialy approaching toward the critical temperature.
+This is the \emph{critical slowing down}: the correlation length between configurations increases exponentialy approaching the critical temperature.
 
 A solution to the critical slowing down for the Ising model\footnote{It applies also to the more general Potts model} was found by Swendsen and Wang in 1987 \cite{swendsen-wang:1987}.
 They found a way to sample the Boltzman distribution inverting many contiguous and parallel spins all together.
@@ -82,7 +82,7 @@ Critical slowing down can then be heavily dampened, making simulations affordabl
 However, the difficulty in creating cluster algorithms is to find a way to efficiently update big parts of the system without compromising the Boltzmann distribution.
 This has to be done exploiting properties of the considered system, and, consequently, the algorithm will be specifically tailored for systems that share these properties.
 For example, Wolff algorithm can be extended to the most generic continuous spin system on a lattice,
-but any good solution was not found to extend it to the hard sphere model,
+but no good solutions have been found to extend it to the hard sphere model,
 \ie a system in which solid spheres can move in space without overlapping.
 The first efficient cluster algorithm for this model was found 1995 by Dress and Krauth \cite{dress-krauth:1995}.
 It is called \emph{the pivot algorithm} and was formulated specifically for hard spheres and related systems\footnote{Such as binary mixtures or dimers, for example},
@@ -93,7 +93,7 @@ It affects Quantum Cromodynamics\footnote{As well as other quantum theories with
 when it is studied with the Monte Carlo method in its lattice formulation, \ie Lattice QCD.
 
 \section*{Lattice QCD and topological freezing}
-\emph{Quantum Cromodynamics} is the quantum field theory that describes the \emph{strong interation},
+\emph{Quantum Cromodynamics} is the quantum field theory that describes the \emph{strong interaction},
 which concerns the coupling between \emph{quarks} (the constituents of nucleons and mesons) and \emph{gluons} (massless particles, mediators of the interaction).
 It is formulated as a non-abelian gauge theory, with gauge group $SU(3)$,
 in which quark fields lie in the foundamental representation of the group and gluon fields are the gauge fields.
@@ -110,9 +110,9 @@ and physical predictions of the theory can be analytically computed with a pertu
 On the other side of the spectrum, when the energy scale decreases, \emph{color confinement} arises.
 Quarks and gluons cannot be isolated and observed directly in normal conditions\footnote{It is only possible at extremely high temperature and/or density, when they form a quark-gluon plasma, a new state of matter},
 and they are confined in mesons or nucleons.
-As coupling is higher at this scale of energy, perturbation theory is not viable, and non-perturbative methods are needed to compute theory predictions.
+As the coupling is higher at this scale of energy, perturbation theory is not viable, and non-perturbative methods are needed to compute theory predictions.
 Lattice QCD is a different approach that fulfils these requirements, and it was formulated in 1974 by Wilson \cite{wilson:1974}.
-Gauge field theories can be quantized on a discrete lattice in euclidean space-time and,
+Gauge field theories can be quantized on a discrete lattice in Euclidean space-time and,
 in this framework, it is possible to compute theory predictions in the strong coupling regime.
 
 In 1979, Creutz et al.\@ \cite{creutz:1979} and Wilson \cite{wilson:1980}
@@ -136,7 +136,7 @@ The demand for an efficient topological charge sampling method is very high, sin
 It is of a great physical interest, especially because there are particle masses directly related to topological charge:
 the $\eta'$ meson mass, whose high value has an explaination within the Witten-Veneziano mechanism \cite{witten:1979-1, witten:1979-2, veneziano:1979},
 and the mass of the \emph{axion}, which is an hypothetical particle postulated by Weinberg \cite{weinberg:1978} and Wilczek \cite{wilczek:1978}
-in the context of Peccei-Quinn model \cite{peccei-quinn:1977-1, peccei-quinn:1977-2}.
+in the context of the Peccei-Quinn model \cite{peccei-quinn:1977-1, peccei-quinn:1977-2}.
 The weakness of the coupling between the axion and the Standard Model makes it a good candidate to be \emph{dark matter}.
 The experimental dicovery of the axion could be a great step in understanding the nature of dark matter, which is one of the main goal of modern Physics.
 An accurate value of the axion mass from lattice QCD simulations would indicate the point of the energy spectrum in which the axion should be,
@@ -147,14 +147,16 @@ The topological charge is the integral of a local quantity, the topological char
 which is a functional of gauge fields configurations.
 Studying its spatial distribution in lattice QCD simulations close enough to the continuum limit, in condition of topological freezing, it exhibits an interesting structure.
 Some regions of the space contribute with a certain topological charge, which can be positive or negative, and,
-fast forwarding the configurations of the Markov chain,
+looking at subsequent configurations of the Markov chain,
 those regions may deform and move around in the space, but their net contribute to the total charge does not change.
 They are the discretized version of instantons, which are exact solutions of the classical equation of motion.
 They have a definite integer topological charge, and their existence proves the non-triviality of QCD topology.
 
 Many strategies have been developed to dampen the problem of topological freezing.
-For example, it is possible to evaluate the finite volume bias that is introduced in condition of fixed topology,
-and reduce it with extrapolations \cite{brower:2003, aoki:2007}.
+For example, it is possible to perform different simulations at fixed topologies,
+and remove the bias of fixed topology afterwards, through extrapolations \cite{brower:2003, aoki:2007}.
+%For example, it is possible to evaluate the finite volume bias that is introduced in condition of fixed topology,
+%and reduce it with extrapolations \cite{brower:2003, aoki:2007}.
 
 Otherwise, implementing the lattice with boundary conditions that are open instead of periodic \cite{luescher:2011},
 the topological freezing is removed because instantons can be created and destroyed on the border.
@@ -186,46 +188,62 @@ The simplest model that satisfies these requirements is a quantum mechanical par
 The topological charge here is equal to the winding number, \ie the number of times a path configuration wraps around the circle.
 In this simple model, it is possible to find exact numerical solutions and compare them with the techniques used in lattice QCD \cite{dromard-wagner:2014, bonati-delia:2018}.
 
-There is, however, an important property of QCD topology that the quantum mechanical particle on a circumference does not reproduce.
-It is the presence of different instantons that can move and interact in the space.
-The simplest toy models that have this properties are two dimensional gauge theories,
-and the $U(1)$ pure gauge theory is, among them, the one that has the most straightforward implementation.
-It is also possible to include fermions into it, and such a theory is known as the \emph{Schwinger model}.
-It is a widely used model since it exhibits fermion confinement, with a potential similar to that of quarks in QCD.
+However, even though the topological charge of the quantum particle shares many characteristics with the one defined in QCD,
+many more similarities could be found if another gauge field theory is considered as a toy model,
+and the $U(1)$ pure gauge theory in two dimensions is, among them, the one that has the most straightforward implementation.
+It is also possible to include fermions into it,
+and such a theory is known as the Schwinger model.
+It is a widely used toy model since it exhibits fermions confinement,
+with a potential similar to that of quarks in QCD.
+
+%There is, however, an important property of QCD topology that the quantum mechanical particle on a circumference does not reproduce.
+%It is the presence of different instantons that can move and interact in the space.
+%The simplest toy models that have this properties are two dimensional gauge theories,
+%and the $U(1)$ pure gauge theory is, among them, the one that has the most straightforward implementation.
+%It is also possible to include fermions into it, and such a theory is known as the \emph{Schwinger model}.
+%It is a widely used model since it exhibits fermion confinement, with a potential similar to that of quarks in QCD.
 
 In Chapter \ref{ch:cluster}, a new cluster algorithm for the two dimensional $U(1)$ pure gauge theory will be presented.
-It constructs closed paths of lattice links and reverses the sign of all gauge fields configurations inside the region surrounded by the path,
+It constructs a closed path of lattice links and reverses the sign of all gauge fields configurations inside the regions surrounded by the path,
 accepting or rejecting the operation with a well-tailored Metropolis-Hastings algorithm.
 A chain of local gauge transformations along the path can make the energy variation of the entire move to be the same as with a local update,
-making the acceptance of the algorithm be reasonably high and idependent from the cluster size.
+making the acceptance of the algorithm be reasonably high and independent of the cluster size, which is also possible to set arbitrarily.
+
+The results of this algorithm will then be compared in Chapter \ref{ch:results} with the ones reported at \cite{durr-hoelbling:2005}, and they will show that the cluster algorithm allows to perform measures in a region of parameter space that is impossible to study with a local algorithm.
 
 This algorithm is not extensible to more than two dimensions,
 because regions of space could not be completely surrounded with a one dimensional path,
 and it is not possible to create a chain of local gauge transformations that covers all links of a multidimensional surface.
 However, the algorithm solves the critical behaviour in two dimensions,
 and it is efficient, parallelizable, and simple to implement, especially with modern programming languages techniques.
-It yields numerical exact results that can be used to test all the workarounds that are used to fight topological freezing in QCD. 
+It yields numerical exact results that can be used to test all the workarounds that are used to fight topological freezing in QCD, or to study the behaviour of the topological charge in a lattice gauge theory very close to the continuum limit. 
 
 The only other cluster algorithm for this theory that is present in literature was published in 1992 by Robert Sinclair \cite{sinclair:1992}.
 His algorithm uses the local gauge invariance to map the system into a one dimensional XY model, and updates it using the extension of the Wolff algorithm.
-Although it is a valid solution, its implementation is more complicated, and it does not leave the choice of cluster size. 
-The algorithm of Chapter \ref{ch:cluster} is formulated specifically for this system, making it more adaptable to its properties and easier to implement and debug.
+Although it is a valid solution, its implementation is more complicated,
+it does not leave the choice of the cluster size, and the updating is not specifically focused in tunneling between topological sectors,
+which is the only thing a standard local algorithm cannot achieve. 
+
+The algorithm of Chapter \ref{ch:cluster}, on the other hand, is specifically tailored for this theory, and,
+for this reason, it is more adaptable, easier to implement and debug.
 In some ways, the approach is similar to that of Dress and Krauth,
 who chose to create a well suited algorithm for a specific task and closer to the underlying Physics, rather than extending Wolff algorithm.\bigskip\bigskip
 
 \noindent
 The exposure of this thesis work will fit in the following scheme:
 \begin{description}
-    \item{Chapter \ref{ch:toy_model}:} Definition of the two dimensional pure gauge $U(1)$ theory and its topological charge,
+    \item{Chapter \ref{ch:toy_model}:} Introduction of the two dimensional pure gauge $U(1)$ theory and its topological charge,
     both in the continuum space and on a discrete lattice.
     \item{Chapter \ref{ch:lattice}:} Implementation of the lattice theory in C++17.
-    \item{Chapter \ref{ch:local}:} Introduction to Markov chain Monte carlo and implementation of a local Metropolis-Hastings algorithm.
+    \item{Chapter \ref{ch:mc}:} Introduction to distribution sampling and Markov chain Monte Carlo.
+    \item{Chapter \ref{ch:local}:} Implementation of a local Metropolis-Hastings algorithm.
     \item{Chapter \ref{ch:cluster}:} Discussion of topological freezing, and introduction of a new cluster Metropolis-Hastings algorithm that solves the problem.
     \item{Chapter \ref{ch:results}:} Numerical results obtained with the cluster algorithm and conclusions.\\
-    \item{Appendix \ref{ap:code}:} Complete implementation of the algorithms.
+    %\item{Appendix \ref{ap:code}:} Complete implementation of the algorithms.
     \item{Appendix \ref{ap:data}:} Methods used for data analysis.
 \end{description}
 
 \endgroup
 
 \vfill
+

@@ -8,6 +8,21 @@
 
 \begin{figure}[!htb]
     \centering
+    \import{gfx/}{cappadocia.pgf}
+    \caption{\emph{Cappadocia Balloon Inflating Wikimedia Commons}, by Benh LIEU SONG, CC BY-SA 3.0}
+    \label{fig:cappadocia}
+\end{figure}
+
+\begin{figure}[!htb]
+    \centering
+    \import{gfx/}{charge_blur.pgf}
+    \caption{Topological charge Gaussian blur}
+    \label{fig:charge_blur}
+\end{figure}
+
+
+\begin{figure}[!htb]
+    \centering
     \import{gfx/}{freezing.pgf}
     \caption{Freezing}
     \label{fig:freezing}
@@ -22,6 +37,12 @@
     \label{fig:local_inv}
 \end{figure}
 
+\subsection*{Inverting links}
+
+\subsection*{Gauge transforms}
+
+\subsection*{Cluster building}
+
 \begin{figure}[!htb]
     \centering
     \import{gfx/}{cluster_inv.pgf}
@@ -29,11 +50,12 @@
     \label{fig:cluster_inv}
 \end{figure}
 
-\subsection*{Inverting links}
-
-\subsection*{Gauge transforms}
-
-\subsection*{Cluster building}
+\begin{figure}[!htb]
+    \centering
+    \import{gfx/}{freezing_overcoming.pgf}
+    \caption{Topological freezing overcoming with the cluster algorithm}
+    \label{fig:freezing_overcoming}
+\end{figure}
 
 \begin{lstlisting}[caption={Cluster class declaration}]
 class Cluster
@@ -208,6 +230,19 @@ double cluster_update(Lattice &lat, int side, URNG &rng)
 }
 \end{lstlisting}
 
+\begin{figure}[!htb]
+    \centering
+    \import{gfx/}{cluster_acc_cont.pgf}
+    \caption{Cluster algorithms acceptance contunuum limit comparison}
+    \label{fig:cluster_acc_cont}
+\end{figure}
+
+\begin{figure}[!htb]
+	\centering
+    \import{gfx/}{cluster_side_acc.pgf}
+    \caption{Cluster side acceptance comparison}
+    \label{fig:cluster_side_acc}
+\end{figure}
 
 %*****************************************
 %*****************************************
