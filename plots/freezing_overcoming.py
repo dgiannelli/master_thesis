@@ -24,7 +24,6 @@ plt.ylabel(r'$Q_\mathrm{tot}$')
 plt.title('Charge history')
 plt.legend()
 plt.xticks([0,4e5,8e5],['$0$',r'$4\times10^5$',r'$8\times10^5$'])
-#plt.xticklabels(['$0$',r'$4\times10^5$',r'$8\times10^5$'])
 
 plt.subplots_adjust(left=0.15)
 

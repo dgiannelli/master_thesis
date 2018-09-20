@@ -8,7 +8,6 @@ import numpy as np
 with open('data/gauss_cluster_data.pickle','br') as file:
     gauss_cluster_data = pickle.load(file)
 
-
 x = []
 y = []
 yerr = []
@@ -30,9 +29,6 @@ axs[1].set_xlim(xmin=0, xmax=0.6)
 axs[1].legend()
 axs[1].set_xlabel(r'$\frac{1}{\beta}$')
 axs[1].tick_params(axis='y',direction='inout')
-
-#plt.ylim(ymin=0.022)
-#print(y[3], yerr[3]) 
 
 beta_durr, y_durr, yerr_durr = np.loadtxt('data/durr-hoelbling.dat',unpack=True)
 axs[0].errorbar(1/beta_durr,y_durr,yerr_durr, fmt='D',color='C1',markerfacecolor='none',capsize=1.5,label='Durr-Hoelbling')
