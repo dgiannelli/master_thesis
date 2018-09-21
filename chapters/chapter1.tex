@@ -307,6 +307,7 @@ if it is going toward site $s$, it will be multiplied by $G^*(s)$.
 This kind of gauge transformations are very important for this work, because the cluster algorithm described in Chapter \ref{ch:cluster}
 will perform a sequence of them before being ready for cluster inversion.
 
+
 A generic lattice path consists in a polygonal chain of links (Figure \ref{fig:path}),
 \begin{figure}[!htb]
     \centering
@@ -355,18 +356,19 @@ it is necessary to express it in terms of the gauge fields.
     \caption{Plaquette loop $\mathcal P$}
     \label{fig:plaq}
 \end{figure}
-Let $\mathcal P(s)$ be the path that starts from site $s$ and runs counter-clockwise around the plaquette (Figure \ref{fig:plaq}).
+Let $\mathcal P_{12}(s)$ be the path that starts from site $s$ and runs counter-clockwise around the plaquette (Figure \ref{fig:plaq}).
 Computing the corresponding Wilson loop using Equation \eqref{eq:link}:
 \begin{equation*}
     \begin{aligned}
-        U[\mathcal P(s)] &\equiv U[\mathcal L_{1}(s)] U[\mathcal L_{2}(s+\hat 1)] U[\mathcal L_{-1}(s+\hat 1+\hat 2)] U[\mathcal L_{-2}(s+\hat 2)] \\
+        U[\mathcal P_{12}(s)] &\equiv U[\mathcal L_{1}(s)] U[\mathcal L_{2}(s+\hat 1)] U[\mathcal L_{-1}(s+\hat 1+\hat 2)] U[\mathcal L_{-2}(s+\hat 2)] \\
                               &= U[\mathcal L_{1}(s)] U[\mathcal L_{2}(s+\hat 1)] U^*[\mathcal L_{1}(s+\hat 2)] U^*[\mathcal L_{2}(s)] \\
                               &= e^{iga[A_1(s) + A_2(s+\hat 1) - A_1(s+\hat 2) - A_2(s) + \mathcal O\left(a\right)]} \\
                               &= e^{iga[a\partial_1A_2(s) - a\partial_2A_1(s) + \mathcal O\left(a\right)]} \\
-                              &= e^{iga\left[\mathcal O\left(a\right)\right]}
+                              &= e^{iga\left[aF_{12} + \mathcal O\left(a\right)\right]}
     \end{aligned}
 \end{equation*}
-does not provide any useful result. However, expanding further Equation \eqref{eq:link}:
+Here, the former leading order has vanished, and the error is of the same order as the new leading order.
+To get a clean result it is necessary to expanding further Equation \eqref{eq:link}:
 \begin{equation*}%\label{eq:link}
     \begin{aligned}
         U[\mathcal L_{\mu}(s)] &\equiv e^{ig\int_s^{s+\hat\mu}\mathrm dt_\mu\,A_\mu(t)} \\
@@ -374,10 +376,10 @@ does not provide any useful result. However, expanding further Equation \eqref{e
                        &= e^{iga\left[A_\mu(s) + \frac{a}{2}\partial_\mu A_\mu(s) + \mathcal O\left(a^2\right)\right]} \\
     \end{aligned}
 \end{equation*}
-it is possible to compute the leading order of the plaquette Wilson loop:
+Thus, the leading order is:
 \begin{equation}\label{eq:plaq}
     \begin{aligned}
-        U[\mathcal P(s)] &= e^{iga^2[\partial_1A_2(s) - \partial_2A_1(s) + \frac{1}{2}(\partial_1A_1(s) + \partial_2A_2(s) - \partial_1A_1(s) - \partial_2A_2(s)) %
+        U[\mathcal P_{12}(s)] &= e^{iga^2[F_{12} + \frac{1}{2}(\partial_1A_1(s) + \partial_2A_2(s) - \partial_1A_1(s) - \partial_2A_2(s)) %
                                    + \mathcal O\left(a\right)]} \\
                          &= e^{iga^2\left[F_{12}(s) + \mathcal O\left(a\right)\right]}
     \end{aligned}
@@ -389,14 +391,14 @@ If $a \to 0$, it is then related the gauge field tensor evaluated at site $s$.
 The continuum action \eqref{eq:cont_action}, depends quadratically on the gauge field tensor.
 In order recover this dependence, it is useful to take the real part of the plaquette loop of Equation \eqref{eq:plaq} and expand it:
 \begin{align*}
-    \Re\,U[\mathcal P(s)] &= \cos\left[ga^2F_{12}(s) + \mathcal O\left(a^3\right)\right] \\
+    \Re\,U[\mathcal P_{12}(s)] &= \cos\left[ga^2F_{12}(s) + \mathcal O\left(a^3\right)\right] \\
                           &= 1 - \frac{1}{2}g^2a^4F_{12}(s)^2 + \mathcal O\left(a^5\right) \\
                           &= 1 - \frac{1}{4}g^2a^4F_{\mu\nu}(s)F_{\mu\nu}(s) + \mathcal O\left(a^5\right)
 \end{align*}
-In fact, defining the lattice action in the following form:
+Indeed, defining the lattice action in the following form:
 \begin{equation}\label{eq:lat_action}
     \begin{aligned}
-        S^L[U] \equiv \beta\sum_s\left(1-\Re\,U[\mathcal P(s)]\right)
+        S^L[U] \equiv \beta\sum_s\left(1-\Re\,U[\mathcal P_{12}(s)]\right)
     \end{aligned}
 \end{equation}
 and using $a^2\sum_s \xrightarrow{a\to0} \int\mathrm d^2x$, the infinitesimal lattice limit is:
@@ -413,45 +415,59 @@ The topological charge was defined in Equation \eqref{eq:top_charge_density} and
 It depends linearly on the gauge field tensor, and,
 considering the plaquette loop of Equation \eqref{eq:plaq},
 it is clear that the complex argument of it provides the correct dependence.
-In fact:
+Indeed:
 \[
     \begin{aligned}
-        \sum_s\arg U[\mathcal P(s)] &= \sum_s\arg e^{iga^2\left[F_{12}(s) + \mathcal O\left(a\right)\right]} \\
+        \sum_s\arg U[\mathcal P_{12}(s)] &= \sum_s\arg e^{iga^2\left[F_{12}(s) + \mathcal O\left(a\right)\right]} \\
                                         &= ga^2\sum_s\left[F_{12}(s) + \mathcal O\left(a\right)\right] \\
                                         &\xrightarrow{a\to0} g\int\mathrm d^2x\,F_{12}(s) = 2\pi Q
     \end{aligned}
 \]
-The topological charge on the lattice can than be defined as:
+The topological charge on the lattice can then be defined as:
 \begin{equation}\label{eq:lat_top_charge}
-    Q^L \equiv \frac{1}{2\pi}\sum_s\arg U[\mathcal P(s)]
+    Q^L \equiv \frac{1}{2\pi}\sum_s\arg U[\mathcal P_{12}(s)]
 \end{equation}
-
-Finally, it remains to define $q^L(s)$, the lattice variant of topological charge density.
-In a discretized space, rather than defining a continuous density,
-it is more useful to define a local quantity associated with the most elementary two dimensional object (\ie a plaquette),
-which has an area of $a^2$.
-The local topological charge in the lattice should then converge to the topological charge of a plaquette in the infinitesimal lattice limit:
+which is a sum of the local contributions:
+\begin{equation}\label{eq:lat_loc_top_charge}
+    q^L(s) \equiv \frac{1}{2\pi}\arg U[\mathcal P_{12}(s)]
+\end{equation}
+In the infinitesimal lattice spacing limit, $q^L(s)$ is equal to the topological charge of the plaquette $P_{12}(s)$:
 \[
     q^L(s) \xrightarrow{a\to0} a^2q(s)
 \]
-This limit is verified with the following definition:
-\begin{equation}\label{eq:lat_loc_top_charge}
-    q^L(s) \equiv \frac{1}{2\pi}\arg U[\mathcal P(s)]
-\end{equation}
-The sum of all local topological charges returns the total topological charge, as it should be:
-\[
-    Q^L = \sum_sq^L(s)
-\]
+
+%Finally, it remains to define $q^L(s)$, the lattice variant of topological charge density.
+%In a discretized space, rather than defining a continuous density,
+%it is more useful to define a local quantity associated with the most elementary two dimensional object (\ie a plaquette),
+%which has an area of $a^2$.
+%The local topological charge in the lattice should then converge to the topological charge of a plaquette in the infinitesimal lattice limit:
+%This limit is verified with the following definition:
+%\begin{equation}\label{eq:lat_loc_top_charge}
+%    q^L(s) \equiv \frac{1}{2\pi}\arg U[\mathcal P(s)]
+%\end{equation}
+%The sum of all local topological charges returns the total topological charge, as it should be:
+%\[
+%    Q^L = \sum_sq^L(s)
+%\]
+
+This definition of the total lattice topological charge yields always integer values if implemented on a compact orientable manifold,
+as it happens in the continuum theory.
+This fact can be easily explained noticing that every local charge is proportional to the sum of the arguments of all link variables in the corresponding plaquette.
+Furthermore, each link is crossed by two plaquettes in opposite directions, so its net contribution to the final sum vanishes.
+The total charge is not zero because the argument of each plaquette is taken,
+and every time the sum of its four link arguments is not in the interval $(-\pi,\pi]$,
+the a shift of $2n\pi$ with $n\in\mathbb Z$ occurs.
+The multiplicative factor of $1/(2\pi)$ in Equation \eqref{eq:lat_loc_top_charge} then make this shift to be the integer value $n$.
 
 \subsection*{Monte Carlo simulations and continuum limit}
 
 Equation \eqref{eq:cont_exp} gives the expectation value of an operator $\hat{\mathcal O}[A]$.
-If it is possible to define a function $\mathcal O^L$ of Wilson lines such that $\mathcal O^L[U] \xrightarrow{a\to0} \mathcal O[A]$,
+If it is possible to define a function $\mathcal O^L$ of Schwinger lines such that $\mathcal O^L[U] \xrightarrow{a\to0} \mathcal O[A]$,
 the lattice variant of the expectation value will be:
 \begin{equation}\label{eq:lat_exp}
     \left<\hat{\mathcal O}^L[U]\right>_L \equiv \frac{\int[\mathrm dU]\, \mathcal O^L[U] e^{-S^L[U]}}{\int[\mathrm dU]\,e^{-S^L[U]}}
 \end{equation}
-Here, the dynamical variables are the lattice Wilson lines $U \in U(1)$, \ie all the link variables, and $\mathrm dU$ is the Haar measure of $U(1)$.
+Here, the dynamical variables are the lattice Schwinger lines $U \in U(1)$, \ie all the link variables, and $\mathrm dU$ is the Haar measure of $U(1)$.
 
 It is useful to describe the problem in terms of \emph{probability theory} concepts:
 $\mathcal O^L[U]$ can be seen as a function of random variables $\{U\}$ that follow a probability density function proportional to $e^{-S^L[U]}$,
@@ -464,12 +480,12 @@ The procedure is organized in these steps:
         and appropriate functions are defined to evaluate $S^L$ and $\mathcal O^L$ in terms of the links.
         This step will be discussed in Chapter \ref{ch:lattice}.
     \item A sequence of link configurations is generated in agreement with the weight function $e^{-S^L}$ with the Monte Carlo method, and, at each step,
-        $\mathcal O^L$ is evaluated at the current configuration, and stored in computer memory. The details will be explained in Chapter \ref{ch:local}.
+        $\mathcal O^L$ is evaluated at the current configuration, and stored in computer memory. The details will be explained in Chapters \ref{ch:mc} and \ref{ch:local}.
     \item The average of the stored values is computed, and, for the law of large numbers,
         it converges to the value of Equation \ref{eq:lat_exp}.
 \end{itemize}
 
-However, the lattice expectation value \eqref{eq:lat_exp} converges to the value in the continuum \eqref{eq:cont_exp} only in the limit of infinitesimal lattice:
+However, the lattice expectation value \eqref{eq:lat_exp} converges to the value in the continuum \eqref{eq:cont_exp} only in the limit of infinitesimal lattice spacing:
 \begin{equation}\label{eq:cont_limit}
     \left<\hat{\mathcal O}^L[U]\right>_L \xrightarrow{a\to0} \left<\hat{\mathcal O}[A]\right>_E
 \end{equation}
@@ -495,9 +511,8 @@ If the theory exhibits asymptotic freedom (like QCD, for example), the continuum
     \beta_L(g) \equiv -a\frac{\partial g}{\partial a}
 \]
 
-However, for the two dimensional $U(1)$ gauge theory, the $\beta_L$ function is zero, and the coupling constant $g$ is then independent from the lattice spacing $a$.
+However, for the two dimensional $U(1)$ gauge theory, the $\beta_L$ function is zero, and the coupling constant $g$ is then independent from the lattice spacing $a$ \cite{casana:1997}.
 Thus, the action parameter $\beta$ dependence on $a$ is simply:
-\marginpar{Serve una dimostrazione che $\beta_L=0$? Oppure basta una citazione? Quale?}
 \[
     \beta(a) \propto a^{-2}
 \]
@@ -513,7 +528,7 @@ one for each pair of parameters $(\beta,N)$, chosen on the line of constant phys
 The continuum limit corresponds to the limit $1/\beta\to0$, and it can be extrapolated with a curve fit.
 
 The more the pair of parameters are close to the continuum limit, the more the curve fit will be realistic,
-since lattice artifacts would be more suppressed. 
+since lattice artifacts will be more suppressed. 
 
 As it will be shown in Chapter \ref{ch:local}, the topological freezing sets a threshold in how far it is possible to proceed toward the continuum with a local algorithm.
 However, with the implementation of the cluster algorithm of Chapter \ref{ch:cluster}, this threshold will be removed.

@@ -34,15 +34,23 @@ reducing also the dependency on external libraries.
 In this work, the C++17 standard was adopted,
 and everything has been implemented in terms of standard library constructs.
 
-In this and later chapters, the exposure and description of data structures and algorithms will be accompained with an implementation in C++17.
-Lower level implementation details will be kept hidden with the encapsulation methods the language provides,
-and they will be shown in Appendix \ref{ap:code}.
+In this and later Chapters, the exposure and description of data structures and algorithms will be accompained with an implementation in C++17.
+Particular effort was put into the design of the program in order to achieve an interface that reflects the notation of Chapter \ref{ch:toy_model}.
+The algorithms of Chapters \ref{ch:local} and \ref{ch:cluster} will then be described with such an interface,
+with the intent of expressing them in terms of abstract concepts, which are closer to the mathematical description of the system.
+Such a paradigm makes the program to be shorter, easier to understand and to debug, and ensures that the lower level implementations are isolated and hidden from the rest of the code.
+In this way, possible causes of errors and useless repetitions are also avoided.
 
-The aim of this chapter is to implement the skeleton of the lattice theory.
+Furthermore, the design of C++17 enables to define such an higher level interface without compromising the performance,
+letting the compiler to perform lower level optimizations, rather than the programmer.
+%Lower level implementation details will be kept hidden with the encapsulation methods the language provides,
+%and they will be shown in Appendix \ref{ap:code}.
+
+The aim of this Chapter is to implement the skeleton of the lattice theory.
 It will be done in the form of a lattice class, which will have methods to access its basic objects,
-compute and modify its Wilson lines and evaluate operators in terms of them.
+compute and modify its Schwinger lines, and evaluate operators in terms of them.
 
-The interface the lattice class provides will then be used in Chapters \ref{ch:local} and \ref{ch:cluster} to define the Markov chain algorithms.
+%The interface the lattice class provides will then be used in Chapters \ref{ch:local} and \ref{ch:cluster} to define the Markov chain algorithms.
 
 \section{Lattice objects}
 
@@ -70,7 +78,9 @@ Site hat(int mu)
     }
 }
 \end{lstlisting}
-A lattice link can be identified with a site and a direction $\texttt{dir} \in \{1,2,-1,-2\}$:
+A site $s$ of coordinates $(x_1,x_2)$ is then {\ttfamily s = Site\{x1,x2\}}, and {\ttfamily s+hat(mu)} is the equivalent of $s+\hat\mu$.
+
+A lattice link can be identified with a site and a direction $\texttt{mu} \in \{1,2,-1,-2\}$:
 \begin{lstlisting}[caption={Link type}]
 struct Link
 {
@@ -78,7 +88,7 @@ struct Link
     int mu;
 };
 \end{lstlisting}
-The link $\mathcal L_2(0,1)$ will then be {\ttfamily Link\{0,1,2\}}.
+The link $\mathcal L_\mu(x_1,x_2)$ will then be {\ttfamily Link\{Site\{x1,x2\},mu\}}.
 
 %A generic lattice path is a sequence of links.
 %The standard library {\ttfamily vector} is an indefinite sized container of object of the same type,
@@ -88,10 +98,12 @@ The link $\mathcal L_2(0,1)$ will then be {\ttfamily Link\{0,1,2\}}.
 %using Path = vector<Link>;
 %\end{lstlisting}
 
-To define the analogous version of the plaquette $\mathcal D(s)$ of Figure \ref{fig:plaq},
-it is useful to inherit from the standard library {\ttfamily array},
-which is similar to {\ttfamily vector} but has a fixed length at compile time,
-enabling then further compiler optimizations.
+Lattice paths are sequences of links, and they can be implemented using Standard Library containers, which have built-it methods to iterate over them.
+A plaquette is a four sized sequence of links, and hence the Standard Library {\ttfamily array<Link,4>} is suitable to implement it.
+The size is specified at compile time,
+and it enables more advanced compiler optimizations.
+
+To define the analogous version of the plaquette $\mathcal P_{12}(s)$ of Figure \ref{fig:plaq}, the implementation is straightforward:
 \begin{lstlisting}[caption={Plaquette type}]
 using Plaq = array<Link,4>;
 
@@ -107,7 +119,7 @@ Plaq plaq_12(Site s)
 \section{Lattice class declaration}
 
 The declaration of the {\ttfamily Lattice} class is now reported.
-The implementation will be shown in Appendice \ref{ap:code}.
+The implementation will be shown in subsequent sections.
 
 \begin{lstlisting}[caption={Lattice class}]
 class Lattice
@@ -146,6 +158,10 @@ class Lattice
         int N_;
         double beta_;
         vector<Site> sites_;
+
+        /* Link variables data:
+           only the argument of them is stored,
+           this prevents them from deviating from U(1) */
         vector<double> link_vars; // Link variables data
         
         /* link_vars indexing:
@@ -154,9 +170,13 @@ class Lattice
 };
 \end{lstlisting}
 
+The following class initialization 
+
 \begin{lstlisting}[caption={Lattice constructor}]
+/* Links are initialized with the value 1,
+   which corresponds to a zero argument */
 Lattice::Lattice(int N, double beta) :
-    N_{N}, beta_{beta}, link_vars(2*N*N,1.)
+    N_{N}, beta_{beta}, link_vars(2*N*N,0.)
 {
     for (int x2=0; x2<N; x2++) {
         for (int x1=0; x1<N; x1++) {
@@ -165,6 +185,11 @@ Lattice::Lattice(int N, double beta) :
     }
 }
 \end{lstlisting}
+
+\subsection*{Lattice observables}
+
+The observables considered in this work are the mean plaquette energy $E_\
+{\mathcal P}$, the total topological charge $Q$ and the local topological charge $q(s)$.
 
 \begin{lstlisting}[caption={Lattice observables}]
 double Lattice::energy() const
