@@ -118,7 +118,7 @@ Plaq plaq_12(Site s)
 
 \section{Lattice class declaration}
 
-The declaration of the {\ttfamily Lattice} class is now reported.
+A $N \times N$ squared lattice with a given action parameter $\beta$ corresponds to the following {\ttfamily Lattice} class declaration.
 The implementation will be shown in subsequent sections.
 
 \begin{lstlisting}[caption={Lattice class}]
@@ -170,7 +170,7 @@ class Lattice
 };
 \end{lstlisting}
 
-The following class initialization 
+The following class initialization gives an initial value of links variables and constructs the sequence of lattice sites that will be used to iterate over them.
 
 \begin{lstlisting}[caption={Lattice constructor}]
 /* Links are initialized with the value 1,
@@ -188,9 +188,19 @@ Lattice::Lattice(int N, double beta) :
 
 \subsection*{Lattice observables}
 
-The observables considered in this work are the mean plaquette energy $E_\
-{\mathcal P}$, the total topological charge $Q$ and the local topological charge $q(s)$.
-
+The observables considered in this work are the mean plaquette energy:
+\[
+    E_{\mathcal P} \equiv \frac{1}{N^2}\sum_s \beta\left(1-\Re U[\mathcal P_{12}(s)]\right)
+\]
+the local topological charge $q(s)$:
+\[
+    \frac{1}{2\pi}\arg U[\mathcal P_{12}(s)]
+\]
+and the total topological charge $Q$:
+\[
+    \sum_s q(s)
+\]
+which are implemented as:
 \begin{lstlisting}[caption={Lattice observables}]
 double Lattice::energy() const
 {
@@ -217,6 +227,8 @@ double Lattice::total_charge() const
     return sum;
 }
 \end{lstlisting}
+
+\subsection*{Schwinger lines}
 
 \begin{lstlisting}[caption={Link indexing}]
 int Lattice::idx(Link link) const
