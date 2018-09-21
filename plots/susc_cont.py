@@ -26,6 +26,7 @@ fig, axs = plt.subplots(1,2,figsize=(4.7,3),sharey=True)
 
 axs[1].errorbar(x,y,yerr, fmt='s', markerfacecolor='none',capsize=1.5,label='Gauss cluster')
 axs[1].set_xlim(xmin=0, xmax=0.6)
+axs[1].set_ylim(ymin=0.0225)
 axs[1].legend()
 axs[1].set_xlabel(r'$\frac{1}{\beta}$')
 axs[1].tick_params(axis='y',direction='inout')

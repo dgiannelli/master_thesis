@@ -2,12 +2,16 @@
 \chapter{Local algorithm}\label{ch:local}
 %************************************************
 
-In this Chapter will be defined a local Metropolis-Hastings algorithm that samples the link variables.
-Then, a specific local algorithm will be defined to compute the integral of Equation \eqref{eq:lat_exp}.
-The first simulation will be run,
-and the result of the plaquette mean value will be compared with the value reported by D\"urr and Hoelbling in 2005 \cite{durr-hoelbling:2005}.
+In this Chapter will be defined a local Metropolis-Hastings algorithm that samples link variables.
+%Then, a specific local algorithm will be defined to compute the integral of Equation \eqref{eq:lat_exp}.
+The first simulations will be performed,
+and the result of the plaquette mean energy will be compared with the value reported by D\"urr and Hoelbling in 2005 \cite{durr-hoelbling:2005}.
 
-However, since the algorithm is local, at small lattice spacing, the topological freezing will be encountered.
+Even though the acceptance of the local algorithm will be close to its possible maximum value of one,
+since the algorithm is local, at small lattice spacing, the topological freezing will be encountered.
+
+This will cause both the divergence of the charge autocorrelation time,
+and the biasedness of observables mean values.
 
 \section{Link variables updating}
 \subsection*{Heat-bath}
@@ -30,11 +34,11 @@ Every plaquette value $\Re\,U[\mathcal P(s)]$ depends on four links variables,
 and every link variable contributes to two different plaquettes.
 
 Links variables are then simultaneously coupled in their probability density function,
-which is then impossible to sample directly.
+which is then complicated and impossible to sample directly.
 
 However, the action has a local nature,
 since every link variable contributes only to the two plaquettes that include it.
-Thus, using the heat-bath approach and considering only the marginal distribution of one link variable,
+Thus, using the heat-bath approach, and considering only the marginal distribution of one link variable,
 the contribution of all plaquettes that do not include the link can be integrated out of the distribution.
 
 Let $\mathcal L$ be the link considered, and $\mathcal P_1, \mathcal P_2$ the two plaquettes that include it.
@@ -113,14 +117,14 @@ the marginal distribution of $x$ finally is:
 \end{equation}
 with $k \equiv \beta|W|$.
 Equation \eqref{eq:local_pdf} cannot be integrated analytically,
-therefore it is not possible to directly sample it.
+therefore it is imppossible to directly sample it without numerical approximations.
 
 It was chosen to sample it using a Metropolis-Hastings algorithm,
-and, what has been said at the end of Chapter \ref{ch:mc},
+and, for what has been said at the end of Chapter \ref{ch:mc},
 the acceptance of the algorithm increases as much similar $\mathcal P(x_\mathrm{old}\to x_\mathrm{new})$ gets to $p(x_\mathrm{new};u_\mathrm{fix})$.
 
 On this matter, Laplaces's method identifies such a distribution.
-Indeed it is its corollary that any unimodal distribution of the form $\propto e^{kf(x)}$ approaches to a Gaussian as $k$ increases.
+Indeed it is its corollary that any unimodal distribution of the form $\propto e^{kf(x)}$ approaches a Gaussian as $k$ increases.
 
 In particular, it proves that (Figure \ref{fig:gauss}):
 \begin{equation}\label{eq:gauss_approx}
@@ -275,15 +279,16 @@ Every sweep over all lattice links will be considered a step of the Markov chain
 and the expectation values will be evaluated on this sequence.
 
 \subsection*{Local algorithm implementation}
-Here will be provided a C++17 implementation of the local algorithm using the {\ttfamily Lattice class} introduced in Chapter \ref{ch:lattice}.
+Here is provided a C++17 implementation of the local algorithm using the {\ttfamily Lattice} class introduced in Chapter \ref{ch:lattice}.
 
-However, it is necessary to define the interface to sample the proposal distribution of Equation \eqref{eq:gauss_proposal} and the uniform distribution.
+It is necessary to define first a way to sample the proposal distribution of Equation \eqref{eq:gauss_proposal} and the uniform distribution.
 
 In the C++ Standard Library, probability distributions are defined in terms of a generic templated type {\ttfamily URNG},
 and the same convention will be used here.
 
-The uniform distribution is alredy present in the Standard implemented as the {\ttfamily uniform\_real\_distribution} class.
-So it is just needed to instatiate it with the defaulf interval parameters, which correspond to the interval $[0,1)$:
+The uniform distribution is already present in the Standard, implemented as the {\ttfamily uniform\_real\_distribution} class,
+and, with its default parameters, corresponds to the uniform distribution in the interval $[0,1)$.
+It will be aliased as follows:
 \begin{lstlisting}[caption={Uniform distribution sampling function}]
 using UniformDouble = uniform_real_distribution<double>;
 \end{lstlisting}
@@ -305,10 +310,18 @@ double gauss_angle(double k, URNG &rng)
 }
 \end{lstlisting}
 
+The local algorithm makes use of staples objects.
+The same paradigm used in Chapter \ref{ch:lattice} is employed here to define the {\ttfamily Staple} type.
+A staple can be identified given its connected link and the direction of the staple's first link.
+For example, the staples $\mathcal S_1$ and $\mathcal S_2$ of Figure \ref{fig:staples} can be identified respectively with
+$(\mathcal L, -1)$ and $(\mathcal L, 1)$.
+The two connected staples employed in the local algorithm can then be obtained from the link $\mathcal L$ and its two ortogonal directions.
 
+All this staples interface is implemented in the following way:
 \begin{lstlisting}[caption={Staple type}]
 using Staple = array<Link,3>;
 
+// nu is the first staple link direction
 Staple conn_staple(Link link, int nu)
 {
     auto [s,mu] = link;
@@ -321,6 +334,7 @@ Staple conn_staple(Link link, int nu)
 array<Staple,2> conn_staples(Link link)
 {
     int nu;
+    // Select ortogonal directions
     switch (link.mu) {
         case 1:; case -1: nu = 2; break;
         case 2:; case -2: nu = 1; break;
@@ -331,6 +345,9 @@ array<Staple,2> conn_staples(Link link)
 }
 \end{lstlisting}
 
+Before updating links, it is recommended to start from a \emph{hot} configuration,
+\ie with all link variables sampled uniformly in $U(1)$.
+This starting configuration usually leads to shorter thermalization times.
 \begin{lstlisting}[caption={Hot configuration}]
 template <class URNG>
 void set_hot(Lattice &lat, URNG &rng)
@@ -344,6 +361,7 @@ void set_hot(Lattice &lat, URNG &rng)
 }
 \end{lstlisting}
 
+The local algorithm is finally:
 \begin{lstlisting}[caption={Local algorithm}]
 // Returns 1. if move is accepted, 0. if not
 template <class URNG>
@@ -367,7 +385,10 @@ double local_update(Lattice &lat, Link link, URNG &rng)
     }
     else return 0.;
 }
+\end{lstlisting}
 
+The local algorithm is then iterated over each lattice link:
+\begin{lstlisting}[caption={Local sweep}]
 template <class URNG>
 double local_sweep(Lattice &lat, URNG &rng)
 {
@@ -380,8 +401,23 @@ double local_sweep(Lattice &lat, URNG &rng)
     return accept/pow(lat.N(),2)/2.;
 }
 \end{lstlisting}
+A local sweep will be considered as an iteration of the Markov chain.
 
 \section{First results}
+
+The line of fixed constant volume $\beta/N^2=1/80$ is chosen with the following parameters:
+
+\begin{table}[!htb]
+    \centering
+    \input{tables/local_cont.tex}
+    \caption{Parameters considered for the local algorithm}
+    \label{tab:local_cont}
+\end{table}
+
+\subsection*{Metropolis-Hastings acceptance}
+
+As expected, the Metropolis-Hastings acceptance converges to 1 when approaching the continuum limit (Figure \ref{fig:local_acc}),
+since, if $\beta$ increases, the $k\propto\beta$ parameter of Figure \ref{fig:gauss} increases, and the Laplace's method becomes more accurate.
 
 \begin{figure}[!htb]
     \centering
@@ -390,7 +426,28 @@ double local_sweep(Lattice &lat, URNG &rng)
     \label{fig:local_acc}
 \end{figure}
 
-\subsection{Plaquette energy}
+\subsection*{Plaquette mean energy}
+For a $24\times24$ lattice with $\beta=7.2$, it is reported in \cite{durr-hoelbling:2005} the following value for the plaquette mean energy:
+\begin{equation}\label{eq:plaq_durr}
+    E_{\mathcal P} = 0.52040(39) \quad \mathrm{(Durr-Hoelbling)}
+\end{equation}
+
+Running the local algorithm for $10^6$ iterations, and discarding the first $20\%$ of the data as thermalization, the local algorithm obtained:
+\begin{equation}\label{eq:plaq_local}
+    E_{\mathcal P} = \input{tables/plaq_local.tex} \quad \mathrm{(Local\ algorithm)}
+\end{equation}
+which is compatible with \eqref{eq:plaq_durr}.
+
+However, problems arise in the attempt to evaluate the continuum limit of the plaquette mean energy (Figure \ref{fig:local_cont_energy}).
+The values of the two points on the left seem to be erroneous even if the plot of the plaquette energies history
+does not show any evident problem (Figure \ref{fig:local_energy_history}).
+
+\begin{figure}[!htb]
+    \centering
+    \import{gfx/}{local_cont_energy.pgf}
+    \caption{Biased plaquette energy continuum limit obtained with the local algorithm}
+    \label{fig:local_cont_energy}
+\end{figure}
 
 \begin{figure}[!htb]
     \centering
@@ -399,14 +456,13 @@ double local_sweep(Lattice &lat, URNG &rng)
     \label{fig:local_energy_history}
 \end{figure}
 
-\subsection{Topological freezing}
+The reason of these biased measures can be seen examining the behaviour of the topological charge.
 
-\begin{figure}[!htb]
-    \centering
-    \import{gfx/}{local_cont_energy.pgf}
-    \caption{Plaquette energy continuum limit}
-    \label{fig:local_cont_energy}
-\end{figure}
+\subsection*{Topological freezing}
+
+Plotting the histories of the total topological charge values, the problem can be identified.
+The second last plot of Figure \ref{fig:local_charge_history} show that the topological charge remains at the same value for a very long number of iterations,
+while the last plot shows a complete charge freezing.
 
 \begin{figure}[!htb]
     \centering
@@ -415,13 +471,30 @@ double local_sweep(Lattice &lat, URNG &rng)
     \label{fig:local_charge_history}
 \end{figure}
 
+The critical behaviour of the integrated autocorrelation time can be seen in Figure \ref{fig:local_charge_corr}.
+The last two points are excluded from this plot because of the insufficient number of independent configurations.
 
 \begin{figure}[!htb]
     \centering
     \import{gfx/}{local_charge_corr.pgf}
-    \caption{Local algorithm: divergent integrated autocorrelation time of the topological charge}
+    \caption{Divergent integrated autocorrelation time of the topological charge obtained with the local algorithm}
     \label{fig:local_charge_corr}
 \end{figure}
+
+The topological susceptibility $\chi$ is proportional to the second moment of the topological charge:
+\[
+    \frac{\chi}{g^2} = \frac{\left<Q^2\right>}{a^2g^2N^2} = \frac{\left<Q^2\right>}{N^2}\beta
+\]
+Thus, the extrapolation of the continuum limit is very problematic in the presence of topological freezing (Figure \ref{fig:local_cont_susc}).
+
+\begin{figure}[!htb]
+    \centering
+    \import{gfx/}{local_cont_susc.pgf}
+    \caption{Biased topological susceptibility continuum limit obtained with the local algorithm}
+    \label{fig:local_cont_susc}
+\end{figure}
+
+All these problems witness the limitations of the local algorithm, and the cluster algorithm presented in the next Chapter will be a solution to them.
 
 %*****************************************
 %*****************************************

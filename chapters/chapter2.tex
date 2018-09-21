@@ -122,6 +122,8 @@ A $N \times N$ squared lattice with a given action parameter $\beta$ corresponds
 The implementation will be shown in subsequent sections.
 
 \begin{lstlisting}[caption={Lattice class}]
+using cmplx = complex<double>;
+
 class Lattice
 {
     public:
@@ -194,13 +196,15 @@ The observables considered in this work are the mean plaquette energy:
 \]
 the local topological charge $q(s)$:
 \[
-    \frac{1}{2\pi}\arg U[\mathcal P_{12}(s)]
+    q(s) \equiv \frac{1}{2\pi}\arg U[\mathcal P_{12}(s)]
 \]
 and the total topological charge $Q$:
 \[
-    \sum_s q(s)
+    Q \equiv \sum_s q(s)
 \]
-which are implemented as:
+
+Given a generic path, the corresponding Schwinger line $U$ is evaluated with the generic templated method {\ttfamily s\_line(Path)}.
+The three observables are then implemented as:
 \begin{lstlisting}[caption={Lattice observables}]
 double Lattice::energy() const
 {
@@ -230,12 +234,45 @@ double Lattice::total_charge() const
 
 \subsection*{Schwinger lines}
 
+Here is reported a lower level implementation of the Schwinger lines interface.
+It is designed such that the following requirements are satisfied:
+\begin{itemize}
+    \item The method {\ttfamily s\_line(Path)} has to return the $U(1)$ complex number corresponding to the Schwinger line evaluated over the generic sequence of links {\ttfamily Path}.
+    \item The method {\ttfamily set\_link(Link link, cmplx u)} has to set the link variable {\ttfamily link} to the value of the $U(1)$ complex number {\ttfamily u}.
+        The direction has to be taken into account so that a successive call of {\ttfamily s\_line(link)} would return the value {\ttfamily u}.
+    \item Both this methods have to handle link coordinates that are out of bounds, applying periodic boundary conditions.
+    \item The link variables stored in memory have to correspond exactly to $U(1)$ numbers to avoid problems caused by the finite representation of numbers.
+        This is done storing in memory the value of their argument, and building the corresponding $U(1)$ complex number when is needed.
+\end{itemize}
+
+Link variables arguments are stored in the private {\ttfamily vector<double>} container {\ttfamily link\_vars}.
+The map between link coordinates {\ttfamily link} and the corresponding index of {\ttfamily link\_vars} is provided by the private method {\ttfamily idx}:
 \begin{lstlisting}[caption={Link indexing}]
+/* Only link variables pointing to positive directions
+   are stored, i.e. top and right links.
+   Links in the opposite directions
+   are computed in terms of them taking the complex
+   conjugate inside s_line and set_link methods. */
+
+
+/* Apply periodic boundary conditions and return
+   the corresponding index of link_vars.
+   If link points to a negative direction,
+   the index of the opposite link is returned.
+   Links with contiguous x1 are contiguous in memory.
+   The successive axis is x2.
+   Links pointing to direction x1 are first in the ordering,
+   then the ones pointing to x2. */
 int Lattice::idx(Link link) const
 {
     auto [x1,x2] = link.s;
     
+    /* axis 0: points to x1
+       axis 1: points to x2 */
     int axis = 0;
+    /* Select right axis.
+       If link points to negative directions,
+       select the opposite one */
     switch (link.mu) {
         case 1: break;
         case -1: x1--; break;
@@ -252,7 +289,8 @@ int Lattice::idx(Link link) const
 }
 \end{lstlisting}
 
-\begin{lstlisting}[caption={Schwinger lines}]
+Once defined {\ttfamily idx}, the implementation of {\ttfamily s\_line(Link)} is trivial:
+\begin{lstlisting}[caption={Link Schwinger line}]
 template <>
 cmplx Lattice::s_line(Link link) const
 {
@@ -260,12 +298,15 @@ cmplx Lattice::s_line(Link link) const
     if (link.mu>0) return u;
     else return conj(u);
 }
+\end{lstlisting}
 
+This method can be generalized to every standard container of links:
+\begin{lstlisting}[caption={Generic path Schwinger line}]
 template <class Path>
 cmplx Lattice::s_line(Path path) const
 {
     cmplx prod = 1.;
-    for (auto link : path)
+    for (Link link : path)
     {
         prod *= s_line(link);
     }
@@ -273,6 +314,7 @@ cmplx Lattice::s_line(Path path) const
 }
 \end{lstlisting}
 
+The link updating is also self-explainatory:
 \begin{lstlisting}[caption={Link updating}]
 void Lattice::set_link(Link link, cmplx u)
 {
@@ -281,6 +323,10 @@ void Lattice::set_link(Link link, cmplx u)
 }
 \end{lstlisting}
 
+\subsection*{Local gauge transform}
+
+Finally, the local gauge transform of Figure \ref{fig:local_gauge},
+applied to the site {\ttfamily s} is implemented as:
 \begin{lstlisting}[caption={Local gauge transform}]
 void Lattice::local_gauge(Site s, cmplx G)
 {
@@ -290,7 +336,6 @@ void Lattice::local_gauge(Site s, cmplx G)
     }
 }
 \end{lstlisting}
-
 
 %*****************************************
 %*****************************************

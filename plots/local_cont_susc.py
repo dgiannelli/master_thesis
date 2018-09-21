@@ -8,29 +8,27 @@ import pickle
 with open('data/local_data.pickle','br') as file:
     local_data = pickle.load(file)
 
-
 x = []
 y = []
 yerr = []
 
-for key in local_data:
+for key in list(local_data)[:-2]:
     N, beta = key
-    energy_mean = local_data[key]['energy_mean']
-    energy_err = local_data[key]['energy_err']
+    susc_mean = local_data[key]['susc_mean']
+    susc_err = local_data[key]['susc_err']
 
     x.append(1./beta)
-    y.append(energy_mean)
-    yerr.append(energy_err)
+    y.append(susc_mean)
+    yerr.append(susc_err)
     
 plt.errorbar(x,y,yerr, fmt='s',markerfacecolor='none',capsize=1.5)
 plt.xlim(xmin=0)
-plt.ylim([0.45,0.625])
-plt.ylabel(r'$E_{\mathcal P}$')
+#plt.ylim([0.45,0.625])
+plt.ylabel(r'$\frac{\chi}{g^2}$')
 plt.xlabel(r'$\frac{1}{\beta}$')
-plt.suptitle('Local algorithm: biased energy continuum limit')
+plt.suptitle(r'Local algorithm: biased $\chi/g^2$ continuum limit')
 plt.subplots_adjust(left=0.2)
 plt.subplots_adjust(bottom=0.2)
 
-plt.savefig('gfx/local_cont_energy.pgf')
-#plt.savefig('gfx/local_cont_energy.pdf')
+plt.savefig('gfx/local_cont_susc.pgf')
 

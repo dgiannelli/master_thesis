@@ -1,5 +1,5 @@
 %************************************************
-\chapter{Probability distributions sampling}\label{ch:mc}
+\chapter{Sampling probability distributions}\label{ch:mc}
 %************************************************
 
 The infrastructure is set up, and the Monte Carlo updating of link variables has to be defined.
@@ -20,15 +20,15 @@ and the expectation values of quantum operators of Equation \eqref{eq:lat_exp} c
 \section{Direct sampling}
 \subsection*{Pseudo-random number generators}
 A Uniform Pseudo-Random Number Generators (URNG) is a deterministic algorithm that generates erratic and periodic
-sequences of all the integers present in an interval $[n_\mathrm{min},n_\mathrm{max}]$, in which $n_\mathrm{min}$ can be $0$ or $1$ and $n_\mathrm{max}$ is a very high number.
+sequences of all the integers present in an interval $[n_\mathrm{min},n_\mathrm{max}]$, in which $n_\mathrm{min}$ can be $0$ or $1$.
 
 A URNG stores in memory a \emph{state}, and the next element of the sequence will be univocally determined by the current state.
 A state can be set with an integer number, called \emph{seed}, and a URNG will generate very different sequences for each seed value. 
 
-If the modulus-$n$ operation is taken over the generated numbers, and if $n\ll n_\mathrm{max}$,
-the sequence will approximate a uniform random number sequence in the interval $[0,n-1]$.
-The quality of a URNG will depend on the the performance of such a sequence over statistical tests.
-Anyway, a good URNG should have a very long period $n_\mathrm{max}$ to perform well,
+%%If the modulus-$n$ operation is taken over the generated numbers, and if $n\ll n_\mathrm{max}$,
+%%the sequence will approximate a uniform random number sequence in the interval $[0,n-1]$.
+The quality of a URNG will depend on the the performance of such sequences over statistical tests.
+Anyway, a good URNG should have a very long period $T$ to perform well,
 and the length of the period can then be used as a rough measure of its quality.
 
 The URNG that is mostly used in scientific works in the \emph{Mersenne Twister} \cite{mersenne-twister},
@@ -40,7 +40,7 @@ Another common URNG is the \emph{ranlux}, which was introduced specifically for 
 The C++ standard library establishes a flexible interface for random numbers generation:
 the algorithms can be written in terms of probability distributions,
 and the random engine specified later at compile time.
-For this work, the same pattern will be preserved.
+For this work, the same paradigm will be preserved.
 
 %\subsection*{Uniform variables}
 %Sampling pseudo-random variables from a uniform distribution in $[a,b)$ with a URNG is straightforward,
@@ -96,10 +96,10 @@ Having defined $F(y) \equiv \int_{y_0}^y\mathrm dy'\,p(y')$, its inverse $F^{-1}
     F(y_1) = 1
 \end{dcases}\]
 
-With this method, it is possible to sample variables directly from them very efficiently,
+With this method, it is possible to sample variables directly from $p(y)$ very efficiently,
 but it is limited only to one dimensional distributions that can be integrated and inverted analytically.
 
-To generate variables that follow a generic real distribution, it is necessary to use accept/reject algorithms,
+To generate variables that follow a generic real distribution, it is possible to use accept/reject algorithms,
 or to sample it with Markov chains.
 
 \section{Markov chain sampling}
@@ -210,7 +210,7 @@ $C_f$ then decays exponentially with the number of forward Markov steps:
     C_f(h) \stackrel{h\to\infty}{\scalebox{2}[1.25]{$\sim$}} e^{-\sfrac{h}{\tau_\mathrm{mix}}}
 \end{equation}
 
-The first encounter with the autocorrelation function occurs when evaluating the variance of the average $\overline f_n$ of Theorem \ref{th:ergodic}:
+A first encounter with the autocorrelation function occurs when evaluating the variance of the average $\overline f_n$ of Theorem \ref{th:ergodic}:
 \begin{align*}
     \sigma_{\overline f_n}^2 &= \left<\left(\frac{1}{N}\sum_if(x_i) - \left<f\right>\right)^2\right> \\
                              &= \left<\frac{1}{N^2}\left(\sum_if(x_i)\right)^2 +\left<f\right>^2 -\frac{2}{N}\left<f\right>\sum_if(x_i)\right> \\
@@ -239,8 +239,8 @@ The result for the variance in the limit of a large sample size is then:
 where $N_f^\mathrm{eff} \equiv N/(1+2\tau_f^\mathrm{int})$ is the \emph{effective number} of uncorrelated values,
 since the variance of the average for uncorrelated data would have been $\sigma_f^2/N$.
 
-A good measure for the effectiveness of a Markov chain algorithm can then be the number of effective uncorrelated values produced in a certain amount of computer time,
-and it can be used to choose simulation parameters, as it will be done in Chapter \ref{ch:results}.
+%A good measure for the effectiveness of a Markov chain algorithm can then be the number of effective uncorrelated values produced in a certain amount of computer time,
+%and it can be used to choose simulation parameters, as it will be done in Chapter \ref{ch:results}.
 The most efficient and simple way to evaluate $\sigma_{\overline f_n}^2$, $n_f^\mathrm{eff}$, and $\tau_f^\mathrm{int}$ is with the use of \emph{resampling methods}.
 All the results present in this work are obtained with the \emph{binning} or the \emph{jackknife} resampling methods,
 and the details of the implementation are showed in Appendix \ref{ap:data}.
@@ -269,7 +269,7 @@ A sufficient condition for Equation \eqref{eq:global_balance} is:
 	p(x)w(x \to y) = p(y)w(y \to x) \quad \forall x,y\in\Omega
 \end{equation}
 which is the \emph{detailed balance} equation.
-Here, the probability flux is in balance for every pair of points.
+Here, the probability flux is in balance between every pair of points.
 
 If any of these two equations for $w(x \to y)$ is satisfied with a given $p(x)$,
 then, $p(x)$ will be the equilibrium distribution for the Markov chain.
