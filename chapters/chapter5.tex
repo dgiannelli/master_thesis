@@ -5,6 +5,26 @@
 \section{Charge clusters}
 
 \subsection*{Smoothing}
+To get an insight of what happens in topological freezing regime,
+it can be useful to find a method to visualize the spatial distribution of the local topological charge,
+which was defined as:
+\[
+    q(s) \equiv \frac{1}{2\pi}\argU[\mathcal P(s)]
+\]
+This means that its value can be in $(-0.5,0.5]$,
+and every plaquette $\mathcal P(s)$ can either give o positive or negative contibution to the total charge.
+The most appropriate way to represent this scenario, is with a diverging colormap, that is,
+a colormap made of two contrasting colors with varying lightness and saturation that meet in the middle at an unsaturated color.
+Each color represents positive or negative numbers,
+with values of lightness and saturation that are perceived by the viewer as monotonically increasing.
+In this way, distances between numbers can be visualized as distances between colors.
+
+The diverging colormap chosen to represent the local charges is the \emph{Colobrewer - RdBu} map \cite{colorbrewer}.
+        
+
+
+
+
 
 \begin{figure}[!htb]
     \centering
