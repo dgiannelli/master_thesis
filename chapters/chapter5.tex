@@ -161,13 +161,85 @@ a move that produces zero energy variation is a move that has acceptance one.
 Thus, taking the complex conjugate of all links inside a space region does not change the energy of all plaquettes of this region.
 What actually changes, and prevents this block move to be an effective Metropolis update,
 is the energy of all plaquettes connected to the border links of this region.
-Indeed, only one link in them is conjugated, and the energy changes, in general, if this link is not zero or $\pi$.
+Indeed, only one link in them is conjugated, and the energy changes, in general, if this link is not real valued.
 It is then very unlikely that the move is accepted if the energies of a high number of plaquettes change all together.
 
 However, there is still another move that leaves the energy and the charge unchanged,
 and it is the gauge transformation.
 
 \subsection*{Gauge transformations}
+Local gauge transformations of the type of Equation \eqref{eq:site_gauge} and Figure \ref{fig:local_gauge} are now considered.
+Each plaquette Wilson loop remains unchanged after such a transformation,
+and hence also the topological charge and the energy are invariant.
+The goal is then to find an appropriate gauge transformation that minimizes the energy variation of the cluster inversion described before.
+
+It was observed before that if link variables along the border are real valued,
+the energy of the corresponding external plaquettes does not change after the cluster inversion.
+A possible strategy to reduce the energy variation is to find a set of local gauge transformations that set border link variables to $1$,
+and then perform the cluster inversion.
+
+Considering the lattice region of Figure \ref{fig:cluster}, and the link path surrounding it,
+let $U_1, U_2, \ldots$ be the Schwinger lines evaluated over links $\mathcal L_1, \mathcal L_2, \ldots$,
+and $s_1, s_2, \ldots$ the starting sites of them.
+The last link variable of the path, $U_{12}$, can be set to $1$ with the gauge transform of Figure \ref{fig:local_gauge}
+with $G=U^*_{12}$ applied on site $s_{12}$.
+The only other link variable of the path that is modified by this transformation is the previous one: $U_{11}$.
+Applying then another local gauge trasformation with $G=U^*_{11}$ on site $s_{11}$,
+also the value of $U_{11}$ can be set to $1$, without modifying the other value already set to $1$.
+This sequence can be iterated to set all values $U_1,U_2,\ldots=1$.
+However, the same procedure cannot be applied to the last remaining path link, $\mathcal L$,
+because it would modify the value $U_{12}$, already set to $1$ with the first transformation.
+
+\subsection*{Reverse cluster algorithm}
+After such a chain of gauge transfomations,
+reversing all links in the surrounded region would modify only one external plaquette,
+the one enclosing the link $\mathcal L$.
+
+The acceptance of the entire move can be evaluated with Equation \eqref{eq:acceptance_sym}
+
+
+
+
+
+\begin{figure}[!htb]
+    \centering
+    \begin{tikzpicture}[x=1cm,y=1cm]
+        \draw[step=1, help lines, dashed, color=black!30] (0,0) grid (4.5,4.5);
+        \draw[->,thick,black] (0,0) -- (4.5,0) node [right] {$x_1$};
+        \draw[->,thick,black] (0,0) -- (0,4.5) node [above] {$x_2$};
+
+        %internal links
+        %\draw[step=1,color=RoyalBlue] (1,1) grid (3,3);
+
+        %gate
+        \draw[->-,very thick,black,dashed] (2,1) -- node [black,above] {$\mathcal L$} (3,1);
+
+        %path
+        \draw[->-,very thick,RoyalBlue] (3,1) -- node [black,below] {$\mathcal L_1$} (4,1);
+        \draw[->-,very thick,RoyalBlue] (4,1) -- node [black,right] {$\mathcal L_2$} (4,2);
+        \draw[->-,very thick,RoyalBlue] (4,2) -- node [black,right] {$\mathcal L_3$} (4,3);
+        \draw[->-,very thick,RoyalBlue] (4,3) -- node [black,right] {$\mathcal L_4$} (4,4);
+        \draw[->-,very thick,RoyalBlue] (4,4) -- node [black,above] {$\mathcal L_5$} (3,4);
+        \draw[->-,very thick,RoyalBlue] (3,4) -- node [black,above] {$\mathcal L_6$} (2,4);
+        \draw[->-,very thick,RoyalBlue] (2,4) -- node [black,above] {$\mathcal L_7$} (1,4);
+        \draw[->-,very thick,RoyalBlue] (1,4) -- node [black,left] {$\mathcal L_8$} (1,3);
+        \draw[->-,very thick,RoyalBlue] (1,3) -- node [black,left] {$\mathcal L_9$} (1,2);
+        \draw[->-,very thick,RoyalBlue] (1,2) -- node [black,left] {$\mathcal L_{10}$} (1,1);
+        \draw[->-,very thick,RoyalBlue] (1,1) -- node [black,below] {$\mathcal L_{11}$} (2,1);
+
+        %internal staple
+        \draw[->-,very thick,Maroon] (3,1) -- (3,2);
+        \draw[->-,very thick,Maroon] (3,2) -- node [black,above] {$\mathcal S_i$} (2,2);
+        \draw[->-,very thick,Maroon] (2,2) -- (2,1);
+
+        %external staple
+        \draw[->-,very thick,Maroon] (3,1) -- (3,0);
+        \draw[->-,very thick,Maroon] (3,0) -- node [black,above] {$\mathcal S_e$} (2,0);
+        \draw[->-,very thick,Maroon] (2,0) -- (2,1);
+    \end{tikzpicture}
+    \caption{Cluster of links with its surrounding path}
+    \label{fig:cluster}
+\end{figure}
 
 \subsection*{Cluster building}
 
