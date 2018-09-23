@@ -10,10 +10,10 @@ To get an insight of what happens in topological freezing regime,
 it can be useful to find a method to visualize the spatial distribution of the local topological charge,
 which was defined as:
 \[
-    q(s) \equiv \frac{1}{2\pi}\arg U[\mathcal P(s)]
+    q(s) \equiv \frac{1}{2\pi}\arg U[\mathcal P_{12}(s)]
 \]
 This means that its value can be in $(-1/2,1/2]$,
-and every plaquette $\mathcal P(s)$ can either give o positive or negative contibution to the total charge.
+and every plaquette $\mathcal P_{12}(s)$ can either give o positive or negative contibution to the total charge.
 The most appropriate way to represent this scenario, is with a diverging colormap, that is,
 a colormap made of two contrasting colors with varying lightness and saturation that meet in the middle at an unsaturated color.
 Each color represents positive or negative numbers,
@@ -122,19 +122,52 @@ but charge tunneling is still not so rare to prevent from collecting independent
 
 The blurred charge maps after four consecutive sweeps are reported in Figure \ref{fig:local_inv},
 and a charge tunneling has happened between the third and the fourth image.
-
+A new cluster of negative red values has risen in a region in which a positive blue cluster was present,
+and the topological charge moves from $Q=0$ to $Q=-1$.
 
 \begin{figure}[!htb]
     \centering
     \import{gfx/}{local_inv.pgf}
-    \caption{Charge tunneling}
+    \caption{Charge tunneling with a local algorithm}
     \label{fig:local_inv}
 \end{figure}
 
+The idea of the cluster algorithm is then to create a Metropolis move that emulates this \emph{spontaneous} charge tunneling,
+
 \section{Cluster inversion}
+
 \subsection*{Inverting links}
 
-\subsection*{Gauge transforms}
+Transforming each link variable inside a plaquette to its complex conjugate
+has the effect of reversing the value of its local topological charge (Equation \eqref{eq:lat_loc_top_charge}):
+\[\begin{aligned}
+    q(s) &= \frac{1}{2\pi}\arg U[\mathcal P_{12}(s)] \\
+         &\mapsto \frac{1}{2\pi}\arg U^*[\mathcal P_{12}(s)] = -q(s)
+\end{aligned}\]
+It has the same effect of taking the plaquette in the opposite direction:
+\[
+    U[\mathcal P_{21}(s)] = U^*[\mathcal P_{12}(s)]
+\]
+
+The plaquette energy is instead invariant under links conjugation:
+\[\begin{aligned}
+    E(s) &= 1-\Re\,U[\mathcal P_{12}(s)] \\
+         &\mapsto 1-\Re\,U^*[\mathcal P_{12}] = E(s)
+\end{aligned}\]
+
+In terms of Markov chain sampling and Metropolis algorithm (Equation \ref{eq:acceptance_sym}),
+a move that produces zero energy variation is a move that has acceptance one.
+
+Thus, taking the complex conjugate of all links inside a space region does not change the energy of all plaquettes of this region.
+What actually changes, and prevents this block move to be an effective Metropolis update,
+is the energy of all plaquettes connected to the border links of this region.
+Indeed, only one link in them is conjugated, and the energy changes, in general, if this link is not zero or $\pi$.
+It is then very unlikely that the move is accepted if the energies of a high number of plaquettes change all together.
+
+However, there is still another move that leaves the energy and the charge unchanged,
+and it is the gauge transformation.
+
+\subsection*{Gauge transformations}
 
 \subsection*{Cluster building}
 
