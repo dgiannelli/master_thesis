@@ -93,15 +93,36 @@ The optimal values of sigma for the considered lattice spacing have been identif
 And this still holds for bigger lattices with the same physical volume.
 
 \subsection*{Topological freezing}
+%Now that a method to visualize charge clusters is defined,
+%it is possible to get an insight of what is happening in topological freezing regime
+Now that a method to visualize charge clusters is defined,
+it can be applied to get an insight of what is happening in topological freezing regime.
+
+The history plots of Figure \ref{fig:local_charge_history} show that the fixed physical volume line of Table \ref{tab:local_cont}
+heavily suffers from freezing if $N>24$.
+Let then consider completely frozen configurations with $N=36,\ \beta=16.2$.
+
+In Figure \ref{fig:freezing}, the blurred charge of four consecutive configurations are reported.
+Charge clusters may move in the space or may be deformed,
+but their contribution to the total charge remains the same.
 
 \begin{figure}[!htb]
     \centering
     \import{gfx/}{freezing.pgf}
-    \caption{Freezing}
+    \caption{Blurred charge maps after four consecutive local sweep updates}
     \label{fig:freezing}
 \end{figure}
 
 \subsection*{Charge tunneling}
+If a solution to the topological freezing has to be found,
+it is instructive to see what happens when charge tunneling is still achievable with a local algorithm.
+Let then consider configurations with $N=24,\ \beta=7.2$,
+in which the charge correlation time is already becomome high (Figure \ref{fig:local_charge_corr}) due to topological freezing,
+but charge tunneling is still not so rare to prevent from collecting independent charge configurations.
+
+The blurred charge maps after four consecutive sweeps are reported in Figure \ref{fig:local_inv},
+and a charge tunneling has happened between the third and the fourth image.
+
 
 \begin{figure}[!htb]
     \centering
