@@ -479,15 +479,12 @@ vector<Link> Cluster::links() const
 Here the reverse cluster update is immediately put to the test,
 showing if it actually overcomes the topological freezing.
 
-
 In Figure \ref{fig:cluster_inv}, the cluster algorithm is applied to the central highlighted square.
 The move is accepted, the total charge has changed.
 The field configuration has been turned up,
 and the blurred charge map shows that the selected cluster has inverted his color:
 the red structure has turned to one structure of similar form,
 and even the smaller blue twist enclosed inside it has reversed his color.
-
-the cluster algorithm is applied to the central highlighted square.
 
 \begin{figure}[!htb]
     \centering
@@ -496,7 +493,18 @@ the cluster algorithm is applied to the central highlighted square.
     \label{fig:cluster_inv}
 \end{figure}
 
+For illustrative purposes,
+a preview of the simulation described in the next chapter is reported in Figure \ref{fig:freezing_overcoming},
+in which are compared the histories of the topological charge obtained with the local and the cluster algorithm.
+With this parameter choice, the local algorithm is freezed in the same topological sector for all the duration of the simulation,
+while the cluster algorithm does not show any evidence of topological freezing.
 
+\begin{figure}[!htb]
+    \centering
+    \import{gfx/}{freezing_overcoming.pgf}
+    \caption{Topological freezing overcoming with the cluster algorithm}
+    \label{fig:freezing_overcoming}
+\end{figure}
 
 \section{Gauss cluster algorithm}
 
@@ -530,7 +538,7 @@ The proposal distribution is then:
     \mathcal P(x_\mathrm{old}\to x_\mathrm{new})\sqrt{\frac{k_\mathrm{new}}{2\pi}}\frac{e^{-k_\mathrm{new}x^2/2}}{\mathrm{erf}\left(\frac{k_\mathrm{new}}{2}\pi^2\right)}
 \end{equation}
 
-\subsection{Gauss cluster update}
+\subsection*{Gauss cluster update}
 
 The Gauss cluster update algorithm can now be defined:
 
@@ -572,16 +580,6 @@ The Gauss cluster update algorithm can now be defined:
         and set all internal cluster links to its own conjugate.
 \end{itemize}
 
-
-\begin{figure}[!htb]
-    \centering
-    \import{gfx/}{freezing_overcoming.pgf}
-    \caption{Topological freezing overcoming with the cluster algorithm}
-    \label{fig:freezing_overcoming}
-\end{figure}
-
-
-\subsection*{Metropolis-Hastings proposal}
 \begin{lstlisting}[caption={Metropolis-Hastings cluster update}]
 template <class URNG>
 double cluster_update(Lattice &lat, int side, URNG &rng)
@@ -627,6 +625,8 @@ double cluster_update(Lattice &lat, int side, URNG &rng)
     else return 0.;
 }
 \end{lstlisting}
+
+\subsection*{Acceptance comparison}
 
 \begin{figure}[!htb]
     \centering

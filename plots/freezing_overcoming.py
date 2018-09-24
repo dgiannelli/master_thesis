@@ -17,13 +17,15 @@ beta = 12.8
 therm = local_data[(N,beta)]['therm']
 
 plt.plot(gauss_cluster_data[(N,beta)]['charges'][therm:],label='Cluster algorithm')
-plt.plot(local_data[(N,beta)]['charges'][therm:],label='Local algorithm')
+plt.plot(local_data[(N,beta)]['charges'][therm:]+4,label='Local algorithm')
 
 plt.xlabel('Iterations')
-plt.ylabel(r'$Q_\mathrm{tot}$')
-plt.title('Charge history')
-plt.legend()
+plt.ylabel('$Q$')
+plt.title('Charge history: $N={},\ \\beta={}$'.format(N,beta))
+plt.legend(loc=1)
 plt.xticks([0,4e5,8e5],['$0$',r'$4\times10^5$',r'$8\times10^5$'])
+plt.ylim(-10,10)
+#plt.yticks(range(-10,11))
 
 plt.subplots_adjust(left=0.15)
 
