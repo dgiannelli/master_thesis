@@ -269,7 +269,7 @@ will be explained in the next section.
         \]
         The update is then accepted with probability:
         \[
-            p = -\Delta S
+            \mathcal A = e^{-\Delta S}
         \]
     \item 
         If the update is accepted,
@@ -304,7 +304,7 @@ It may be possible that using sequences of different shapes would be more effici
 However, since performances of the algorithm obtained with squared clusters have already been considered very satisfactory,
 such a detailed study of cluster shapes have not be considered of great interest.
 
-The declaration of the squared {\ttfamily Cluster} class outlines as follows:
+The declaration of the squared {\ttfamily Cluster} class is outlined as follows:
 
 \begin{lstlisting}[caption={Cluster class declaration}]
 class Cluster
@@ -321,7 +321,7 @@ class Cluster
            the surrounding path,
            the esternal staple,
            the internal staple
-           and the internal links /*
+           and the internal links */
         Link gate() const {return gate_;};
         const vector<Link> &path() const {return path_;};
         const Staple &estaple() const {return estaple_;};
@@ -349,7 +349,7 @@ double reverse_cluster(Lattice &lat, int side, URNG &rng)
     auto path = cluster.path();
 
     /* rbegin and rend return a reverse iterator
-       useful to iterate backward on path links /*
+       useful to iterate backward on path links */
     auto link_it = path.rbegin();
     for (; link_it<path.rend(); link_it++) {
         Link link = *link_it;
@@ -475,7 +475,19 @@ vector<Link> Cluster::links() const
 }
 \end{lstlisting}
 
-\section{Gauss cluster update}
+\subsection*{Topological freezing overcoming}
+Here the reverse cluster update is immediately put to the test,
+showing if it actually overcomes the topological freezing.
+
+
+In Figure \ref{fig:cluster_inv}, the cluster algorithm is applied to the central highlighted square.
+The move is accepted, the total charge has changed.
+The field configuration has been turned up,
+and the blurred charge map shows that the selected cluster has inverted his color:
+the red structure has turned to one structure of similar form,
+and even the smaller blue twist enclosed inside it has reversed his color.
+
+the cluster algorithm is applied to the central highlighted square.
 
 \begin{figure}[!htb]
     \centering
@@ -483,6 +495,83 @@ vector<Link> Cluster::links() const
     \caption{Cluster algorithm inversion}
     \label{fig:cluster_inv}
 \end{figure}
+
+
+
+\section{Gauss cluster algorithm}
+
+There is still an improvement of the algorithm that can be made to increase the acceptance.
+In the reverse cluster update,
+the acceptance is expected to be reasonably high since only one plaquette energy is modified.
+However, it is not necessary that with another choice for the gate variable the acceptance would be lower,
+even if the plaquette energies modified are two instead of one.
+
+Indeed, the choice can be made in a way that is similar to the one used in Chapter \ref{ch:local}.
+The idea is to choose a value for the gate variable using the Gaussian distribution,
+using the reversed staple value to find the parameters $x$ and $k$.
+In this way, the new gate value is more likely to be at thermal equilibrium configuration with the two staples.
+
+However, the acceptance will not be as high as for the local update,
+since all the other cluster link variables are chosen arbitrarily,
+and not sampled from their heat-bath distribution, which is unknown.
+
+Unlike the case of the local algorithm,
+the proposal distributions $\mathcal P(x_\mathrm{old}\to x_\mathrm{new})$ and $\mathcal P(x_\mathrm{new}\to x_\mathrm{old})$
+are not the same, since the $k$ parameter,
+which depends on the staples Schwinger line, is different before and after the move.
+For this reason, the normalization factor of the Gaussian cannot be ignored:
+\[\begin{aligned}
+    \int_{-\pi}^\pi\mathrm dx\,e^{-kx^2/2} &= 2\int_0^\pi\mathrm dx\,e^{-kx^2/2} \\
+                                           &= 2\sqrt{\frac{2}{k}}\int_0^{k\pi^2/2}\mathrm dx\,e^{-x^2} = \sqrt{\frac{2\pi}{k}}\mathrm{erf}\left(\frac{k}{2}\pi^2\right)
+\end{aligned}\]
+where $\mathrm{erf}(x) \equiv \frac{2}{\sqrt\pi}\int_0^x\mathrm dt\,e^{-t^2}$ is the error function.
+The proposal distribution is then:
+\begin{equation}\label{eq:gauss_cluster_proposal}
+    \mathcal P(x_\mathrm{old}\to x_\mathrm{new})\sqrt{\frac{k_\mathrm{new}}{2\pi}}\frac{e^{-k_\mathrm{new}x^2/2}}{\mathrm{erf}\left(\frac{k_\mathrm{new}}{2}\pi^2\right)}
+\end{equation}
+
+\subsection{Gauss cluster update}
+
+The Gauss cluster update algorithm can now be defined:
+
+\begin{itemize}
+    \item
+        Create a cluster and perform the chain of local gauge transformations in the same way as in the reverse cluster update.
+    \item
+        Compute the sum of connected staples Schwinger lines before and after the cluster inversion:
+        \[\begin{aligned}
+            W_\mathrm{old} &\equiv U[\mathcal S_\mathrm{e}] + U[\mathcal S_\mathrm{i}] &
+            W_\mathrm{new} &\equiv U[\mathcal S_\mathrm{e}] + U^*[\mathcal S_\mathrm{i}]
+        \end{aligned}\]
+    \item
+        Compute $k_\mathrm{old}, k_\mathrm{new}, x_\mathrm{old}$ using the following definitions:
+        \[\begin{gathered}
+            \begin{aligned}
+                k_\mathrm{old} &\equiv \beta|W_\mathrm{old}| & k_\mathrm{new} &\equiv \beta|W_\mathrm{new}|
+            \end{aligned}\\
+            x_\mathrm{old} \equiv \arg(W_\mathrm{old}U[\mathcal L])
+        \end{gathered}\]
+        where $\mathcal L$ is the gate link.
+    \item
+        Sample $x_\mathrm{new}$ from $\mathcal P(x_\mathrm{old}\to x_\mathrm{new})$ of Equation \eqref{eq:gauss_cluster_proposal}
+        using the algorithm of Equation \eqref{eq:gauss_angle}.
+    \item
+        Accept the proposal with probability:
+        \[\begin{aligned}
+            \mathcal A(x_\mathrm{old}\to x_\mathrm{new}) &= e^{-\Delta S}\frac{\mathcal P(x_\mathrm{new}\to x_\mathrm{old})}{\mathcal P(x_\mathrm{old}\to x_\mathrm{new})} \\
+%            = e^{k_\mathrm{new}(\cos x_\mathrm{new}+x_\mathrm{new}^2/2)-k_\mathrm{old}(\cos x_\mathrm{old}+x_\mathrm{old}^2/2)}
+%              \sqrt{\frac{k_\mathrm{old}}{k_\mathrm{new}}}\frac{\mathrm{erf}\left(\pi\sqrt{\frac{k_\mathrm{new}}{2}}\right)}{\mathrm{erf}\left(\pi\sqrt{\frac{k_\mathrm{old}}{2}}\right)}\\
+            &= \frac{e^{k_\mathrm{new}(\cos x_\mathrm{new}+x_\mathrm{new}^2/2)}}{e^{k_\mathrm{old}(\cos x_\mathrm{old}+x_\mathrm{old}^2/2)}}
+              \sqrt{\frac{k_\mathrm{old}}{k_\mathrm{new}}}\frac{\mathrm{erf}\left(\pi\sqrt{\frac{k_\mathrm{new}}{2}}\right)}{\mathrm{erf}\left(\pi\sqrt{\frac{k_\mathrm{old}}{2}}\right)}
+        \end{aligned}\]
+    \item
+        If the proposal is accepted, update the gate link as follows:
+        \[
+            U[\mathcal L] \mapsfrom e^{i(x_\mathrm{new}-\arg W_\mathrm{new})}
+        \]
+        and set all internal cluster links to its own conjugate.
+\end{itemize}
+
 
 \begin{figure}[!htb]
     \centering
