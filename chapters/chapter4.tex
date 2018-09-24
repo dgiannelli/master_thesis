@@ -363,7 +363,7 @@ void set_hot(Lattice &lat, URNG &rng)
 
 The local algorithm is finally:
 \begin{lstlisting}[caption={Local algorithm}]
-// Returns 1. if move is accepted, 0. if not
+// Return 1.0 if move is accepted, 0.0 if not
 template <class URNG>
 double local_update(Lattice &lat, Link link, URNG &rng)
 {

@@ -134,7 +134,7 @@ and the topological charge moves from $Q=0$ to $Q=-1$.
 
 The idea of the cluster algorithm is then to create a Metropolis move that emulates this \emph{spontaneous} charge tunneling,
 
-\section{Cluster inversion}
+\section{Reverse cluster algorithm}
 
 \subsection*{Inverting links}
 
@@ -162,7 +162,8 @@ Thus, taking the complex conjugate of all links inside a space region does not c
 What actually changes, and prevents this block move to be an effective Metropolis update,
 is the energy of all plaquettes connected to the border links of this region.
 Indeed, only one link in them is conjugated, and the energy changes, in general, if this link is not real valued.
-It is then very unlikely that the move is accepted if the energies of a high number of plaquettes change all together.
+It is then very unlikely that the move is accepted if the energies of a high number of plaquettes change all together,
+especially close to the continuum limit, when $\beta$ is high, as the system is close to its \emph{ground state}.
 
 However, there is still another move that leaves the energy and the charge unchanged,
 and it is the gauge transformation.
@@ -180,7 +181,7 @@ and then perform the cluster inversion.
 
 Considering the lattice region of Figure \ref{fig:cluster}, and the link path surrounding it,
 let $U_1, U_2, \ldots$ be the Schwinger lines evaluated over links $\mathcal L_1, \mathcal L_2, \ldots$,
-and $s_1, s_2, \ldots$ the starting sites of them.
+and $s_1, s_2, \ldots$ be the starting sites of them.
 The last link variable of the path, $U_{12}$, can be set to $1$ with the gauge transform of Figure \ref{fig:local_gauge}
 with $G=U^*_{12}$ applied on site $s_{12}$.
 The only other link variable of the path that is modified by this transformation is the previous one: $U_{11}$.
@@ -190,16 +191,17 @@ This sequence can be iterated to set all values $U_1,U_2,\ldots=1$.
 However, the same procedure cannot be applied to the last remaining path link, $\mathcal L$,
 because it would modify the value $U_{12}$, already set to $1$ with the first transformation.
 
-\subsection*{Reverse cluster algorithm}
+All these gauge transformations do not modify the energy of the system,
+and then, they can be accepted with acceptance one.
+They can be seen as a preparatory step of the cluster inversion.
+
 After such a chain of gauge transfomations,
 reversing all links in the surrounded region would modify only one external plaquette,
 the one enclosing the link $\mathcal L$.
 
-The acceptance of the entire move can be evaluated with Equation \eqref{eq:acceptance_sym}
-
-
-
-
+The acceptance of the entire move can be evaluated with Equation \eqref{eq:acceptance_sym}.
+Since only the energy of one single plaquette is modified,
+the increasing of energy cannot be too high, and hence, the acceptance cannot be too low.
 
 \begin{figure}[!htb]
     \centering
@@ -241,29 +243,85 @@ The acceptance of the entire move can be evaluated with Equation \eqref{eq:accep
     \label{fig:cluster}
 \end{figure}
 
-\subsection*{Cluster building}
+\subsection*{Reverse cluster update}
 
-\begin{figure}[!htb]
-    \centering
-    \import{gfx/}{cluster_inv.pgf}
-    \caption{Cluster algorithm inversion}
-    \label{fig:cluster_inv}
-\end{figure}
+Here are summarized the steps of the first implementation of a cluster algotithm.
+This version will be referred as the \emph{reverse cluster update}.
+The details about the construction of clusters of the kind of Figure \ref{fig:cluster}
+will be explained in the next section.
 
-\begin{figure}[!htb]
-    \centering
-    \import{gfx/}{freezing_overcoming.pgf}
-    \caption{Topological freezing overcoming with the cluster algorithm}
-    \label{fig:freezing_overcoming}
-\end{figure}
+\begin{itemize}
+    \item
+        Select a random cluster of the kind of Figure \ref{fig:cluster},
+        identifying its surrounding path $\mathcal L_1, \mathcal L_2, \ldots$,
+        its unfixed link $\mathcal L$, which will be reffered as the \emph{gate} link,
+        and its internal and external staples $\mathcal S_i, \mathcal S_e$.
+    \item 
+        Starting from the last link of the path,
+        $\mathcal L_{11}$ in the case of Figure \ref{fig:cluster},
+        perform a gauge transformation of the kind of Figure \ref{fig:local_gauge}
+        with $G=U^*_{11}$ applied on the starting site of the considered link,
+        and iterate the procedure until reaching the first link of the path $\mathcal L_1$.
+    \item
+        The action variation due to the cluster inversion is:
+        \[
+            \Delta S = -\beta(\Re\,(U[\mathcal S_e](U^*[\mathcal L]-U[\mathcal L])))
+        \]
+        The update is then accepted with probability:
+        \[
+            p = -\Delta S
+        \]
+    \item 
+        If the update is accepted,
+        set to its own conjugate the gate link and all internal cluster links.
+\end{itemize}
+
+The simulation should then alternate sweeps of local updates,
+which are efficient in sampling the Boltzmann distribution at fixed topology,
+and cluster updates, which are efficient in tunneling between topological sectors.
+
+\subsection{Reverse cluster implementation}
+The implementation follows the same pattern.
+The cluster building interface is here declared without definition,
+and it is used to define the reverse cluster update.
+
+In the following discussion,
+clusters will be considered random lattice squares with a given side,
+and a randomly chosen gate link and path orientation.
+
+Even though the algorithm can be extended to any generic simply connected cluster,
+there are no reasons to believe that, in a squared lattice,
+other generic shapes would achieve so much better performances than squares
+to justify a more complicated and less efficient implementation of them.
+
+This ansatz is justified by the shapes of clusters of Figure \ref{fig:freezing}.
+They have a typical size determined by the physical volume of the system,
+but they have very heterogeneous and variadic shapes. 
+For this reason,
+it is impossible to identify a more specialized shape that would fit the cluster structure.
+
+It may be possible that using sequences of different shapes would be more efficient to achieve charge tunneling.
+However, since performances of the algorithm obtained with squared clusters have already been considered very satisfactory,
+such a detailed study of cluster shapes have not be considered of great interest.
+
+The declaration of the squared {\ttfamily Cluster} class outlines as follows:
 
 \begin{lstlisting}[caption={Cluster class declaration}]
 class Cluster
 {
     public:
         template <class URNG>
-        Cluster(int N, int side, URNG&);
+        /* N <- lattice side
+           side <- squared cluster side
+           rng <- random number generator */
+        Cluster(int N, int side, URNG &rng);
 
+        /* Return respectively:
+           the gate link,
+           the surrounding path,
+           the esternal staple,
+           the internal staple
+           and the internal links /*
         Link gate() const {return gate_;};
         const vector<Link> &path() const {return path_;};
         const Staple &estaple() const {return estaple_;};
@@ -279,11 +337,74 @@ class Cluster
 };
 \end{lstlisting}
 
+Using this {\ttfamily Cluster} class interface, the reverse cluster algorithm is the following:
+
+\begin{lstlisting}[caption={Reverse cluster update}]
+// Return 1.0 if move is accepted, 0.0 if not
+template <class URNG>
+double reverse_cluster(Lattice &lat, int side, URNG &rng)
+{
+    Cluster cluster(lat.N(),side,rng);
+
+    auto path = cluster.path();
+
+    /* rbegin and rend return a reverse iterator
+       useful to iterate backward on path links /*
+    auto link_it = path.rbegin();
+    for (; link_it<path.rend(); link_it++) {
+        Link link = *link_it;
+        cmplx u = lat.s_line(link);
+        lat.local_gauge(link.s, conj(u));
+    }
+
+    cmplx US_e = lat.s_line(cluster.estaple());
+    cmplx u_old = lat.s_line(cluster.gate());
+    cmplx u_new = conj(u_old);
+
+    double p = exp(lat.beta()*real(US_e*(u_new-u_old)));
+
+    if (UniformDouble()(rng)<p) {
+        lat.set_link(cluster.gate(),u_new);
+        for (Link link : cluster.links()) {
+            cmplx u = lat.s_line(link);
+            lat.set_link(link,conj(u));
+        }
+        return 1.;
+    }
+    else return 0.;
+}
+\end{lstlisting}
+
+\subsection*{Cluster building}
+
+Here is now discussed the construction of a random squared cluster of the kind of Figure \ref{fig:cluster}.
+The algorithm is made of the following steps:
+
+\begin{itemize}
+    \item
+        Select randomly a lattice site, which will be the cluster lower left corner,
+        the orientation of the surrounding path and the gate link.
+    \item
+        Build the squared path of size $\mathrm{side}\times 4$ starting from the lower left corner along the selected direction.
+    \item
+        Rotate the path so that the gate will be its first link,
+        and remove the gate from the path.
+    \item Identify the internal and the external staples connected to the gate.
+    \item
+        Starting from the corner, select all internal horizontal and vertical links inside the square.
+\end{itemize}
+
+This can be implemented as a {\ttfamily Cluster} class as follows:
+
 \begin{lstlisting}[caption={Cluster class implementation}]
 template <class URNG>
 Cluster::Cluster(int N, int side, URNG &rng) :
     side{side}
 {
+    /* Select random corner,
+       starting path direction
+       and the path position of the gate */
+
     int ran_pos = UniformInt(0,N*N-1)(rng);
     int x1 = ran_pos/N; // unif in [0,N-1]
     int x2 = ran_pos%N; // unif in [0,N-1]
@@ -293,7 +414,9 @@ Cluster::Cluster(int N, int side, URNG &rng) :
     int mu = ran_muoff%2 + 1; // unif in [1,2]
     int offset = ran_muoff/2; // unif in [0,4*side-1]
 
+
     // Build path
+
     int nu;
     switch (mu) {
         case 1: nu = 2; break;
@@ -326,6 +449,9 @@ Cluster::Cluster(int N, int side, URNG &rng) :
     istaple_ = conn_staple(gate_,-mu_e);
 }
 
+/* Select internal links.
+   This function is lazily evaluated
+   only if the inversion move is accepted */
 vector<Link> Cluster::links() const
 {
     vector<Link> vec;
@@ -349,39 +475,22 @@ vector<Link> Cluster::links() const
 }
 \end{lstlisting}
 
-\subsection*{Metropolis inversion}
+\section{Gauss cluster update}
 
-\begin{lstlisting}[caption={Metropolis cluster update}]
-template <class URNG>
-double naive_cluster_update(Lattice &lat, int side, URNG &rng)
-{
-    Cluster cluster(lat.N(),side,rng);
+\begin{figure}[!htb]
+    \centering
+    \import{gfx/}{cluster_inv.pgf}
+    \caption{Cluster algorithm inversion}
+    \label{fig:cluster_inv}
+\end{figure}
 
-    auto path = cluster.path();
-    auto link_it = path.rbegin();
-    for (; link_it<path.rend(); link_it++) {
-        Link link = *link_it;
-        cmplx u = lat.s_line(link);
-        lat.local_gauge(link.s, conj(u));
-    }
+\begin{figure}[!htb]
+    \centering
+    \import{gfx/}{freezing_overcoming.pgf}
+    \caption{Topological freezing overcoming with the cluster algorithm}
+    \label{fig:freezing_overcoming}
+\end{figure}
 
-    cmplx US_e = lat.s_line(cluster.estaple());
-    cmplx u_old = lat.s_line(cluster.gate());
-    cmplx u_new = conj(u_old);
-
-    double p = exp(lat.beta()*real(US_e*(u_new-u_old)));
-
-    if (UniformDouble()(rng)<p) {
-        lat.set_link(cluster.gate(),u_new);
-        for (Link link : cluster.links()) {
-            cmplx u = lat.s_line(link);
-            lat.set_link(link,conj(u));
-        }
-        return 1.;
-    }
-    else return 0.;
-}
-\end{lstlisting}
 
 \subsection*{Metropolis-Hastings proposal}
 \begin{lstlisting}[caption={Metropolis-Hastings cluster update}]
