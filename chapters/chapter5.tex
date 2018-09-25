@@ -2,138 +2,6 @@
 \chapter{Cluster Algorithm}\label{ch:cluster}
 %************************************************
 
-\section{Charge clusters}
-
-\subsection*{Charge colormaps}
-
-To get an insight of what happens in topological freezing regime,
-it can be useful to find a method to visualize the spatial distribution of the local topological charge,
-which was defined as:
-\[
-    q(s) \equiv \frac{1}{2\pi}\arg U[\mathcal P_{12}(s)]
-\]
-This means that its value can be in $(-1/2,1/2]$,
-and every plaquette $\mathcal P_{12}(s)$ can either give o positive or negative contibution to the total charge.
-The most appropriate way to represent this scenario, is with a diverging colormap, that is,
-a colormap made of two contrasting colors with varying lightness and saturation that meet in the middle at an unsaturated color.
-Each color represents positive or negative numbers,
-with values of lightness and saturation that are perceived by the viewer as monotonically increasing.
-In this way, distances between numbers can be visualized as distances between colors.
-
-The diverging colormap chosen to represent the local charges is the \emph{Colobrewer - RdBu} map \cite{colorbrewer}.
-To increase the range of visible values, the charges are first mapped using a logarithmic scale.
-The typical values of the total charge are of the unit order, and it is the result of the summation of all the $N^2$ local contributions.
-For this reason, the scale chosen to visualize the data ranges from $1/N^2$ to $100/N^2$, both in the positive and in the negative directions.
-The values in $(-1/N^2,1/N^2)$ are mapped to the central white \emph{zero}. Values that are out of the scale have the same color as extreme values.
-
-However, plotting the colormap of the local charges without preprocessing does not produce useful results (Figure \ref{fig:raw_charge_cmap}).
-The values are very erratic, and an internal structure cannot be identified.
-
-\begin{figure}[!htb]
-	\centering
-    \import{gfx/}{raw_charge_cmap.pgf}
-    \caption{Local charge colormap without preprocessing}
-    \label{fig:raw_charge_cmap}
-\end{figure}
-
-\subsection*{Charge smoothing}
-
-What causes such a behaviour are ultraviolet fluctuations of the lattice local charge on wavelengths of the order of the lattice spacing $a$ \cite{teper:1985},
-and they overshadow the typical fluctuations of the continuous charge on a certain wavelength $\rho$. 
-This problem can be overcome approaching the continuum limit. Indeed, the lattice spacing becomes $a\ll\rho$,
-and the unwanted ultraviolet fluctuations can be erased locally smoothing the fields over distances $\gg a$ but $\ll \rho$.
-
-There are several methods to smooth link variables in Lattice QCD \cite{alexandrou:2017}.
-However, in this toy model, the lattice topological charge is already well defined and integer valued.
-For this reason, it is sufficient to smooth the local values of the charge to remove ultraviolet fluctuations,
-which is easier, since they are simply matrices of values associated with lattice plaquettes.
-
-These matrices can be represented as images, as discussed before,
-and this parallelism suggests that the same techniques used to smooth colors in images can be employed to smooth local charge values.
-
-For instance, in image processing, the Gaussian blur is a smoothing algorithm commonly used to remove image noise and for edge detection.
-It consists in spreading the color of every pixel to all its neighbouring pixels, using a Gaussian weight, centered in the considered pixel.
-The algorithm leaves the choice of the Gaussian $\sigma$ and a cutoff distance, beyond which the color is not spread.
-In all following applications, the cutoff distance is set to $4\sigma$.
-
-It is also needed to specify how the algorithm should handle pixels near the edges of the image.
-In image processing, this is usually done treating pixels out of the bounds as if they were equal to those on the border.
-For the smoothing of the topological charge, the lattice boundary conditions have to be reproduced,
-and hence, periodic boundary conditions are implemented.
-
-An example application of the Gussian blur is reported in Figure \ref{fig:cappadocia}, obtained used Scikit-image's Gaussian filter.
-It can be seen how the smoothing procedure cancels the local squared structure,
-and only the global colored spiral structure is visible with the higher value of $\sigma$.
-Furthermore, the spiral is more evident in the blurred images, since the local structure overshadowes it.
-
-\begin{figure}[!htb]
-    \centering
-    \import{gfx/}{cappadocia.pgf}
-    \caption{\emph{Cappadocia Balloon Inflating Wikimedia Commons}, by Benh LIEU SONG, CC BY-SA 3.0}
-    \label{fig:cappadocia}
-\end{figure}
-
-The parallelism with the ultraviolet fluctuations of the topological charge is evident.
-Instead of the three components of the RGB colors, the local charge of a plaquette is spread.
-
-The result of the Gaussian blur applied to the topological charge is reported in Figure \ref{fig:charge_blur}.
-With a sufficiently high value of $\sigma$, ultaviolet fluctuations are removed,
-and the cluster structure becomes evident.
-If $\sigma$ is too high, also the topological charge fluctuations will cancel each others,
-and too much information will be lost.
-
-\begin{figure}[!htb]
-    \centering
-    \import{gfx/}{charge_blur.pgf}
-    \caption{Topological charge Gaussian blur}
-    \label{fig:charge_blur}
-\end{figure}
-
-The optimal values of sigma for the considered lattice spacing have been identified to be between $\sigma=1.5$ and $\sigma=2$.
-And this still holds for bigger lattices with the same physical volume.
-
-\subsection*{Topological freezing}
-%Now that a method to visualize charge clusters is defined,
-%it is possible to get an insight of what is happening in topological freezing regime
-Now that a method to visualize charge clusters is defined,
-it can be applied to get an insight of what is happening in topological freezing regime.
-
-The history plots of Figure \ref{fig:local_charge_history} show that the fixed physical volume line of Table \ref{tab:local_cont}
-heavily suffers from freezing if $N>24$.
-Let then consider completely frozen configurations with $N=36,\ \beta=16.2$.
-
-In Figure \ref{fig:freezing}, the blurred charge of four consecutive configurations are reported.
-Charge clusters may move in the space or may be deformed,
-but their contribution to the total charge remains the same.
-
-\begin{figure}[!htb]
-    \centering
-    \import{gfx/}{freezing.pgf}
-    \caption{Blurred charge maps after four consecutive local sweep updates}
-    \label{fig:freezing}
-\end{figure}
-
-\subsection*{Charge tunneling}
-If a solution to the topological freezing has to be found,
-it is instructive to see what happens when charge tunneling is still achievable with a local algorithm.
-Let then consider configurations with $N=24,\ \beta=7.2$,
-in which the charge correlation time is already becomome high (Figure \ref{fig:local_charge_corr}) due to topological freezing,
-but charge tunneling is still not so rare to prevent from collecting independent charge configurations.
-
-The blurred charge maps after four consecutive sweeps are reported in Figure \ref{fig:local_inv},
-and a charge tunneling has happened between the third and the fourth image.
-A new cluster of negative red values has risen in a region in which a positive blue cluster was present,
-and the topological charge moves from $Q=0$ to $Q=-1$.
-
-\begin{figure}[!htb]
-    \centering
-    \import{gfx/}{local_inv.pgf}
-    \caption{Charge tunneling with a local algorithm}
-    \label{fig:local_inv}
-\end{figure}
-
-The idea of the cluster algorithm is then to create a Metropolis move that emulates this \emph{spontaneous} charge tunneling,
-
 \section{Reverse cluster algorithm}
 
 \subsection*{Inverting links}
@@ -311,17 +179,8 @@ class Cluster
 {
     public:
         template <class URNG>
-        /* N <- lattice side
-           side <- squared cluster side
-           rng <- random number generator */
         Cluster(int N, int side, URNG &rng);
 
-        /* Return respectively:
-           the gate link,
-           the surrounding path,
-           the esternal staple,
-           the internal staple
-           and the internal links */
         Link gate() const {return gate_;};
         const vector<Link> &path() const {return path_;};
         const Staple &estaple() const {return estaple_;};
@@ -535,7 +394,7 @@ For this reason, the normalization factor of the Gaussian cannot be ignored:
 where $\mathrm{erf}(x) \equiv \frac{2}{\sqrt\pi}\int_0^x\mathrm dt\,e^{-t^2}$ is the error function.
 The proposal distribution is then:
 \begin{equation}\label{eq:gauss_cluster_proposal}
-    \mathcal P(x_\mathrm{old}\to x_\mathrm{new})\sqrt{\frac{k_\mathrm{new}}{2\pi}}\frac{e^{-k_\mathrm{new}x^2/2}}{\mathrm{erf}\left(\frac{k_\mathrm{new}}{2}\pi^2\right)}
+    \mathcal P(x_\mathrm{old}\to x_\mathrm{new})=\sqrt{\frac{k_\mathrm{new}}{2\pi}}\frac{e^{-k_\mathrm{new}x^2/2}}{\mathrm{erf}\left(\frac{k_\mathrm{new}}{2}\pi^2\right)}
 \end{equation}
 
 \subsection*{Gauss cluster update}
@@ -581,6 +440,7 @@ The Gauss cluster update algorithm can now be defined:
 \end{itemize}
 
 \begin{lstlisting}[caption={Metropolis-Hastings cluster update}]
+// Return 1.0 if move is accepted, 0.0 if not
 template <class URNG>
 double cluster_update(Lattice &lat, int side, URNG &rng)
 {
@@ -607,7 +467,6 @@ double cluster_update(Lattice &lat, int side, URNG &rng)
     
     double x_new = gauss_angle(k_new,rng);
     
-
     double p = exp(k_new*(cos(x_new)+pow(x_new,2.)/2.)
                   -k_old*(cos(x_old)+pow(x_old,2.)/2.))
               *erf(pi*sqrt(k_new/2.))/erf(pi*sqrt(k_old/2.))
@@ -628,18 +487,85 @@ double cluster_update(Lattice &lat, int side, URNG &rng)
 
 \subsection*{Acceptance comparison}
 
+The acceptance of the two cluster algorithms are now compared with two different sets of parameters.
+\begin{itemize}
+    \item
+        The fixed physical volume line,
+        with the same physical cluster side (Figure \ref{fig:cluster_acc_cont}).
+    \item
+        The same lattice parameters, with different cluster sides (Figure \ref{fig:cluster_acc_side})
+\end{itemize}
+
+The results of Figure \ref{fig:cluster_acc_cont} show that the acceptance of the Gauss cluster update is always better that the reverse cluster update.
+Both of them decrease when going toward continuum limit, because, with a high value of $\beta$, the system is close to its ground state,
+and a rip of the structure is very likely to cause an energy increasing, and hence, a lower acceptance.
+However, the lowering of the acceptance is not critical: it always assumes values above $0.1$,
+and the performance reduction can be balanced with an increasing number of cluster update steps.
+
 \begin{figure}[!htb]
     \centering
-    \import{gfx/}{cluster_acc_cont.pgf}
-    \caption{Cluster algorithms acceptance contunuum limit comparison}
+    \begin{subfigure}{\textwidth}
+        \centering
+        \import{gfx/}{cluster_acc_cont.pgf}
+    \end{subfigure}\vspace{2em}
+    \begin{subfigure}{\textwidth}
+        \centering
+        \input{tables/cluster_acc_cont.tex}
+    \end{subfigure}
+    \caption{Cluster algorithms: acceptance continuum limit comparison}
     \label{fig:cluster_acc_cont}
 \end{figure}
 
+Instead, Figure \ref{fig:cluster_acc_side} shows what has been asserted in the Introduction:
+the cluster algorithm acceptance is independent of the cluster size,
+which can be chosen in accordance with the charge typical correlation length obtained after the smoothing procedure.
+
 \begin{figure}[!htb]
 	\centering
-    \import{gfx/}{cluster_side_acc.pgf}
+    \begin{subfigure}{\textwidth}
+        \centering
+        \import{gfx/}{cluster_acc_side.pgf}
+    \end{subfigure}\vspace{2em}
+    \begin{subfigure}{\textwidth}
+        \centering
+        \input{tables/cluster_acc_side.tex}
+    \end{subfigure}
     \caption{Cluster side acceptance comparison}
-    \label{fig:cluster_side_acc}
+    \label{fig:cluster_acc_side}
+\end{figure}
+
+\section{Cluster algorithm results}
+
+\subsection*{Plaquette energy continuum limit}
+
+\begin{figure}[!htb]
+    \centering
+    \begin{subfigure}{\textwidth}
+        \centering
+        \import{gfx/}{cluster_energy_cont.pgf}
+    \end{subfigure}\vspace{2em}
+    \begin{subfigure}{\textwidth}
+        \centering
+        \input{tables/cluster_energy_cont.tex}
+    \end{subfigure}
+    \caption{Cluster algorithm: plaquette energy continuum limit}
+    \label{fig:cluster_energy_cont}
+\end{figure}
+
+\subsection*{Topological susceptibility continuum limit}
+
+\begin{figure}[!htb]
+    \centering
+    \begin{subfigure}{\textwidth}
+        \centering
+        \import{gfx/}{cluster_susc_cont.pgf}
+    \end{subfigure}\vspace{2em}
+    \begin{subfigure}{\textwidth}
+        \centering
+        \input{tables/cluster_susc_cont.tex}
+    \end{subfigure}
+    \caption{Topological susceptivity continuum limit: comparison with Durr-Hoelbling}
+    \label{fig:susc_cont}
 \end{figure}
 
 %*****************************************

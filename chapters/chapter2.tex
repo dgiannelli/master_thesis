@@ -216,6 +216,8 @@ double Lattice::energy() const
     return beta()*sum/pow(N(),2);
 }
 
+using pi = acos(-1.);
+
 double Lattice::charge(Site s) const
 {
     return arg(s_line(plaq_12(s)))/2./pi;

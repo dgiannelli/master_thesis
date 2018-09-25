@@ -1,5 +1,5 @@
 %*******************************************************
-% Preface
+% Introduction
 %*******************************************************
 \phantomsection
 \markboth{\spacedlowsmallcaps{Introduction}}{\spacedlowsmallcaps{Introduction}}
@@ -209,7 +209,7 @@ accepting or rejecting the operation with a well-tailored Metropolis-Hastings al
 A chain of local gauge transformations along the path can make the energy variation of the entire move to be the same as with a local update,
 making the acceptance of the algorithm be reasonably high and independent of the cluster size, which is also possible to set arbitrarily.
 
-The results of this algorithm will then be compared in Chapter \ref{ch:results} with the ones reported at \cite{durr-hoelbling:2005}, and they will show that the cluster algorithm allows to perform measures in a region of parameter space that is impossible to study with a local algorithm.
+The results of this algorithm will then be compared with the ones reported at \cite{durr-hoelbling:2005}, and they will show that the cluster algorithm allows to perform measures in a region of parameter space that is impossible to study with a local algorithm.
 
 This algorithm is not extensible to more than two dimensions,
 because regions of space could not be completely surrounded with a one dimensional path,
@@ -232,15 +232,22 @@ who chose to create a well suited algorithm for a specific task and closer to th
 \noindent
 The exposure of this thesis work will fit in the following scheme:
 \begin{description}
-    \item{Chapter \ref{ch:toy_model}:} Introduction of the two dimensional pure gauge $U(1)$ theory and its topological charge,
-    both in the continuum space and on a discrete lattice.
-    \item{Chapter \ref{ch:lattice}:} Implementation of the lattice theory in C++17.
-    \item{Chapter \ref{ch:mc}:} Introduction to distribution sampling and Markov chain Monte Carlo.
-    \item{Chapter \ref{ch:local}:} Implementation of a local Metropolis-Hastings algorithm.
-    \item{Chapter \ref{ch:cluster}:} Discussion of topological freezing, and introduction of a new cluster Metropolis-Hastings algorithm that solves the problem.
-    \item{Chapter \ref{ch:results}:} Numerical results obtained with the cluster algorithm and conclusions.\\
+    \item{Chapter \ref{ch:toy_model}:}
+        Introduction of the two dimensional pure gauge $U(1)$ theory and its topological charge,
+        both in the continuum space and on a discrete lattice.
+    \item{Chapter \ref{ch:lattice}:}
+        Implementation of the lattice theory in C++17.
+    \item{Chapter \ref{ch:mc}:}
+        Introduction to distribution sampling and Markov chain Monte Carlo.
+    \item{Chapter \ref{ch:local}:}
+        Implementation of a local Metropolis-Hastings algorithm and discussion of topological freezing .
+    \item{Chapter \ref{ch:cluster}:}
+        Implementation of a new cluster Metropolis-Hastings algorithm that overcomes the topological freezing.
+    \item{Chapter \ref{ch:conclusion}:}
+        Conclusions and outlooks.\\
     %\item{Appendix \ref{ap:code}:} Complete implementation of the algorithms.
-    \item{Appendix \ref{ap:data}:} Methods used for data analysis.
+    \item{Appendix \ref{ap:data}:}
+        Methods used for data analysis.
 \end{description}
 
 \endgroup
