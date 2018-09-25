@@ -1,8 +1,43 @@
 %************************************************
 \chapter{Conclusions and outlooks}\label{ch:conclusion}
 %************************************************
-
 \section{Conclusions}
+The results of this work are here summarized:
+\begin{itemize}
+    \item
+        An original local Metropolis-Hastings algorithm has been designed to sample link variables from a truncated Gaussian distribution.
+        Laplace's method guarantees that the probability density function of $U(1)$ link variables converges to the truncated Gaussian
+        as the $\beta$ parameter increases.
+        The acceptance of this local algorithm (Figure \ref{fig:local_acc_cont}) has been very high for all parameters considered
+        with values above 99\% for those that are close to the physical continuum limit.
+    \item
+        The topological freezing has been studied both numerically and visually.
+        In particular, an original smoothing method of the topological charge has been introduced.
+        It uses the image processing Gaussian blur algorithm, and, in this specific theory,
+        it can be applied directly on local topological charge values instead of link variables.
+        It is then easier to implement and visualize,
+        as it is applied on matrices of real numbers instead of on $U(1)$ lattice link variables.
+        The results it has produced are reported in Figures \ref{fig:charge_blur},
+        \ref{fig:freezing}, \ref{fig:local_inv} and \ref{fig:cluster_inv}.
+    \item
+        An original cluster inversion algorithm has been defined.
+        It selects a lattice square of arbitrary size, and sets each link variable included in it to its own complex conjugate.
+        A chain of lattice local gauge transformation is applied to the border of the square before the cluster inversion:
+        it makes real valued all border link variables, exept for one, making the energy variation of the entire move to be
+        dependent of only one plaquette.
+        The Metropolis acceptance of the algorithm is then of the same order of magnitude as the one due to a random local update.
+
+        Alternating cluster inversion and sweeps of local updates, the entire configuration space can be explored effectively:
+        the local updates are efficient in sampling Boltzmann distribution, and cluster inversions are efficient in charge tunneling.
+    \item
+        The same idea used to find an optimal local Metropolis-Hastings algorithm has been used to improve the performance of the cluster algorithm.
+        Instead of conjugating all cluster links, the border link that is unfixed by the gauge transformation can be sampled from a truncated Gaussian distribution.
+        In this way, the link is sampled from a distribution that is similar to the marginalized Boltzmann distribution, and hence, more likely to be accepted.
+        However, since initial and final Gaussians are not the same, the acceptance is not as high as a local update,
+        but it is still higher than the one obtained with the complete cluster inversion (Figure \ref{cluster_acc_cont}).
+
+\end{itemize}
+
 
 \section{Outlooks}
 
