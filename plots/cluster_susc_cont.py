@@ -5,6 +5,7 @@ plt.style.use('./plots/a4.mplstyle')
 import pickle
 import numpy as np
 from uncertainties import ufloat
+from scipy.optimize import curve_fit
 
 with open('data/gauss_cluster_data.pickle','br') as file:
     gauss_cluster_data = pickle.load(file)
@@ -36,22 +37,50 @@ for key in list(gauss_cluster_data):
 
 fig, axs = plt.subplots(1,2,figsize=(4.7,3),sharey=True)
 
+axs[0].axvline(0,linewidth=0.5,linestyle='dashed',color='black')
+axs[1].axvline(0,linewidth=0.5,linestyle='dashed',color='black')
+
 axs[1].errorbar(x,y,yerr, fmt='s', markerfacecolor='none',capsize=1.5,label='Gauss cluster')
 axs[1].set_xlim(xmin=0, xmax=0.6)
-axs[1].set_ylim(ymin=0.0225)
+axs[1].set_ylim(0.020,0.045)
 axs[1].legend(loc=2)
 axs[1].set_xlabel(r'$1/\beta$')
-axs[1].tick_params(axis='y',direction='inout')
+axs[1].tick_params(axis='y',length=0)
+
+yaxis = axs[1].get_yaxis()
+yaxis.set_zorder(-1)
+
+def f(x,a,b):
+    return a+b*x
+
+popt, pcov = curve_fit(f,x[3:],y[3:],sigma=yerr[3:],absolute_sigma=True)
+cont_mean = popt[0]
+cont_err = np.sqrt(pcov[0,0])
+axs[0].errorbar(0,cont_mean,cont_err,fmt=',',color='C0',capsize=2.5, clip_on=False,barsabove=True,zorder=10)
+axs[1].errorbar(0,cont_mean,cont_err,fmt=',',color='C0',capsize=2.5, clip_on=False,barsabove=True,zorder=10)
 
 beta_durr, y_durr, yerr_durr = np.loadtxt('data/durr-hoelbling.dat',unpack=True)
-axs[0].errorbar(1/beta_durr,y_durr,yerr_durr, fmt='D',color='C1',markerfacecolor='none',capsize=1.5,label='Durr-Hoelbling')
+axs[0].errorbar(1/beta_durr[:-1],y_durr[:-1],yerr_durr[:-1], fmt='D',color='C1',markerfacecolor='none',capsize=1.5,label='Durr-Hoelbling')
+
+axs[0].errorbar(0,y_durr[-1],yerr_durr[-1],fmt=',',color='C1',capsize=2.5,clip_on=False,barsabove=True,zorder=10)
+axs[1].errorbar(0,y_durr[-1],yerr_durr[-1],fmt=',',color='C1',capsize=2.5,clip_on=False,barsabove=True,zorder=10)
+
+xx = np.linspace(0,0.27,20)
+axs[1].plot(xx,f(xx,*popt),'-',color='C3',lw=0.75)
+
 axs[0].set_xlim(xmin=0.6,xmax=0)
 axs[0].legend(loc=1)
 axs[0].set_xlabel(r'$1/\beta$')
 axs[0].set_ylabel(r'$\chi/g^2$')
+#axs[0].tick_params(axis='y',direction='in')
+#axs[0].yaxis.set_ticks_position('both')
 
-ticks = axs[0].xaxis.get_major_ticks()
-ticks[0].label1.set_visible(False)
+axs[0].spines['right'].set_visible(False)
+axs[1].spines['left'].set_visible(False)
+#ticks = axs[0].xaxis.get_major_ticks()
+#ticks[0].label1.set_visible(False)
+#yaxis = axs[0].get_yaxis()
+#yaxis.set_visible(False)
 
 fig.suptitle('Topological susceptivity: continuum limit')
 fig.subplots_adjust(wspace=0)
@@ -69,8 +98,15 @@ def latex_float(f):
     else:
         return float_str
 
+cont_measure = ufloat(cont_mean,cont_err)
+durr_measure = ufloat(y_durr[-1],yerr_durr[-1])
 measures = [ufloat(mean,err) for mean,err in zip(y,yerr)]
 with open('tables/cluster_susc_cont.tex','w') as file:
+    file.write(r'\[\begin{aligned}'+'\n')
+    file.write(r'\chi/g^2&='+cont_measure.format('.2uS')+r'\quad \mathrm{(Cluster\ algorithm)}\\'+'\n')
+    file.write(r'\chi/g^2&='+durr_measure.format('.2uS')+r'\quad \mathrm{(Durr-Hoelbling)}'+'\n')
+    file.write(r'\end{aligned}\]'+'\n')
+    file.write('\\vspace{1em}\n')
     file.write(r'\begin{tabular}{ccccccc} \toprule'+'\n')
     file.write(r'$N$ & $\beta$ & Side & Repets & Iters & Therm. & $\chi/g^2$'+'\n')
     for N,beta,side,repet,iter,therm,measure in zip(Ns,betas,sides,repets,iters,therms,measures):

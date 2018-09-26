@@ -1,14 +1,14 @@
 %************************************************
 \chapter{Conclusions and outlooks}\label{ch:conclusion}
 %************************************************
-\section{Conclusions}
+\subsection*{Conclusions}
 The results of this work are here summarized:
 \begin{itemize}
     \item
         An original local Metropolis-Hastings algorithm has been designed to sample link variables from a truncated Gaussian distribution.
         Laplace's method guarantees that the probability density function of $U(1)$ link variables converges to the truncated Gaussian
         as the $\beta$ parameter increases.
-        The acceptance of this local algorithm (Figure \ref{fig:local_acc_cont}) has been very high for all parameters considered
+        The acceptance of this local algorithm (Figure \ref{fig:local_acc}) is very high for all parameters considered,
         with values above 99\% for those that are close to the physical continuum limit.
     \item
         The topological freezing has been studied both numerically and visually.
@@ -17,29 +17,55 @@ The results of this work are here summarized:
         it can be applied directly on local topological charge values instead of link variables.
         It is then easier to implement and visualize,
         as it is applied on matrices of real numbers instead of on $U(1)$ lattice link variables.
-        The results it has produced are reported in Figures \ref{fig:charge_blur},
-        \ref{fig:freezing}, \ref{fig:local_inv} and \ref{fig:cluster_inv}.
+        In Figures \ref{fig:charge_blur}, \ref{fig:freezing}, \ref{fig:local_inv} and \ref{fig:cluster_inv}
+        are reported topological charge colormaps obtained with such a method.
     \item
         An original cluster inversion algorithm has been defined.
-        It selects a lattice square of arbitrary size, and sets each link variable included in it to its own complex conjugate.
+        It selects a lattice square of arbitrary size, and conjugates each link variable included into it.
         A chain of lattice local gauge transformation is applied to the border of the square before the cluster inversion:
         it makes real valued all border link variables, exept for one, making the energy variation of the entire move to be
-        dependent of only one plaquette.
-        The Metropolis acceptance of the algorithm is then of the same order of magnitude as the one due to a random local update.
-
-        Alternating cluster inversion and sweeps of local updates, the entire configuration space can be explored effectively:
-        the local updates are efficient in sampling Boltzmann distribution, and cluster inversions are efficient in charge tunneling.
+        dependent on only one plaquette.
+        The Metropolis acceptance of the algorithm is then of the same order of magnitude as the one due to a random local update,
+        while a big number of links is being updated, and it is independent of the cluster size.
     \item
         The same idea used to find an optimal local Metropolis-Hastings algorithm has been used to improve the performance of the cluster algorithm.
-        Instead of conjugating all cluster links, the border link that is unfixed by the gauge transformation can be sampled from a truncated Gaussian distribution.
-        In this way, the link is sampled from a distribution that is similar to the marginalized Boltzmann distribution, and hence, more likely to be accepted.
+        Instead of conjugating all cluster links, the border link that is left unfixed by the gauge transformation can be sampled from a truncated Gaussian distribution.
+        In this way, the link comes from a distribution that is similar to the marginalized Boltzmann distribution, and hence, more likely to be accepted.
         However, since initial and final Gaussians are not the same, the acceptance is not as high as a local update,
-        but it is still higher than the one obtained with the complete cluster inversion (Figure \ref{cluster_acc_cont}).
-
+        but it is still higher than the one obtained with the complete cluster inversion (Figure \ref{fig:cluster_acc_cont}).
+    \item
+        Alternating cluster inversions and sweeps of local updates, the entire configuration space can be explored effectively:
+        the local updates are efficient in sampling Boltzmann distribution, and cluster inversions are efficient in charge tunneling.
+        The topological freezing problem is then overcome:
+        it is possible to perform accurate and precise measures in regions of parameter space that are impossible to examine with standard local algorithms.
+    \item
+        Precise continuum limit extrapolations of the plaquette energy and the topological susceptibility have been performed.
+        In particular, the values obtained for the topological susceptibility have been compared with the ones reported by
+        D\"urr and Hoelbing in \cite{durr-hoelbling:2005}.
+        The improved precision and the higher number of experimental points obtained with the cluster algorithm have helped to identify the continuum limit behaviour,
+        and hence, a more appropriate choice of the fitting function and the points to consider.
 \end{itemize}
 
+\subsection*{Outlooks}
+It is possible to obtain further important results with longer runs of the cluster algorithm.
+In particular, it would be interesting to perform a precise continuum extrapolation of topological charge's fourth moment,
+since no values for it are currently present in literature for this theory.
 
-\section{Outlooks}
+Another interesting possible usage of the cluster algorithm could be the following:
+with longer runs, it may be possible to measure the dependence of the effectiveness of the algorithm on the choice of cluster size.
+This would not be of much interest for optimization purposes, as this dependence is not very strong,
+but, rather, it may be a very interesting alternative method to estimate the topological charge correlation length without the need of smoothing procedures.
+
+However, in general, the cluster algorithm can be used for all the typical purposes an exact solution of a toy model can have:
+other strategies used to avoid topological freezing in QCD can be implemented on the $U(1)$ pure gauge theory,
+and their correctness can be evaluated with the exact numerical results of the cluster algorithm.
+
+Furthermore, studying the behaviour of the topological charge in such a toy model can also be useful to gain an insight into the analogous topological charge of QCD.
+In particular, there may be similarities in the continuum limit behaviour, and this information can be very useful to perform correct extrapolations in QCD.
+
+There is also an attempt in progress to extend the idea of this cluster algorithm to a more advanced two dimensional toy model,
+the $\mathbb CP^{N-1}$ model, and also to the complete QCD.
+The good performances obtained in the $U(1)$ pure gauge theory give reason to hope that useful results can be produced applying the same idea to more advanced models.
 
 %*****************************************
 %*****************************************

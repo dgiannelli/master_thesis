@@ -4,74 +4,87 @@
 %*******************************************************
 
 \subsection*{Na\"ive variance estimation}
+Although mean values computed over regular Markov chain values $f_1,f_2,\ldots$, are unbiased (Theorem \eqref{th:ergodic}),
+the estimation of the mean variance is more problematic.
+
+Indeed, considering the unbiased estimator of the mean variance of uncorrelated data, which is:
 \[
     s_{\overline f}^2 \equiv \frac{1}{N(N-1)}\sum_i\left(f_i-\overline f\right)^2
 \]
-
+and evaluating its expectation value:
 \[\begin{aligned}
     \left<s_{\overline f}^2\right> &= \frac{1}{N(N-1)}\left<\sum_if_i^2-\frac{2}{N}\sum_{ij}f_if_j+\frac{1}{N^2}\sum_{ijk}f_jf_k\right> \\
                                    &= \frac{1}{N-1}\left(\left<f^2\right>-\frac{1}{N^2}\sum_{ij}\left<f_if_j\right>\right)
 \end{aligned}\]
+Using then the same arguments of Chapter \ref{ch:mc}:
 \[
     \frac{1}{N^2}\sum_{ij}\left<f_if_j\right> \xrightarrow{N\to\infty}\frac{1}{N}\left<f^2\right> + \frac{N-1}{N}\left<f\right>^2+\frac{2}{N}\sigma_f^2\tau_\mathrm{int}
 \]
-
+Thus, the estimator converges to: 
 \[\begin{aligned}
     \left<s_{\overline f}^2\right> &\xrightarrow{N\gg\tau_\mathrm{mix}}
                                      \frac{1}{N-1}\left(\frac{N-1}{N}\left<f^2\right>-\frac{N-1}{N}\left<f\right>^2-\frac{2}{N}\sigma_f^2\tau_\mathrm{int}\right) \\
                                    &= \frac{\sigma_f^2}{N}\left(1-\frac{2}{N-1}\tau_\mathrm{int}\right) \xrightarrow{N\gg\tau_\mathrm{int}} \frac{\sigma_f^2}{N}
 \end{aligned}\]
+which is not the variance of Equation \eqref{eq:variance}.
+It is rather an underestimation of it.
 
 \subsection*{Binning resampling}
+The easiest and most efficient method to estimate the correct variance is the binning resampling.
 
+Let the dataset be divided into $B$ contiguous equal sized\footnote{If N is not divisible by B, the rest can be discarded.} subsets $\{b\}$.
+The mean values of the subsets are:
 \[
     f_b \equiv \frac{B}{N}\sum_i f_{b_i}
 \]
-
+and their average is equal to the entire sample average:
 \[
     \overline f_b \equiv \frac{1}{B} \sum_b f_b = \overline f
 \]
-\[
-    s_{\overline f_b}^2 \equiv \frac{1}{B(B-1)}\sum_b \left(f_b - \overline f_b\right)^2
-\]
-
+and they are uncorrelated in the limit $N/B\gg\tau_\mathrm{int}$:
 \[\begin{aligned}
     \left<f_{b_n}f_{b_m}\right> &= \frac{B^2}{N^2}\left<\left(\sum_{i\in b_n} f_i\right)\left(\sum_{j\in b_m}f_j\right)\right> 
                                 = \frac{B^2}{N^2}\sum_{i\in b_n} \sum_{j\in b_m} \left<f_i f_j\right> \\
-                                &\xrightarrow{\sfrac{N}{B}\to\infty} \frac{B^2}{N^2}\sum_{i\in b_n} \sum_{j\in b_m} \left<f_i\right> \left<f_j\right> 
+                                &\xrightarrow{\sfrac{N}{B}\gg\tau_\mathrm{int}} \frac{B^2}{N^2}\sum_{i\in b_n} \sum_{j\in b_m} \left<f_i\right> \left<f_j\right> 
                                 = \left<f_{b_n}\right>\left<f_{b_m}\right>
 \end{aligned}\]
-
+Thus, their sample mean variance estimator:
+\[
+    s_{\overline f_b}^2 \equiv \frac{1}{B(B-1)}\sum_b \left(f_b - \overline f_b\right)^2
+\]
+is unbiased:
 \[
     \left<s_{\overline f_b}^2\right> \xrightarrow{\sfrac{N}{B}\to\infty} \sigma_{\overline f_b}^2 = \sigma_{\overline f}^2 = \frac{\sigma_f^2}{N}(1+2\tau_\mathrm{int})
 \]
 
-
 \subsection*{Jackknife resampling} 
-\[
-    \Theta(f)
-\]
-\[
-    f_{J_b} \equiv \{f_i | i\notin b\}
-\]
+The jackknife resampling \cite{efron:1992} is a resampling method used to estimate the expectation value and the variance of a generic functional%
+\footnote{It can be used also to estimate the bias of the functional.} $\Theta(f)$ of Markov chain values $f=\{f_1,f_2,\ldots\}$.
+
+Considering the same $B$ subsets $\{b\}$ of the preceding section,
+let $f_{J_b} \equiv \{f_i | i\notin b\}$ be the jackknife subsamples.
+
+The jackknife estimators of the expectation value and the variance of $\Theta(f)$ are:
 \[\begin{gathered}
     \overline \Theta_J \equiv \frac{1}{B} \sum_b \Theta(f_{J_b}) \\
     s_{\overline \Theta_J}^2 \equiv \frac{B-1}{B}\sum_b \left(\Theta(f_{J_b})-\overline\Theta_J\right)^2
 \end{gathered}\]
 
 \subsection*{Integrated autocorrelation time}
+Comparing the expectation values of the na\"ive and binning variance estimators:
 \[\begin{dcases}
     \left<s_{\overline f}^2\right> \xrightarrow{N\gg\tau_\mathrm{int}} \frac{\sigma_f^2}{N} \\
     \left<s_{\overline f_b}^2\right> \xrightarrow{\sfrac{N}{B}\gg\tau_\mathrm{int}} \frac{\sigma_f^2}{N}\left(1+2\tau_\mathrm{int}\right)
 \end{dcases}\]
-
+it can be seen that their ratio is useful to estimate the integrated autocorrelation time:
 \[
     \hat\tau_\mathrm{int}(f) \equiv \frac{1}{2}\left(\frac{s_{\overline f_b}^2}{s_{\overline f}^2}-1\right) 
 \]
+Indeed, it is asymptotically unbiased:
 \[
     \left<\hat\tau_\mathrm{int}\right> \xrightarrow{\sfrac{N}{B}\gg\tau_\mathrm{int}} \tau_\mathrm{int}
 \]
-
+and the integrated autocorrelation time can then be estimated with the jackknife resampling using:
 \[
     \Theta(f) = \hat\tau_\mathrm{int}(f)
 \]
