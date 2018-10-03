@@ -2,7 +2,7 @@
 \chapter{Toy Model}\label{ch:toy_model}
 %************************************************
 
-In this chapter will be introduced the two dimensional $U(1)$ pure gauge theory.
+In this chapter the two dimensional $U(1)$ pure gauge theory will be introduced.
 Starting from the Lagrangian of classic electrodynamics in a $1+1$ Minkowski space-time and its path integral formulation,
 it will be discussed the analytic continuation to euclidean space, the definition of the topological charge and its physical interpretation.
 Then, the theory will be extended to a discrete lattice space, and it will be described the method used to compute physical quantities with Monte Carlo simulations.
@@ -46,14 +46,14 @@ and the time ordered vacuum expectation value of an operator $\widehat{\mathcal 
     \left< \widehat{\mathcal O}[A] \right> = \frac{\int[\mathrm dA]\, \mathcal O[A] e^{iS[A]}}{\int[\mathrm dA]\,e^{iS[A]}}
 \end{equation}
 where the integrals are path integrals over field configurations.
-The integral ratio can be interpreted as a weighted mean of $\mathcal O[A]$ evaluated at all possible configurations, weighted with the function $e^{iS[A]}$.
+The integral ratio can be interpreted as a weighted mean of $\mathcal O[A]$ evaluated at all possible configurations, weighted by the function $e^{iS[A]}$.
 However, in this case, the weight function is oscillatory, and it is not possible to define the measure over field configurations.
 
-Within this theory, the weight function can be made a negative real exponential switching to theory to Euclidean metric performing a Wick rotation of the time coordinate.
-In this way, the measure can be defined as a Wiener measure and the expectation value of Equation \eqref{eq:min_exp} can then be obtained with an analytic continuation.
+Within this theory, the weight function can be made a negative real exponential switching the theory to Euclidean metric performing a Wick rotation of the time coordinate.
+In this way, the measure can be defined as a Wiener measure and the expectation value of Equation \eqref{eq:min_exp} can then be obtained by analytic continuation.
 
 The Euclidean path integral formulation is also a valid stand-alone physical theory, indeed,
-it provides expectation values of operators at thermodynamic equilibrium.
+it provides expectation values of operators at thermodynamic equilibrium, and hence vacuum expectation values.
 
 Furthermore, a real and positive weight function can be interpreted as a probability density function of field configurations,
 and this fact is of crucial importance if a path integral has to be evaluated with the Monte Carlo method.
@@ -72,7 +72,7 @@ Indicating with the index $M$ the objects defined in Minkowski space and with $E
         A^M_1 &\rightarrow A^E_1 
     \end{dcases}&
 \end{align*}
-induce the following transformation of the action:
+induces the following transformation of the action:
 \[
     S^M[A] = -\frac{1}{4}\int\mathrm d^2x^M\,F^M_{\mu\nu}F_M^{\mu\nu} \rightarrow  \frac{i}{4}\int\mathrm d^2x\,F^E_{\mu\nu}F^E_{\mu\nu}
 \]
@@ -87,14 +87,12 @@ the expectation value of an operator $\widehat{\mathcal O}[A]$ is:
 \begin{equation}\label{eq:cont_exp}
     \left< \widehat{\mathcal O}[A] \right> = \frac{\int[\mathrm dA]\, \mathcal O[A] e^{-S^E[A]}}{\int[\mathrm dA]\,e^{-S^E[A]}}
 \end{equation}
-Here, the factor $e^{-S[A]}$ is real and positive, and can be enterpreted as a probability density function of field configurations.
+Here, the factor $e^{-S[A]}$ is real and positive, and can be enterpreted as a probability density function over field configurations.
 
 The Minkowski formulation will not be needed anymore in later discussions.
 For this reason, every object will be considered defined in a euclidean two dimensional space.
 
 \subsection*{Topological charge}
-
-\subsubsection*{prova}
 
 The gauge field, expressed in a generic gauge $G(x) \equiv e^{i\theta(x)} \in U(1)$ is:
 \[
@@ -188,7 +186,7 @@ The continuum expectation value \eqref{eq:cont_exp} is then obtained as the cont
 It is then necessary to provide new definitions for the action and the topological charge on the lattice,
 and they need to converge to the continuum definition if the lattice spacing approaches zero.
 
-Once the lattice theory is defined, it remains to describe how to compute expectation values with Monte Carlo simulations, and how to extrapolate the continuum limit.
+Once the lattice theory is defined, it remains to describe how to compute expectation values with Monte Carlo simulations, and how to extrapolate to the continuum limit.
 
 \subsection*{Gauge invariant objects}
 
@@ -479,7 +477,7 @@ The procedure is organized in these steps:
     \item The physical system has to be implemented on a computer: link variables are stored in computer memory,
         and appropriate functions are defined to evaluate $S^L$ and $\mathcal O^L$ in terms of the links.
         This step will be discussed in Chapter \ref{ch:lattice}.
-    \item A sequence of link configurations is generated in agreement with the weight function $e^{-S^L}$ with the Monte Carlo method, and, at each step,
+    \item A sequence of link configurations is generated in agreement with the weight function $e^{-S^L}$, and, at each step,
         $\mathcal O^L$ is evaluated at the current configuration, and stored in computer memory. The details will be explained in Chapters \ref{ch:mc} and \ref{ch:local}.
     \item The average of the stored values is computed, and, for the law of large numbers,
         it converges to the value of Equation \ref{eq:lat_exp}.
@@ -522,7 +520,7 @@ thus, the action parameter $\beta$ and the number of sites at each direction $N$
     \frac{\beta}{N^2} = \text{constant}
 \end{equation}
 
-To extrapolate the contunuum limit of Equation \eqref{eq:cont_limit},
+To extrapolate the continuum limit of Equation \eqref{eq:cont_limit},
 one then needs to evaluate different expectation values of Equation \eqref{eq:lat_exp},
 one for each pair of parameters $(\beta,N)$, chosen on the line of constant physics of Equation \eqref{eq:const_phys}.
 The continuum limit corresponds to the limit $1/\beta\to0$, and it can be extrapolated with a curve fit.
@@ -533,10 +531,11 @@ since lattice artifacts will be more suppressed.
 As it will be shown in Chapter \ref{ch:local}, the topological freezing sets a threshold in how far it is possible to proceed toward the continuum with a local algorithm.
 However, with the implementation of the cluster algorithm of Chapter \ref{ch:cluster}, this threshold will be removed.
 
-The infinite volume limit will not be treated in this work,
-because it would not be useful to evaluate the cluster algorithm,
-since infinite volume extrapolations are performed at fixed lattice spacing and variable volume,
-while the presence of topological freezing depends only on lattice spacing and not on volume.
+The infinite volume limit will not be treated in this work
+because it would not be useful to evaluate the cluster algorithm:
+infinite volume extrapolations are performed at fixed lattice spacing and variable volume,
+while the presence of topological freezing depends mainly on lattice spacing and not on volume.
+Thus, the infinite volume extrapolation is not the main problem in presence of topological freezing.
 
 %*****************************************
 %*****************************************

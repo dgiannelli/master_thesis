@@ -60,7 +60,7 @@ def latex_float(f):
 measures = [ufloat(mean,err) for mean,err in zip(y,yerr)]
 with open('tables/cluster_energy_cont.tex','w') as file:
     file.write(r'\begin{tabular}{ccccccc} \toprule'+'\n')
-    file.write(r'$N$ & $\beta$ & Side & Repets & Iters & Therm. & $E[\mathcal P]$'+'\n')
+    file.write(r'$N$ & $\beta$ & Side & Repeats & Iters & Therm. & $E[\mathcal P]$'+'\n')
     for N,beta,side,repet,iter,therm,measure in zip(Ns,betas,sides,repets,iters,therms,measures):
         file.write(r'\\ \midrule'+'\n')
         file.write('${}$'.format(N)+' & '+'${}$'.format(beta)+' & '+'${}$'.format(side)+' & '+'${}$'.format(repet)+' & '

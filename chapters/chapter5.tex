@@ -6,7 +6,7 @@
 
 \subsection*{Charge colormaps}
 
-To get an insight of what happens in topological freezing regime,
+To get an insight of what happens in the topological freezing regime,
 it can be useful to find a method to visualize the spatial distribution of the local topological charge,
 which was defined as:
 \[
@@ -41,9 +41,9 @@ The values are very erratic, and an internal structure cannot be identified.
 What causes such a behaviour are ultraviolet fluctuations of the lattice local charge on wavelengths of the order of the lattice spacing $a$ \cite{teper:1985},
 and they overshadow the typical fluctuations of the continuous charge on a certain wavelength $\rho$. 
 This problem can be overcome approaching the continuum limit. Indeed, the lattice spacing becomes $a\ll\rho$,
-and the unwanted ultraviolet fluctuations can be erased locally smoothing the fields over distances $\gg a$ but $\ll \rho$.
+and the unwanted ultraviolet fluctuations can be erased locally by smoothing the fields over distances $\gg a$ but $\ll \rho$.
 
-There are several methods to smooth link variables in Lattice QCD \cite{alexandrou:2017}.
+There are several methods to smooth link variables in Lattice QCD \cite{bonati-delia:2014}.
 However, in this toy model, % the lattice topological charge is already well defined and integer valued. For this reason,
 it has been sufficient to smooth the local values of the charge to remove ultraviolet fluctuations,
 which is easier, since they are simply matrices of values associated with lattice plaquettes.
@@ -103,7 +103,7 @@ it can be applied to get an insight of what is happening in topological freezing
 
 The history plots of Figure \ref{fig:local_charge_history} show that the fixed physical volume line of Table \ref{tab:local_cont}
 heavily suffers from freezing if $N>24$.
-Let then consider completely frozen configurations with $N=36,\ \beta=16.2$.
+Consider then completely frozen configurations with $N=36,\ \beta=16.2$.
 
 In Figure \ref{fig:freezing}, the blurred charge of four consecutive configurations are reported.
 Charge clusters may move in the space or may be deformed,
@@ -119,7 +119,7 @@ but their contribution to the total charge remains the same.
 \subsection*{Charge tunneling}
 If a solution to the topological freezing has to be found,
 it is instructive to see what happens when charge tunneling is still achievable with a local algorithm.
-Let then consider configurations with $N=24,\ \beta=7.2$,
+Considering then configurations with $N=24,\ \beta=7.2$,
 in which the charge correlation time is already become high (Figure \ref{fig:local_charge_corr}) due to topological freezing,
 but charge tunneling is still not so rare to prevent from collecting independent charge configurations.
 
@@ -300,7 +300,7 @@ to justify a more complicated and less efficient implementation of them.
 
 This ansatz is justified by the shapes of clusters of Figure \ref{fig:freezing}.
 They have a typical size determined by the physical volume of the system,
-but they have very heterogeneous and variadic shapes. 
+but they have very heterogeneous and variable shapes. 
 For this reason,
 it is impossible to identify a more specialized shape that would fit the cluster structure.
 
@@ -372,7 +372,7 @@ double reverse_cluster(Lattice &lat, int side, URNG &rng)
 
 \subsection*{Cluster building}
 
-Here is now discussed the construction of a random squared cluster of the kind of Figure \ref{fig:cluster}.
+The construction of a random squared cluster of the kind of Figure \ref{fig:cluster} is here discussed.
 The algorithm is made of the following steps:
 
 \begin{itemize}
@@ -679,10 +679,10 @@ For bigger lattices, the cluster update is repeated more times to compensate the
 
 The statistical samples gathered are of the same size as those of the preceding Chapter,
 and also the CPU time used is similar.
-The results of the cluster algorithm, however, are be definitely better.
+The results of the cluster algorithm, however, are definitely better.
 
-In Figure \ref{fig:cluster_energy_cont} are reported the values for the plaquette energy in the fixed physical volume line.
-The biased values showed in \ref{fig:cont_energy_cont} are here on the same line of the other points.
+The values of the plaquette energy in the fixed physical volume line are reported in Figure \ref{fig:cluster_energy_cont}.
+The biased values showed in \ref{fig:local_cont_energy} are here on the same line as the other points.
 
 \begin{figure}[!htb]
     \centering
@@ -713,8 +713,8 @@ make it possible to distinguish two different regimes of the fixed physical volu
         \centering
         \input{tables/cluster_susc_cont.tex}
     \end{subfigure}
-    \caption{Topological susceptivity continuum limit: comparison with Durr-Hoelbling}
-    \label{fig:susc_cont}
+    \caption{Topological susceptibility continuum limit: comparison with Durr-Hoelbling}
+    \label{fig:cluster_susc_cont}
 \end{figure}
 
 In the continuum limit extrapolation,

@@ -85,7 +85,7 @@ For example, Wolff algorithm can be extended to the most generic continuous spin
 but no good solutions have been found to extend it to the hard sphere model,
 \ie a system in which solid spheres can move in space without overlapping.
 The first efficient cluster algorithm for this model was found 1995 by Dress and Krauth \cite{dress-krauth:1995}.
-It is called \emph{the pivot algorithm} and was formulated specifically for hard spheres and related systems\footnote{Such as binary mixtures or dimers, for example},
+It was formulated specifically for hard spheres and related systems\footnote{Such as binary mixtures or dimers, for example},
 independently from the efforts that have been made to extend Wolff algorithm.
 
 Another important case of critical slowing down is \emph{topological freezing}.
@@ -226,9 +226,10 @@ which is the only thing a standard local algorithm cannot achieve.
 
 The algorithm of Chapter \ref{ch:cluster}, on the other hand, is specifically tailored for this theory, and,
 for this reason, it is more adaptable, easier to implement and debug.
-In some ways, the approach is similar to that of Dress and Krauth,
+In some ways, the approach is similar to that of Dress and Krauth \cite{dress-krauth:1995},
 who chose to create a well suited algorithm for a specific task and closer to the underlying Physics, rather than extending Wolff algorithm.\bigskip\bigskip
 
+\begin{samepage}
 \noindent
 The exposure of this thesis work will fit in the following scheme:
 \begin{description}
@@ -242,13 +243,14 @@ The exposure of this thesis work will fit in the following scheme:
     \item{Chapter \ref{ch:local}:}
         Implementation of a local Metropolis-Hastings algorithm and discussion of topological freezing .
     \item{Chapter \ref{ch:cluster}:}
-        Implementation of a new cluster Metropolis-Hastings algorithm that overcomes the topological freezing.
+        Introduction of a new charge smoothing method and implementation of a new cluster Metropolis-Hastings algorithm that overcomes the topological freezing.
     \item{Chapter \ref{ch:conclusion}:}
         Conclusions and outlooks.\\
     %\item{Appendix \ref{ap:code}:} Complete implementation of the algorithms.
     \item{Appendix \ref{ap:data}:}
         Methods used for data analysis.
 \end{description}
+\end{samepage}
 
 \endgroup
 

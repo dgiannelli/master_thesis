@@ -82,7 +82,7 @@ axs[1].spines['left'].set_visible(False)
 #yaxis = axs[0].get_yaxis()
 #yaxis.set_visible(False)
 
-fig.suptitle('Topological susceptivity: continuum limit')
+fig.suptitle('Topological susceptibility: continuum limit')
 fig.subplots_adjust(wspace=0)
 fig.subplots_adjust(left=0.15)
 fig.subplots_adjust(right=0.85)
@@ -108,7 +108,7 @@ with open('tables/cluster_susc_cont.tex','w') as file:
     file.write(r'\end{aligned}\]'+'\n')
     file.write('\\vspace{1em}\n')
     file.write(r'\begin{tabular}{ccccccc} \toprule'+'\n')
-    file.write(r'$N$ & $\beta$ & Side & Repets & Iters & Therm. & $\chi/g^2$'+'\n')
+    file.write(r'$N$ & $\beta$ & Side & Repeats & Iters & Therm. & $\chi/g^2$'+'\n')
     for N,beta,side,repet,iter,therm,measure in zip(Ns,betas,sides,repets,iters,therms,measures):
         file.write(r'\\ \midrule'+'\n')
         file.write('${}$'.format(N)+' & '+'${}$'.format(beta)+' & '+'${}$'.format(side)+' & '+'${}$'.format(repet)+' & '

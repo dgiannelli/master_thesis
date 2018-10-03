@@ -32,7 +32,7 @@ It is rather an underestimation of it.
 \subsection*{Binning resampling}
 The easiest and most efficient method to estimate the correct variance is the binning resampling.
 
-Let the dataset be divided into $B$ contiguous equal sized\footnote{If N is not divisible by B, the rest can be discarded.} subsets $\{b\}$.
+Let the dataset be divided into $B$ contiguous equal sized\footnote{If N is not divisible by B, the remainder can be discarded.} subsets $\{b\}$.
 The mean values of the subsets are:
 \[
     f_b \equiv \frac{B}{N}\sum_i f_{b_i}

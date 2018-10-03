@@ -123,13 +123,9 @@ In the following discussion will be only considered Markov chains that are:
             \forall x,y \in \Omega,\ \exists n\in\mathbb N^* : p(x_n=y|x_1=x) \neq 0
         \]
     \item \emph{Aperiodic}:
-        \[
-            \forall x,y \in \Omega,\ \nexists t\in\mathbb N^* :
-            \begin{dcases}
-                p(x_n=y|x_1=x)=0 \quad \forall n\neq t,2t,\ldots \\
-                p(x_n=y|x_1=x)\neq0 \quad \forall n=t,2t,\ldots
-            \end{dcases}
-        \]
+        Defining $\mathcal T(x) \equiv \{t\geq1:p(x_i=x,x_{i+t}=x)>0\}$,
+        the \emph{period} of the state $x$ is the greatest common divisor $\mathrm{gcd}\ \mathcal T(x)$.
+        A Markov chain i \emph{aperiodic} if all states have period 1.
 \end{itemize}
 
 A Markov chain is univocally determided by its \emph{transition probability} from point $x$ to $y$, which is defined as:
@@ -253,7 +249,7 @@ What is still missing in the discussion is how to define a Markov chain whose eq
 To define a Markov chain, it is sufficient to specify the transition probability of Equation \eqref{eq:transition},
 and the Metropolis-Hastings algorithm provides a way to do it.
 
-The equilibrium condititon of Equation \eqref{eq:equilibrium}
+The equilibrium condition of Equation \eqref{eq:equilibrium}
 can be interpreted as a requirement for stability of the probability flux.
 In fact, using the normalization condition $\int\mathrm dy\,w(x \to y) = 1$,
 it is equivalent to:
@@ -299,7 +295,7 @@ With such a prescription, the transition probability is:
     \end{dcases}
 \end{equation}
 
-The acceptance probability $\mathcal A(x\to y)$ can than be chosen so that the detailed balance condition is satisfied.
+The acceptance probability $\mathcal A(x\to y)$ can then be chosen so that the detailed balance condition is satisfied.
 For $y=x$, the condition is trivially satisfied. 
 For $y\neq x$, the two members of Equation \eqref{eq:detailed_balance} are:
 \[
@@ -331,14 +327,14 @@ and it has to satisfy the following requirements:
 \end{itemize}
 
 With them satisfied, the remaining arbitrariness of $\mathcal P(x\to y)$ leaves space to algorithm optimization.
-The sampling of $p(x)$ will be as efficient as how much fast the Markov chain will be to travel across all the space $\Omega$,
-and there are two possible ways to boost it:
+The sampling of $p(x)$ is more efficient if the Markov chain is fast to travel across all the space $\Omega$,
+and there are two possible ways to boost this speed:
 \begin{itemize}
     \item The proposals should not be too close to the starting position, favoring then broader jumps over narrower ones.
     \item The acceptance $\mathcal A(x\to y)$ should be as high as possible, since, at each proposal rejection,
         the Markov chain will be stuck in the same position.
 \end{itemize}
-Usually, both of these strategy cannot be pursued all together, then, in this case, a well-balanced compromise should be found.
+Usually, both of these strategies cannot be pursued all together, then, in this case, a well-balanced compromise should be found.
 
 There is, however, a way to improve the acceptance without reducing the speed of the Markov chain.
 In fact, choosing a $\mathcal P(x\to y)$ that is similar to $p(y)$ would let the ratio of Equation \eqref{eq:acceptance} to be closer to one.

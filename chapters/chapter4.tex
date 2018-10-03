@@ -2,15 +2,15 @@
 \chapter{Local algorithm}\label{ch:local}
 %************************************************
 
-In this Chapter will be defined a local Metropolis-Hastings algorithm that samples link variables.
+In this Chapter a local Metropolis-Hastings algorithm that samples link variables will be defined.
 %Then, a specific local algorithm will be defined to compute the integral of Equation \eqref{eq:lat_exp}.
-The first simulations will be performed,
+The first simulations have been performed using it,
 and the result of the plaquette mean energy will be compared with the value reported by D\"urr and Hoelbling in 2005 \cite{durr-hoelbling:2005}.
 
-Even though the acceptance of the local algorithm will be close to its possible maximum value of one,
-since the algorithm is local, at small lattice spacing, the topological freezing will be encountered.
+Even though the acceptance of the local algorithm is close to its possible maximum value of one,
+since the algorithm is local, at small lattice spacing, the topological freezing is encountered.
 
-This will cause both the divergence of the charge autocorrelation time,
+This causes both the divergence of the charge autocorrelation time,
 and the biasedness of observables mean values.
 
 \section{Link variables updating}
@@ -440,7 +440,8 @@ For a $24\times24$ lattice with $\beta=7.2$, it is reported in \cite{durr-hoelbl
     E_{\mathcal P} = 0.52040(39) \quad \mathrm{(Durr-Hoelbling)}
 \end{equation}
 
-Running the local algorithm for $10^6$ iterations, and discarding the first $20\%$ of the data as thermalization, the local algorithm obtained:
+Running the local algorithm for $10^6$ iterations, and discarding the first $20\%$ of the data as thermalization,
+the following value of the plaquette energy has been obtained:
 \begin{equation}\label{eq:plaq_local}
     E_{\mathcal P} = \input{tables/plaq_local.tex} \quad \mathrm{(Local\ algorithm)}
 \end{equation}
@@ -469,7 +470,7 @@ The reason of these biased measures can be seen examining the behaviour of the t
 \subsection*{Topological freezing}
 
 Plotting the histories of the total topological charge values, the problem can be identified.
-The second last plot of Figure \ref{fig:local_charge_history} show that the topological charge remains at the same value for a very long number of iterations,
+The second last plot of Figure \ref{fig:local_charge_history} shows that the topological charge remains at the same value for a very long number of iterations,
 while the last plot shows a complete charge freezing.
 
 \begin{figure}[!htb]
@@ -502,7 +503,7 @@ Thus, the extrapolation of the continuum limit is very problematic in the presen
     \label{fig:local_cont_susc}
 \end{figure}
 
-All this problems will be completely overcome with the introduction of the cluster algorithm in the next Chapter.
+All these problems will be completely overcome with the introduction of the cluster algorithm described in the next Chapter.
 
 
 %*****************************************
