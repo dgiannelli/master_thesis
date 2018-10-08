@@ -100,7 +100,8 @@ The gauge field, expressed in a generic gauge $G(x) \equiv e^{i\theta(x)} \in U(
 \]
 
 Let $S$ be a disk in the space, $\partial S$ its boundary and $R$ its radius.
-If $R \to \infty$, the gauge field, evaluated on $\partial S$,
+In an infinite space, the gauge field $A_\mu$ is asymptotically approaching zero.
+Thus, If $R \to \infty$, the gauge field expressed in a gauge $G$, evaluated on $\partial S$,
 has only the contribution induced by the gauge transformation:
 \[
     \lim_{R\to\infty}A^G_\mu(x) = -\frac{1}{g}\partial_\mu\theta(x)
@@ -110,33 +111,36 @@ and its circulation integral over the border is:
     \lim_{R\to\infty}\oint\limits_{\partial S}\mathrm dl_\mu\,A^G_\mu(x) = -\frac{1}{g}\oint\limits_{\partial S}\mathrm dl_\mu\partial_\mu\theta(x)
 \end{equation}
 If $\theta(x)$ is differentiable, then Equation \eqref{eq:circulation} is equal to zero.
-
-However, the definition of $\theta(x)$ leaves a further unfixed constant term:
-\[
-    \theta(x) \rightarrow \theta(x) + 2\pi n, \quad \text{with}\ n \in \mathbb Z
-\]
-and this redundancy can be fixed imposing:
-\[
-    \theta(x) \in (-\pi,\pi]
-\]
-Which makes $\theta(x)$ not continuous.
-
-Along the path $\partial S$, every time $\theta(x)$ increases and passes across the superior border at $\pi$, it acquires a new value,
-just above the inferior border $-\pi$.
-On the contrary, when $\theta(x)$ decreases so that it would reach $-\pi$, it becomes $\pi$ instead.
-
-When integrating $\partial_\mu\theta(x)$ over these discontinuities,
-they contribute with $-2\pi$ if $\theta(x)$ pass across the superior border, and with $2\pi$ if across the inferior.
-Apart from these discontinuity points, the function $\partial_\mu\theta(x)$ is conservative, thus,
-there is not any other contribution to the circulation apart from the ones that are due to the discontinuities.
-
-Letting $Q_+$ and $Q_-$ be respectively the number of times $\theta(x)$ cuts the superior or the inferior extreme of the interval,
-the result of the circulation of Equation \eqref{eq:circulation} is:
+However, $\theta(x)$, which is the complex argument of $G(x)$, is discontinuous along $\partial S$.
+Indeed, in order to have a single valued complex argument function, it is necessary to confine it in a $2\pi$ sized interval, \ie $(-\pi,\pi]$.
+For this reason, the integral of $\parital_\mu\theta(x)$ along $\partial S$ receives a contribution of $\pm 2\pi$ every time $\theta(x)$ runs across a discontinuity,
+%However, the definition of $\theta(x)$ leaves a further unfixed constant term:
+%\[
+%    \theta(x) \rightarrow \theta(x) + 2\pi n, \quad \text{with}\ n \in \mathbb Z
+%\]
+%and this redundancy can be fixed imposing:
+%\[
+%    \theta(x) \in (-\pi,\pi]
+%\]
+%Which makes $\theta(x)$ not continuous.
+%
+%Along the path $\partial S$, every time $\theta(x)$ increases and passes across the superior border at $\pi$, it acquires a new value,
+%just above the inferior border $-\pi$.
+%On the contrary, when $\theta(x)$ decreases so that it would reach $-\pi$, it becomes $\pi$ instead.
+%
+%When integrating $\partial_\mu\theta(x)$ over these discontinuities,
+%they contribute with $-2\pi$ if $\theta(x)$ pass across the superior border, and with $2\pi$ if across the inferior.
+%Apart from these discontinuity points, the function $\partial_\mu\theta(x)$ is conservative, thus,
+%there is not any other contribution to the circulation apart from the ones that are due to the discontinuities.
+%
+%Letting $Q_+$ and $Q_-$ be respectively the number of times $\theta(x)$ cuts the superior or the inferior extreme of the interval,
+and the result of the circulation of Equation \eqref{eq:circulation} is:
 \[
     \lim_{R\to\infty}\oint\limits_{\partial S}\mathrm dl_\mu\,A^G_\mu(x) = \frac{2\pi}{g} Q
 \]
-where $Q \equiv Q_+ - Q_- \in \mathbb Z$ is the topological charge, \ie the net number of times $\theta(x)$ has wrapped around the interval $(-\pi,\pi]$,
-and $Q$ is positive if the winding has happened from the positive direction, while it is negative if from the other side.
+where $Q \in \mathbb Z$ is the topological charge.
+%, \ie the net number of times $\theta(x)$ has wrapped around the interval $(-\pi,\pi]$,
+%and $Q$ is positive if the winding has happened from the positive direction, while it is negative if from the other side.
 
 Applying Stokes theorem:
 \begin{align*}
@@ -158,7 +162,9 @@ and its integral over all the space is the topological charge:
 Finally, being $\vv B(x) = \vv\nabla \times \vv A(x)$, the charge density is proportional to the flux of the magnetic field across an infinitesimal surface,
 and the total charge is proportional to the total flux.
 
-The same result is obtained if the space considered is a compact and orientable manifold.
+The topological charge is integer valued also if the space considered is a compact and orientable manifold.
+%It is possible to obtain an integer valued topological charge also in a finite space,
+%is a compact and orientable manifold.
 Indeed, the circulation of the vector potential $A_\mu$ over $\partial S$ is equal to the negative of the circulation over $-\partial S$,
 which is also the flux of the magnetic field across the complementary of $S$.
 Since these two fluxes have to be the same, the circulation of $A_\mu$ has to be:
