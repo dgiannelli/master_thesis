@@ -2,6 +2,8 @@ import matplotlib as mpl
 mpl.use('pgf')
 import matplotlib.pyplot as plt
 plt.style.use('./plots/a4.mplstyle')
+import numpy as np
+from uncertainties import ufloat
 import pickle
 
 with open('data/acc_cont_data.pickle','br') as file:
@@ -55,12 +57,15 @@ def latex_float(f):
     else:
         return float_str
 
+reverse_measures = [ufloat(mean,err) for mean,err in zip(reverse_cluster_means,reverse_cluster_errs)]
+gauss_measures = [ufloat(mean,err) for mean,err in zip(gauss_cluster_means,gauss_cluster_errs)]
 with open('tables/cluster_acc_cont.tex','w') as file:
-    file.write(r'\begin{tabular}{cccc} \toprule'+'\n')
-    file.write(r'$N$ & $\beta$ & Sample & Cluster side'+'\n')
-    for N,beta,sample,side in zip(Ns,betas,samples,sides):
+    file.write(r'\begin{tabular}{cccccc} \toprule'+'\n')
+    file.write(r'$N$ & $\beta$ & Sample & Cluster side & Reverse acc. & Gauss acc.'+'\n')
+    for N,beta,sample,side,reverse_measure,gauss_measure in zip(Ns,betas,samples,sides,reverse_measures,gauss_measures):
         file.write(r'\\ \midrule'+'\n')
-        file.write('${}$'.format(N)+' & '+'${}$'.format(beta)+' & '+'${}$'.format(latex_float(sample))+' & '+'${}$'.format(side))
+        file.write('${}$'.format(N)+' & '+'${}$'.format(beta)+' & '+'${}$'.format(latex_float(sample))+' & '
+                  +'${}$'.format(side)+' & '+'${:.2ufS}$'.format(reverse_measure)+' & '+'${:.2ufS}$'.format(gauss_measure))
     file.write(r'\\ \bottomrule'+'\n')
     file.write(r'\end{tabular}'+'\n')
 

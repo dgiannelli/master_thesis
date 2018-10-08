@@ -17,7 +17,7 @@ beta = 12.8
 therm = local_data[(N,beta)]['therm']
 
 plt.plot(gauss_cluster_data[(N,beta)]['charges'][therm:],label='Cluster algorithm')
-plt.plot(local_data[(N,beta)]['charges'][therm:]+4,label='Local algorithm')
+plt.plot(local_data[(N,beta)]['charges'][therm:]+9,label='Local algorithm')
 
 plt.xlabel('Iterations')
 plt.ylabel('$Q$')

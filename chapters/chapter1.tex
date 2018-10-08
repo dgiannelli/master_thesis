@@ -113,7 +113,7 @@ and its circulation integral over the border is:
 If $\theta(x)$ is differentiable, then Equation \eqref{eq:circulation} is equal to zero.
 However, $\theta(x)$, which is the complex argument of $G(x)$, is discontinuous along $\partial S$.
 Indeed, in order to have a single valued complex argument function, it is necessary to confine it in a $2\pi$ sized interval, \ie $(-\pi,\pi]$.
-For this reason, the integral of $\parital_\mu\theta(x)$ along $\partial S$ receives a contribution of $\pm 2\pi$ every time $\theta(x)$ runs across a discontinuity,
+For this reason, the integral of $\partial_\mu\theta(x)$ along $\partial S$ receives a contribution of $\pm 2\pi$ every time $\theta(x)$ runs across a discontinuity,
 %However, the definition of $\theta(x)$ leaves a further unfixed constant term:
 %\[
 %    \theta(x) \rightarrow \theta(x) + 2\pi n, \quad \text{with}\ n \in \mathbb Z
@@ -471,7 +471,10 @@ the lattice variant of the expectation value will be:
 \begin{equation}\label{eq:lat_exp}
     \left<\hat{\mathcal O}^L[U]\right>_L \equiv \frac{\int[\mathrm dU]\, \mathcal O^L[U] e^{-S^L[U]}}{\int[\mathrm dU]\,e^{-S^L[U]}}
 \end{equation}
-Here, the dynamical variables are the lattice Schwinger lines $U \in U(1)$, \ie all the link variables, and $\mathrm dU$ is the Haar measure of $U(1)$.
+Here, the dynamical variables are the lattice Schwinger lines $U \in U(1)$, \ie all the link variables, and $\mathrm dU$ is the Haar measure of $U(1)$:
+\[
+    U = e^{i\varphi} \Longrightarrow \mathrm dU \propto \mathrm d\varphi
+\]
 
 It is useful to describe the problem in terms of \emph{probability theory} concepts:
 $\mathcal O^L[U]$ can be seen as a function of random variables $\{U\}$ that follow a probability density function proportional to $e^{-S^L[U]}$,

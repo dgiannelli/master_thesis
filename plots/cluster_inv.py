@@ -33,7 +33,7 @@ for ax, charge_matrix, charge in zip(axs.flatten(),charge_matrices,charges):
     rolled = np.roll(filtered,(yshift,xshift),axis=(0,1))
     mesh = ax.pcolormesh(rolled, cmap='RdBu', norm=norm)
     ax.set_aspect('equal')
-    ax.set_title(r'$Q_\mathrm{tot} ='+'{:.0f}$'.format(charge+0.1))
+    ax.set_title(r'$Q ='+'{:.0f}$'.format(charge+0.1))
     ticks = [n*N/4 for n in range(5)]
     ax.set_xticks(ticks)
     ax.set_yticks(ticks)
@@ -47,7 +47,7 @@ cax = fig.add_axes([0.15,0.15,0.7,0.0325])
 bar = fig.colorbar(mesh, cax=cax, extend='both', orientation='horizontal')
 bar.set_ticks([-maximum,-10*minimum,0,10*minimum,maximum])
 bar.set_ticklabels([r'$-\frac{100}{N^2}$',r'$-\frac{10}{N^2}$',r'$\pm\frac{1}{N^2}$',r'$\frac{10}{N^2}$',r'$\frac{100}{N^2}$'])
-bar.ax.set_title(r'$Q_\mathrm{loc}$')
+bar.ax.set_title('$q$')
 fig.suptitle('Cluster update: $N={},\\ \\beta={},\\ \\sigma={}$'.format(N,beta,sigma))
 
 fig.savefig('gfx/cluster_inv.pgf')

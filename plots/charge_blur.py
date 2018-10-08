@@ -32,7 +32,7 @@ for ax, sigma in zip(axs.flatten(),sigmas):
     rolled = np.roll(filtered,(yshift,xshift),axis=(0,1))
     mesh = ax.pcolormesh(rolled, cmap='RdBu', norm=norm)
     ax.set_aspect('equal')
-    ax.set_title(r'$\sigma=' + '{}'.format(sigma) + r',\ Q_\mathrm{tot} ='+'{:.0f}$'.format(charge_matrix.sum()+0.01))
+    ax.set_title(r'$\sigma=' + '{}'.format(sigma) + r',\ Q ='+'{:.0f}$'.format(charge_matrix.sum()+0.01))
     ticks = [n*N/4 for n in range(5)]
     ax.set_xticks(ticks)
     ax.set_yticks(ticks)
@@ -44,7 +44,7 @@ cax = fig.add_axes([0.15,0.1,0.7,0.02])
 bar = fig.colorbar(mesh, cax=cax, extend='both', orientation='horizontal')
 bar.set_ticks([-maximum,-10*minimum,0,10*minimum,maximum])
 bar.set_ticklabels([r'$-\frac{100}{N^2}$',r'$-\frac{10}{N^2}$',r'$\pm\frac{1}{N^2}$',r'$\frac{10}{N^2}$',r'$\frac{100}{N^2}$'])
-bar.ax.set_title(r'$Q_\mathrm{loc}$')
+bar.ax.set_title(r'$q$')
 fig.suptitle('Charge Gaussian blur: $N={},\\ \\beta={}$'.format(N,beta))
 
 fig.savefig('gfx/charge_blur.pgf')

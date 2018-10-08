@@ -62,8 +62,8 @@ axs[1].errorbar(0,cont_mean,cont_err,fmt=',',color='C0',capsize=2.5, clip_on=Fal
 beta_durr, y_durr, yerr_durr = np.loadtxt('data/durr-hoelbling.dat',unpack=True)
 axs[0].errorbar(1/beta_durr[:-1],y_durr[:-1],yerr_durr[:-1], fmt='D',color='C1',markerfacecolor='none',capsize=1.5,label='Durr-Hoelbling')
 
-axs[0].errorbar(0,y_durr[-1],yerr_durr[-1],fmt=',',color='C1',capsize=2.5,clip_on=False,barsabove=True,zorder=10)
-axs[1].errorbar(0,y_durr[-1],yerr_durr[-1],fmt=',',color='C1',capsize=2.5,clip_on=False,barsabove=True,zorder=10)
+axs[0].errorbar(0,y_durr[-1],yerr_durr[-1],fmt='x',markersize=3.5,color='C1',capsize=2.5,clip_on=False,barsabove=True,zorder=10)
+axs[1].errorbar(0,y_durr[-1],yerr_durr[-1],fmt='x',markersize=3.5,color='C1',capsize=2.5,clip_on=False,barsabove=True,zorder=10)
 
 xx = np.linspace(0,0.27,20)
 axs[1].plot(xx,f(xx,*popt),'-',color='C3',lw=0.75)

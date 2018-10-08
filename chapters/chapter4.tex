@@ -485,7 +485,14 @@ The last two points are excluded from this plot because of the insufficient numb
 
 \begin{figure}[!htb]
     \centering
-    \import{gfx/}{local_charge_corr.pgf}
+    \begin{subfigure}{\textwidth}
+        \centering
+        \import{gfx/}{local_charge_corr.pgf}
+    \end{subfigure}\vspace{2em}
+    \begin{subfigure}{\textwidth}
+        \centering
+        \input{tables/local_charge_corr.tex}
+    \end{subfigure}
     \caption{Divergent integrated autocorrelation time of the topological charge obtained with the local algorithm}
     \label{fig:local_charge_corr}
 \end{figure}

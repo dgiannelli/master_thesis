@@ -681,8 +681,23 @@ The statistical samples gathered are of the same size as those of the preceding 
 and also the CPU time used is similar.
 The results of the cluster algorithm, however, are definitely better.
 
+\begin{figure}[!htb]
+    \centering
+    \begin{subfigure}{\textwidth}
+        \centering
+        \import{gfx/}{cluster_charge_corr.pgf}
+    \end{subfigure}\vspace{2em}
+    \begin{subfigure}{\textwidth}
+        \centering
+        \input{tables/cluster_charge_corr.tex}
+    \end{subfigure}
+    \caption{Topological charge integrated autocorrelation time obtained with the Gauss cluster algorithm.
+    The behaviour is not critical, and the increasing of autocorrelation is suppressed with an increasing number of cluster updates per iteration.}
+    \label{fig:cluster_charge_corr}
+\end{figure}
+
 The values of the plaquette energy in the fixed physical volume line are reported in Figure \ref{fig:cluster_energy_cont}.
-The biased values showed in \ref{fig:local_cont_energy} are here on the same line as the other points.
+The biased values showed in Figure \ref{fig:local_cont_energy} are here on the same line as the other points.
 
 \begin{figure}[!htb]
     \centering
