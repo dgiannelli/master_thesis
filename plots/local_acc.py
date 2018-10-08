@@ -25,10 +25,11 @@ plt.ylim(ymax=1)
 plt.xlim(0,0.6)
 
 plt.ylabel('Acceptance')
-plt.xlabel(r'$\frac{1}{\beta}$')
+plt.xlabel(r'$1/\beta$')
 plt.suptitle('Local algorithm: Metropolis acceptance ratio')
 plt.subplots_adjust(left=0.2)
-plt.subplots_adjust(bottom=0.2)
+plt.subplots_adjust(right=0.8)
+plt.subplots_adjust(bottom=0.15)
 
 plt.savefig('gfx/local_acc.pgf')
 

@@ -40,12 +40,12 @@ ax.set_ylim(ymin=0)
 ax.set_xlim(0,0.6)
 
 fig.suptitle('Cluster acceptance continuum limit: Reverse vs Gauss')
-ax.set_xlabel(r'$\frac{1}{\beta}$')
+ax.set_xlabel(r'$1/\beta$')
 ax.set_ylabel('Acceptance')
 
 fig.subplots_adjust(left=0.2)
 fig.subplots_adjust(right=0.8)
-fig.subplots_adjust(bottom=0.2)
+fig.subplots_adjust(bottom=0.15)
 
 fig.savefig('gfx/cluster_acc_cont.pgf')
 
@@ -61,7 +61,7 @@ reverse_measures = [ufloat(mean,err) for mean,err in zip(reverse_cluster_means,r
 gauss_measures = [ufloat(mean,err) for mean,err in zip(gauss_cluster_means,gauss_cluster_errs)]
 with open('tables/cluster_acc_cont.tex','w') as file:
     file.write(r'\begin{tabular}{cccccc} \toprule'+'\n')
-    file.write(r'$N$ & $\beta$ & Sample & Cluster side & Reverse acc. & Gauss acc.'+'\n')
+    file.write(r'$N$ & $\beta$ & Sample & Square side & Reverse acc. & Gauss acc.'+'\n')
     for N,beta,sample,side,reverse_measure,gauss_measure in zip(Ns,betas,samples,sides,reverse_measures,gauss_measures):
         file.write(r'\\ \midrule'+'\n')
         file.write('${}$'.format(N)+' & '+'${}$'.format(beta)+' & '+'${}$'.format(latex_float(sample))+' & '

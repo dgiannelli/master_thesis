@@ -643,7 +643,7 @@ and the performance reduction can be balanced with an increasing number of clust
     \begin{subfigure}{\textwidth}
         \centering
         \import{gfx/}{cluster_acc_cont.pgf}
-    \end{subfigure}\vspace{2em}
+    \end{subfigure}\vspace{1.5em}
     \begin{subfigure}{\textwidth}
         \centering
         \input{tables/cluster_acc_cont.tex}
@@ -661,18 +661,18 @@ which can be chosen in accordance with the charge typical correlation length obt
     \begin{subfigure}{\textwidth}
         \centering
         \import{gfx/}{cluster_acc_side.pgf}
-    \end{subfigure}\vspace{2em}
+    \end{subfigure}\vspace{1.5em}
     \begin{subfigure}{\textwidth}
         \centering
         \input{tables/cluster_acc_side.tex}
     \end{subfigure}
-    \caption{Cluster side acceptance comparison}
+    \caption{Cluster side acceptance comparison at fixed $N$ and $\beta$}
     \label{fig:cluster_acc_side}
 \end{figure}
 
 \section{Cluster algorithm results}
 
-Simulations on the fixed physical volume line have been performed with the Gauss cluster algorithm.
+Simulations on the fixed physical volume line $\beta/N^2=1/80$ have been performed with the Gauss cluster algorithm.
 Sweeps of local updates and cluster updates are alternated, since sweeps are efficient in sampling the Boltzmann distribution,
 and cluster inversions are efficient in charge tunneling, and each of them are considered as one simulation iteration.
 For bigger lattices, the cluster update is repeated more times to compensate the decreasing of the acceptance.
@@ -681,30 +681,36 @@ The statistical samples gathered are of the same size as those of the preceding 
 and also the CPU time used is similar.
 The results of the cluster algorithm, however, are definitely better.
 
+\subsection*{Controlled charge autocorrelation}
+The integrated autocorrelation time of the topological charge obtained with the cluster algorithm (Figure \ref{fig:cluster_charge_corr})
+does not manifest the critical behaviour obtained with the local algorithm (Figure \ref{fig:local_charge_corr}).
+Instead, the increasing of the autocorrelation time has been suppressed with an increasing number of cluster updates per iteration,
+which has been chosen in order to balance the decreasing of the acceptance (Figure \ref{fig:cluster_acc_cont}).
+
 \begin{figure}[!htb]
     \centering
     \begin{subfigure}{\textwidth}
         \centering
         \import{gfx/}{cluster_charge_corr.pgf}
-    \end{subfigure}\vspace{2em}
+    \end{subfigure}\vspace{1.5em}
     \begin{subfigure}{\textwidth}
         \centering
         \input{tables/cluster_charge_corr.tex}
     \end{subfigure}
-    \caption{Topological charge integrated autocorrelation time obtained with the Gauss cluster algorithm.
-    The behaviour is not critical, and the increasing of autocorrelation is suppressed with an increasing number of cluster updates per iteration.}
+    \caption{Topological charge integrated autocorrelation time obtained with the Gauss cluster algorithm.}
     \label{fig:cluster_charge_corr}
 \end{figure}
 
-The values of the plaquette energy in the fixed physical volume line are reported in Figure \ref{fig:cluster_energy_cont}.
-The biased values showed in Figure \ref{fig:local_cont_energy} are here on the same line as the other points.
+\subsection*{Plaquette energy}
+The values of the mean plaquette energy in the fixed physical volume line are reported in Figure \ref{fig:cluster_energy_cont}.
+The biased values showed in Figure \ref{fig:local_energy_cont} are here on the same line as the other points.
 
 \begin{figure}[!htb]
     \centering
     \begin{subfigure}{\textwidth}
         \centering
         \import{gfx/}{cluster_energy_cont.pgf}
-    \end{subfigure}\vspace{2em}
+    \end{subfigure}\vspace{1.5em}
     \begin{subfigure}{\textwidth}
         \centering
         \input{tables/cluster_energy_cont.tex}
@@ -713,17 +719,23 @@ The biased values showed in Figure \ref{fig:local_cont_energy} are here on the s
     \label{fig:cluster_energy_cont}
 \end{figure}
 
+In particular, for a $24\times24$ lattice with $\beta=7.2$:
+\[
+    E[\mathcal P] = \input{tables/plaq_cluster.tex} \quad \text{(Cluster algorithm)}
+\]
+which is compatible with the value \eqref{eq:plaq_local} obtained with the local algorithm,
+and the value \eqref{eq:plaq_durr} obtained by D\"urr and Hoelbling \cite{durr-hoelbling:2005}.
+
+\subsection*{Topological susceptibility}
 In Figure \ref{fig:cluster_susc_cont} is reported the extrapolation of the topological susceptibility
 and compared with the one obtained by D\"urr and Hoelbling \cite{durr-hoelbling:2005}.
-The improved precision and the higher number of experimental point obtained with the cluster algorithm
-make it possible to distinguish two different regimes of the fixed physical volume line.
 
 \begin{figure}[!htb]
     \centering
     \begin{subfigure}{\textwidth}
         \centering
         \import{gfx/}{cluster_susc_cont.pgf}
-    \end{subfigure}\vspace{2em}
+    \end{subfigure}\vspace{1.5em}
     \begin{subfigure}{\textwidth}
         \centering
         \input{tables/cluster_susc_cont.tex}
@@ -732,10 +744,17 @@ make it possible to distinguish two different regimes of the fixed physical volu
     \label{fig:cluster_susc_cont}
 \end{figure}
 
-In the continuum limit extrapolation,
-it was not considered the point that caused a bias in the one of D\"urr and Hoelbling.
+The improved precision and the higher number of experimental point obtained with the cluster algorithm
+make it possible to distinguish two different regimes of the fixed physical volume line,
+which correspond to the regions where the charge tunneling is easily achievable with the local algorithm or not,
+\ie the convergence toward the continuum limit is different when the instantonic structure is reproduced, as it is expected.
 
-This last example witnesses how much misleading can be to extrapolate the continuum limit of a lattice gauge field theory.
+Two different linear fits have been performed, including or excluding the point at $\beta=5$,
+and no systematic errors have been observed with this precision.
+
+In the extrapolation performed by D\"urr and Hoelbling was included a point that belongs to a different regime and it caused a bias in the continuum limit extrapolation.
+This fact could not be noticed with the limited precision obtained with a local algorithm 
+and this last example witnesses how much misleading can be to extrapolate the continuum limit of a lattice gauge field theory.
 For this reason, there is a high demand of new algorithms that can sample the topological charge more efficiently.
 
 The need for a precise computation of the axion mass is the main reason of this urgency,

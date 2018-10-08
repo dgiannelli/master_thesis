@@ -17,31 +17,30 @@ x = []
 y = []
 yerr = []
 
-for key in list(local_data)[:-2]:
+for key in list(local_data)[:-1]:
     N, beta = key
     Ns.append(N)
     betas.append(beta)
     iters.append(local_data[key]['iters'])
     therms.append(local_data[key]['therm'])
-    charge_corr_mean = local_data[key]['charge_corr_mean']
-    charge_corr_err = local_data[key]['charge_corr_err']
+    susc_mean = local_data[key]['susc_mean']
+    susc_err = local_data[key]['susc_err']
 
     x.append(1./beta)
-    y.append(charge_corr_mean)
-    yerr.append(charge_corr_err)
-
+    y.append(susc_mean)
+    yerr.append(susc_err)
+    
 plt.errorbar(x,y,yerr, fmt='s',markerfacecolor='none',capsize=1.5)
-#plt.ylim(ymax=1)
 plt.xlim(xmin=0)
-
-plt.ylabel(r'$\tau_Q^\mathrm{int}$')
+#plt.ylim([0.45,0.625])
+plt.ylabel(r'$\frac{\chi}{g^2}$')
 plt.xlabel(r'$1/\beta$')
-plt.suptitle('Local algorithm: charge autocorrelation time')
+plt.suptitle(r'Local algorithm: biased $\chi/g^2$ continuum limit')
 plt.subplots_adjust(left=0.2)
 plt.subplots_adjust(right=0.8)
 plt.subplots_adjust(bottom=0.15)
 
-plt.savefig('gfx/local_charge_corr.pgf')
+plt.savefig('gfx/local_susc_cont.pgf')
 
 def latex_float(f):
     float_str = "{0:.2g}".format(f)
@@ -52,9 +51,9 @@ def latex_float(f):
         return float_str
 
 measures = [ufloat(mean,err) for mean,err in zip(y,yerr)]
-with open('tables/local_charge_corr.tex','w') as file:
+with open('tables/local_susc_cont.tex','w') as file:
     file.write(r'\begin{tabular}{ccccc} \toprule'+'\n')
-    file.write(r'$N$ & $\beta$ & Iters & Therm. & $\tau_Q^\mathrm{int}$'+'\n')
+    file.write(r'$N$ & $\beta$ & Iters & Therm. & $\chi/g^2$'+'\n')
     for N,beta,iter,therm,measure in zip(Ns,betas,iters,therms,measures):
         file.write(r'\\ \midrule'+'\n')
         file.write('${}$'.format(N)+' & '+'${}$'.format(beta)+' & '+'${}$'.format(latex_float(iter))+' & '

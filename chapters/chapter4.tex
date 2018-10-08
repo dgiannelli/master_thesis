@@ -413,14 +413,16 @@ A local sweep will be considered as an iteration of the Markov chain.
 
 \section{First results}
 
-The line of fixed constant volume $\beta/N^2=1/80$ is chosen with the following parameters:
+The simulations have been run with parameters $\beta$ and $N$ on the fixed physical volume line $\beta/N^2=1/80$,
+which is the same line considered by D\"urr and Hoelbling \cite{durr-hoelbling:2005}.
+The results will than be compared with the ones reported in their article.
 
-\begin{table}[!htb]
-    \centering
-    \input{tables/local_cont.tex}
-    \caption{Parameters considered for the local algorithm}
-    \label{tab:local_cont}
-\end{table}
+%\begin{table}[!htb]
+%    \centering
+%    \input{tables/local_cont.tex}
+%    \caption{Parameters considered for the local algorithm}
+%    \label{tab:local_cont}
+%\end{table}
 
 \subsection*{Metropolis-Hastings acceptance}
 
@@ -437,25 +439,32 @@ since, if $\beta$ increases, the $k\propto\beta$ parameter of Figure \ref{fig:ga
 \subsection*{Plaquette mean energy}
 For a $24\times24$ lattice with $\beta=7.2$, it is reported in \cite{durr-hoelbling:2005} the following value for the plaquette mean energy:
 \begin{equation}\label{eq:plaq_durr}
-    E_{\mathcal P} = 0.52040(39) \quad \mathrm{(Durr-Hoelbling)}
+    E[\mathcal P] = 0.52040(39) \quad \text{(D\"urr-Hoelbling)}
 \end{equation}
 
 Running the local algorithm for $10^6$ iterations, and discarding the first $20\%$ of the data as thermalization,
 the following value of the plaquette energy has been obtained:
 \begin{equation}\label{eq:plaq_local}
-    E_{\mathcal P} = \input{tables/plaq_local.tex} \quad \mathrm{(Local\ algorithm)}
+    E[\mathcal P] = \input{tables/plaq_local.tex} \quad \mathrm{(Local\ algorithm)}
 \end{equation}
 which is compatible with \eqref{eq:plaq_durr}.
 
-However, problems arise in the attempt to evaluate the continuum limit of the plaquette mean energy (Figure \ref{fig:local_cont_energy}).
+However, problems arise in the attempt to evaluate the continuum limit of the plaquette mean energy (Figure \ref{fig:local_energy_cont}).
 The values of the two points on the left seem to be erroneous even if the plot of the plaquette energies history
 does not show any evident problem (Figure \ref{fig:local_energy_history}).
 
 \begin{figure}[!htb]
     \centering
-    \import{gfx/}{local_cont_energy.pgf}
+    \begin{subfigure}{\textwidth}
+        \centering
+        \import{gfx/}{local_energy_cont.pgf}
+    \end{subfigure}\vspace{1.5em}
+    \begin{subfigure}{\textwidth}
+        \centering
+        \input{tables/local_energy_cont.tex}
+    \end{subfigure}
     \caption{Biased plaquette energy continuum limit obtained with the local algorithm}
-    \label{fig:local_cont_energy}
+    \label{fig:local_energy_cont}
 \end{figure}
 
 \begin{figure}[!htb]
@@ -488,7 +497,7 @@ The last two points are excluded from this plot because of the insufficient numb
     \begin{subfigure}{\textwidth}
         \centering
         \import{gfx/}{local_charge_corr.pgf}
-    \end{subfigure}\vspace{2em}
+    \end{subfigure}\vspace{1.5em}
     \begin{subfigure}{\textwidth}
         \centering
         \input{tables/local_charge_corr.tex}
@@ -501,13 +510,20 @@ The topological susceptibility $\chi$ is proportional to the second moment of th
 \[
     \frac{\chi}{g^2} = \frac{\left<Q^2\right>}{a^2g^2N^2} = \frac{\left<Q^2\right>}{N^2}\beta
 \]
-Thus, the extrapolation of the continuum limit is very problematic in the presence of topological freezing (Figure \ref{fig:local_cont_susc}).
+Thus, the extrapolation of the continuum limit is very problematic in the presence of topological freezing (Figure \ref{fig:local_susc_cont}).
 
 \begin{figure}[!htb]
     \centering
-    \import{gfx/}{local_cont_susc.pgf}
+    \begin{subfigure}{\textwidth}
+        \centering
+        \import{gfx/}{local_susc_cont.pgf}
+    \end{subfigure}\vspace{1.5em}
+    \begin{subfigure}{\textwidth}
+        \centering
+        \input{tables/local_susc_cont.tex}
+    \end{subfigure}
     \caption{Biased topological susceptibility continuum limit obtained with the local algorithm}
-    \label{fig:local_cont_susc}
+    \label{fig:local_susc_cont}
 \end{figure}
 
 All these problems will be completely overcome with the introduction of the cluster algorithm described in the next Chapter.

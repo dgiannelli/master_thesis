@@ -56,6 +56,7 @@ def f(x,a,b):
 popt, pcov = curve_fit(f,x[3:],y[3:],sigma=yerr[3:],absolute_sigma=True)
 cont_mean = popt[0]
 cont_err = np.sqrt(pcov[0,0])
+
 axs[0].errorbar(0,cont_mean,cont_err,fmt=',',color='C0',capsize=2.5, clip_on=False,barsabove=True,zorder=10)
 axs[1].errorbar(0,cont_mean,cont_err,fmt=',',color='C0',capsize=2.5, clip_on=False,barsabove=True,zorder=10)
 
@@ -98,15 +99,24 @@ def latex_float(f):
     else:
         return float_str
 
+popt, pcov = curve_fit(f,x[4:],y[4:],sigma=yerr[4:],absolute_sigma=True)
+cont_mean2 = popt[0]
+cont_err2 = np.sqrt(pcov[0,0])
+
 cont_measure = ufloat(cont_mean,cont_err)
+cont_measure2 = ufloat(cont_mean2,cont_err2)
 durr_measure = ufloat(y_durr[-1],yerr_durr[-1])
-measures = [ufloat(mean,err) for mean,err in zip(y,yerr)]
+
 with open('tables/cluster_susc_cont.tex','w') as file:
     file.write(r'\[\begin{aligned}'+'\n')
-    file.write(r'\chi/g^2&='+cont_measure.format('.2uS')+r'\quad \mathrm{(Cluster\ algorithm)}\\'+'\n')
-    file.write(r'\chi/g^2&='+durr_measure.format('.2uS')+r'\quad \mathrm{(Durr-Hoelbling)}'+'\n')
+    file.write(r'\chi/g^2&='+cont_measure.format('.2uS')+r'\quad \text{(Cluster algorithm with $\beta=5$)}\\'+'\n')
+    file.write(r'\chi/g^2&='+cont_measure2.format('.2uS')+r'\quad \text{(Cluster algorithm without $\beta=5$)}\\'+'\n')
+    file.write(r'\chi/g^2&='+durr_measure.format('.2uS')+r'\quad \text{(D\"urr-Hoelbling)}'+'\n')
     file.write(r'\end{aligned}\]'+'\n')
+
     file.write('\\vspace{1em}\n')
+
+    measures = [ufloat(mean,err) for mean,err in zip(y,yerr)]
     file.write(r'\begin{tabular}{ccccccc} \toprule'+'\n')
     file.write(r'$N$ & $\beta$ & Side & Repeats & Iters & Therm. & $\chi/g^2$'+'\n')
     for N,beta,side,repet,iter,therm,measure in zip(Ns,betas,sides,repets,iters,therms,measures):

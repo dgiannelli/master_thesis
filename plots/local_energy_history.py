@@ -22,7 +22,7 @@ for (ax,key) in zip(axs.flatten(),keys):
     ax.set_xticks([0,4e5,8e5])
     ax.set_xticklabels(['$0$',r'$4\times10^5$',r'$8\times10^5$'])
     ax.set_xlabel('Iterations',labelpad=10)
-    ax.set_ylabel(r'$E_{\mathcal P}$')
+    ax.set_ylabel(r'$E[\mathcal P]$')
     ax.set_title('$N={},\\ \\beta={}$'.format(key[0],key[1]))
     ax.label_outer()
     #ax.xaxis.set_major_formatter(formatter)

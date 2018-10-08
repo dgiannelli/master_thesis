@@ -39,10 +39,11 @@ plt.errorbar(x,y,yerr, fmt='s',markerfacecolor='none',capsize=1.5)
 plt.xlim(xmin=0)
 
 plt.ylabel(r'$\tau_Q^\mathrm{int}$')
-plt.xlabel(r'$\frac{1}{\beta}$')
+plt.xlabel(r'$1/\beta$')
 plt.suptitle('Gauss cluster algorithm: charge autocorrelation time')
 plt.subplots_adjust(left=0.2)
-plt.subplots_adjust(bottom=0.2)
+plt.subplots_adjust(right=0.8)
+plt.subplots_adjust(bottom=0.15)
 
 plt.savefig('gfx/cluster_charge_corr.pgf')
 
